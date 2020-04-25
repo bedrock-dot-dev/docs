@@ -1,0 +1,998 @@
+<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>FEATURES DOCUMENTATION </br>Version: 1.15.0.53</h1>
+This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
+<h2><p id="Index">Index</p></h2>
+<table border="1">
+<tr> <th><a href="#Overview">Overview</a></th> </tr>
+<tr> <th><a href="#JSON format">JSON format</a></th> </tr>
+<tr> <th><a href="#Adding features">Adding features</a></th> </tr>
+<tr> <th><a href="#Supported features">Supported features</a></th> </tr>
+<tr> <td> <a href="#minecraft:aggregate_feature"> minecraft:aggregate_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:sequence_feature"> minecraft:sequence_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:ore_feature"> minecraft:ore_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:scatter_feature"> minecraft:scatter_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:search_feature"> minecraft:search_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:single_block_feature"> minecraft:single_block_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:structure_template_feature"> minecraft:structure_template_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:tree_feature"> minecraft:tree_feature</a> </tr> </td>
+<tr> <td> <a href="#minecraft:weighted_random_feature"> minecraft:weighted_random_feature</a> </tr> </td>
+<tr> <th><a href="#Attaching features">Attaching features</a></th> </tr>
+<tr> <th><a href="#Feature rules">Feature rules</a></th> </tr>
+<tr> <th><a href="#Feature rule schema">Feature rule schema</a></th> </tr>
+<tr> <th><a href="#Forced features">Forced features</a></th> </tr>
+</table>
+<a href="#Index">Back to top</a>
+<h1><p id="Overview">Overview</p></h1>
+
+Features are decorations scattered throughout the world. Things such as trees, plants, flowers, springs, ore, and coral are all features. Basically, if it isn't the terrain or a mob, it's probably a feature!</br>Features can be standalone or composed of multiple sub-features. In practice, most features in Minecraft are defined as a chain of two or more features. These chains typically end with features that place blocks in the world. Other feature types control flow such as conditional, sequential, or random distribution.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="JSON format">JSON format</p></h1>
+
+All features must specify the version that they target via the "format_version" field. The remainder of the data is contained in independet JSON sub-objects for each supported feature type. These feature types define the behavior of the feature and include properties specific to that behavior. To be valid, a definition must include exactly one of these type objects. See the full feature schema below for additional details and the full list of supported feature types.</br><h2></h2>
+Here is a sample feature<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.13.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:ore_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:coal_ore_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"count"</span><span class="token operator">:</span> <span class="token number">17</span><span class="token punctuation">,</span>
+    <span class="token property">"places_block"</span><span class="token operator">:</span> <span class="token string">"minecraft:coal_ore"</span><span class="token punctuation">,</span>
+    <span class="token property">"may_replace"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"andesite"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"andesite_smooth"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"diorite"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"diorite_smooth"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"granite"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"granite_smooth"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"minecraft:stone"</span><span class="token punctuation">,</span>
+        <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"stone_type"</span><span class="token operator">:</span> <span class="token string">"stone"</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Adding features">Adding features</p></h1>
+
+Features are read from JSON files in the "features" subfolder of behavior packs. Loading enforces one feature per file; the file name and the name of the feature must match. Feature names can include a namespace of the form "namespace:feature_name" to help distinguish them from features that may be in other behavior packs. This namespace is not considered when matching the filename to the feature name. For example, in a file called "my_tree_feature.json" both "my_tree_feature" and "my_pack_name:my_tree_feature" would be valid identifiers. If two behavior packs define the same feature name (including namespace), then the feature from the highest pack in the stack will be used. This allows users to override base features if desired.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Supported features">Supported features</p></h1>
+
+<h1><p id="minecraft:aggregate_feature">minecraft:aggregate_feature</p></h1>
+
+'minecraft:aggregate_feature' places a collection of features in an arbitary order. All features in the collection use the same input position. Features should not depend on each other, as there is no guarantee on the order the features will be placed.</br>Succeeds if: At lease one feature is placed successfully.</br>Fails if: All features fail to be placed.</br><h2></h2>
+Example use: scattering multiple different plants around a monument.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.3</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:aggregate_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:monument_with_flowers_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"features"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"monument_feature"</span><span class="token punctuation">,</span>
+      <span class="token string">"scatter_white_flowers_feature"</span><span class="token punctuation">,</span>
+      <span class="token string">"scatter_yellow_flower_feature"</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:sequence_feature">minecraft:sequence_feature</p></h1>
+
+'minecraft:sequence_feature' places a collection of features sequentially, in the order they appear in data. The output position of the previous feature is used as the input position for the next. For example, a tree feature is placed at (0, 0, 0) and places blocks up to (0, 10, 0). The next feature in the sequence begins at (0, 10, 0).</br>Succeeds if: All features in the sequence are successfully placed.</br>Fails if: Any feature in the sequence fails to be placed. Features that have not yet been placed at the time of failure are skipped.</br><h2></h2>
+Example use: Scattering fruit throughout the canopy of a tree.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.3</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:sequence_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:oak_tree_then_apples_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"features"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"oak_tree_feature"</span><span class="token punctuation">,</span>
+      <span class="token string">"scatter_apples_feature"</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:ore_feature">minecraft:ore_feature</p></h1>
+
+'minecraft:ore_feature' places a vein of blocks to simulate ore deposits. Despite the name, any block can be placed by this feature. During placement, existing world blocks are checked to see if they can be replaced by the new ore block based on the list provided in the 'may_replace' field. If no 'may_replace' field is specified, the ore block can replace any existing block.</br>Succeeds if: At least one ore block is successfully placed.</br>Fails if: All ore block placements fail.</br><h2></h2>
+Example use: Oil deposits in the sand.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:ore_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:oil_deposit_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"places_block"</span><span class="token operator">:</span> <span class="token string">"example:oil_block"</span><span class="token punctuation">,</span>
+    <span class="token property">"count"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+    <span class="token property">"may_replace"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"minecraft:sand"</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:scatter_feature">minecraft:scatter_feature</p></h1>
+
+'minecraft:scatter_feature' scatters a feature throughout a chunk. The 'x', 'y', and 'z' fields are per-coordinate parameters. Note that coordinates represent an offset from the input position, not an absolute position. Coordinates may be a single value, a random distribution, or molang expression that resolves to a numeric value. The 'coordinate_eval_order' field is provided for finer control of coordinate resolution (particularly when using the 'grid' distribution). 'iterations' controls how many individual placements should occur if the 'scatter_chance' check succeeds. The 'scatter_chance' check happens once, so either all placements will run or none will.</br>Succeeds if: At least one feature placement succeeds.</br>Fails if: All feature placements fail.</br><h2></h2>
+Example use: Scattering flowers at sea level across half the chunks in a biome.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:scatter_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:scatter_flowers_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"places_feature"</span><span class="token operator">:</span> <span class="token string">"example:flower_feature"</span><span class="token punctuation">,</span>
+    <span class="token property">"iterations"</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    <span class="token property">"scatter_chance"</span><span class="token operator">:</span> <span class="token number">50.0</span><span class="token punctuation">,</span>
+    <span class="token property">"x"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"distribution"</span><span class="token operator">:</span> <span class="token string">"uniform"</span><span class="token punctuation">,</span>
+      <span class="token property">"extent"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">15</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"y"</span><span class="token operator">:</span> <span class="token number">64</span><span class="token punctuation">,</span>
+    <span class="token property">"z"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"distribution"</span><span class="token operator">:</span> <span class="token string">"uniform"</span><span class="token punctuation">,</span>
+      <span class="token property">"extent"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">15</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:search_feature">minecraft:search_feature</p></h1>
+
+'minecraft:search_feature' sweeps a volume searching for a valid placement location for its referenced feature. The 'search_volume' field specifies the axis-aligned bounding box that defines the boundaries of the search. The search sweeps along the axis defined by the 'search_axis' field, layer by layer. For example, if 'search_axis' = '-x', blocks with greater x values will be checked before blocks with lower x values. Each layer is searched from the bottom-left to the top-right before moving to the next layer along the axis. By default, only one valid position must be found, but this can be altered by specifying the 'required_successes' field. If fewer than the required successes are found, no placement will occur.</br>Succeeds if: The number of valid positions is equal to the value specified by 'required_successes'.</br>Fails if: The number of valid positions is less than the value specified by 'required_successes'.</br><h2></h2>
+Example use: Attaching apples to a tree canopy<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:search_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:find_valid_apples_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"places_feature"</span><span class="token operator">:</span> <span class="token string">"example:apple_feature"</span><span class="token punctuation">,</span>
+    <span class="token property">"search_volume"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"min"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">-3</span><span class="token punctuation">,</span> <span class="token number">-3</span><span class="token punctuation">,</span> <span class="token number">-3</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"max"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"search_axis"</span><span class="token operator">:</span> <span class="token string">"-y"</span><span class="token punctuation">,</span>
+    <span class="token property">"required_successes"</span><span class="token operator">:</span> <span class="token number">3</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:single_block_feature">minecraft:single_block_feature</p></h1>
+
+'minecraft:single_block_feature' places a single block in the world. The 'may_place_on' and 'may_replace' fields are whitelists which specify where the block can be placed. If these fields are omitted, the block can be placed anywhere. The block's internal survivability and placement rules can optionally be enforced with the 'enforce_survivability_rules' and 'enforce_placement_rules' fields. These rules are specified per-block and are typically designed to produce high quality gameplay or natural behavior. However, enabling this enforcement may make it harder to debug placement failures.</br>Succeeds if: The block is successfully placed in the world.</br>Fails if: The block fails to be placed.</br><h2></h2>
+Example use: Placing a single pumpkin block.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:single_block_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:single_pumpkin_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"places_block"</span><span class="token operator">:</span> <span class="token string">"example:pumpkin"</span><span class="token punctuation">,</span>
+    <span class="token property">"enforce_placement_rules"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token property">"enforce_survivability_rules"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token property">"may_place_on"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"example:grass"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"may_replace"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"example:air"</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:structure_template_feature">minecraft:structure_template_feature</p></h1>
+
+'minecraft:structure_template_feature' places a structure in the world. The structure must be stored as a .mcstructure file in the "structures" subdirectory of a behavior pack. It is possible to reference structures that are part of other behavior packs, they do not need to come from the same behavior pack as this feature. Constraints can be defined to specify where the structure is allowed to be placed. During placement, the feature will search for a position within the 'adjustment_radius' that satisfies all constraints. If none are found, the structure will not be placed.</br>Succeeds if: The structure is placed in the world.</br>Fails if: The structure fails to be placed within the world.</br><h2></h2>
+Example use: Place a hot air balloon structure that "floats" in the air.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:structure_template_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:hot_air_balloon_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"structure_name"</span><span class="token operator">:</span> <span class="token string">"example:hot_air_balloon"</span><span class="token punctuation">,</span>
+    <span class="token property">"adjustment_radius"</span><span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span>
+    <span class="token property">"facing_direction"</span><span class="token operator">:</span> <span class="token string">"random"</span><span class="token punctuation">,</span>
+    <span class="token property">"constraints"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"unburied"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"block_intersection"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"block_whitelist"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token string">"example:air"</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:tree_feature">minecraft:tree_feature</p></h1>
+
+Feature type 'minecraft:tree_feature' has not yet been documented.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="minecraft:weighted_random_feature">minecraft:weighted_random_feature</p></h1>
+
+'minecraft:weighted_random_feature' randomly selects and places a feature based on a weight value. Weights are relative, with higher values making selection more likely.</br>Succeeds if: The selected feature is placed.</br>Fails if: The selected feature fails to be placed.</br><h2></h2>
+Example use: Selecting and placing a variant of a flower.<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1.13</span>.<span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:weighted_random_feature"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"example:select_flower_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"features"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">[</span> <span class="token string">"example:white_flower_feature"</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span> <span class="token string">"example:red_flower_feature"</span><span class="token punctuation">,</span> <span class="token number">2</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span> <span class="token string">"example:blue_flower_feature"</span><span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span> <span class="token string">"example:yellow_flower_feature"</span><span class="token punctuation">,</span> <span class="token number">4</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h2>Feature schema</h2>
+Here is the complete feature schema<br / ><pre class="language-json">
+  <span class="token punctuation">{</span>
+      version <span class="token string">"format_version"</span>
+      object <span class="token property">"minecraft:aggregate_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          array <span class="token string">"features"</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span>*<span class="token punctuation">]</span> <span class="token comment">// Collection of features to be placed one by one. No guarantee of order. All features use the same input position.</span>
+          <span class="token punctuation">{</span>
+              feature_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">}</span>
+          enumerated_value <span class="token string">"early_out"</span>&lt;<span class="token string">"none"</span><span class="token punctuation">,</span> <span class="token string">"first_failure"</span><span class="token punctuation">,</span> <span class="token string">"first_success"</span>> <span class="token operator">:</span> opt <span class="token comment">// LIKELY TO BE CHANGED: Do not continue placing features once either the first success or first failure has occurred.</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:sequence_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          array <span class="token string">"features"</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span>*<span class="token punctuation">]</span> <span class="token comment">// List of features to be placed in sequence. The output position of the previous feature is used as the input position to the next.</span>
+          <span class="token punctuation">{</span>
+              feature_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:ore_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          block_reference <span class="token string">"places_block"</span> <span class="token comment">// Reference to the block to be placed.</span>
+          int <span class="token string">"count"</span>&lt;<span class="token number">1</span>-*> <span class="token comment">// The number of blocks to be placed.</span>
+          array <span class="token string">"may_replace"</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span>*<span class="token punctuation">]</span> <span class="token operator">:</span> opt <span class="token comment">// A list of blocks that may be replaced during placement. Omit this field to allow any block to be replaced.</span>
+          <span class="token punctuation">{</span>
+              block_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:scatter_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          feature_reference <span class="token string">"places_feature"</span> <span class="token comment">// Named reference of feature to be placed</span>
+          bool <span class="token property">"project_input_to_floor"</span> <span class="token operator">:</span> opt <span class="token comment">// If true, snaps the y-value of the scattered position to the terrain heightmap. If false or unset, y-value is unmodified.</span>
+          molang <span class="token string">"iterations"</span> <span class="token comment">// Number of scattered positions to generate</span>
+          object <span class="token property">"scatter_chance"</span> <span class="token operator">:</span> opt <span class="token comment">// Probability numerator / denominator that this scatter will occur.  Not evaluated each iteration; either no iterations will run, or all will.</span>
+          <span class="token punctuation">{</span>
+              int <span class="token string">"numerator"</span>&lt;<span class="token number">1</span>-*>
+              int <span class="token string">"denominator"</span>&lt;<span class="token number">1</span>-*>
+          <span class="token punctuation">}</span>
+          molang <span class="token property">"scatter_chance"</span> <span class="token operator">:</span> opt <span class="token comment">// Probability (0-100] that this scatter will occur.  Not evaluated each iteration; either no iterations will run, or all will.</span>
+          enumerated_value <span class="token string">"coordinate_eval_order"</span>&lt;<span class="token string">"xyz"</span><span class="token punctuation">,</span> <span class="token string">"xzy"</span><span class="token punctuation">,</span> <span class="token string">"yxz"</span><span class="token punctuation">,</span> <span class="token string">"yzx"</span><span class="token punctuation">,</span> <span class="token string">"zxy"</span><span class="token punctuation">,</span> <span class="token string">"zyx"</span>> <span class="token operator">:</span> opt <span class="token comment">// The order in which coordinates will be evaluated. Should be used when a coordinate depends on another. If omitted, defaults to </span><span class="token string">"xzy"</span>.
+          molang <span class="token property">"x"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+          object <span class="token property">"x"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+          <span class="token punctuation">{</span>
+              enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+              int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+              int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+              array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+              <span class="token punctuation">{</span>
+                  molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          molang <span class="token property">"z"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+          object <span class="token property">"z"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+          <span class="token punctuation">{</span>
+              enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+              int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+              int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+              array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+              <span class="token punctuation">{</span>
+                  molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          molang <span class="token property">"y"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+          object <span class="token property">"y"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+          <span class="token punctuation">{</span>
+              enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+              int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+              int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+              array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+              <span class="token punctuation">{</span>
+                  molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:search_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          feature_reference <span class="token string">"places_feature"</span> <span class="token comment">// Named reference of feature to be placed</span>
+          object <span class="token string">"search_volume"</span> <span class="token comment">// Axis-aligned bounding box that will be searched for valid placement positions. Expressed as offsets from the input position.</span>
+          <span class="token punctuation">{</span>
+              array <span class="token string">"min"</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token comment">// Minimum extent of the bounding volume expressed as [ x, y, z ]</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"[0..0]"</span> <span class="token comment">// x_min</span>
+                  int <span class="token string">"[1..1]"</span> <span class="token comment">// y_min</span>
+                  int <span class="token string">"[2..2]"</span> <span class="token comment">// z_min</span>
+              <span class="token punctuation">}</span>
+              array <span class="token string">"max"</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token comment">// Maxium extent of the bounding volume expressed as [ x, y, z ]</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"[0..0]"</span> <span class="token comment">// x_max</span>
+                  int <span class="token string">"[1..1]"</span> <span class="token comment">// y_max</span>
+                  int <span class="token string">"[2..2]"</span> <span class="token comment">// z_max</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          enumerated_value <span class="token string">"search_axis"</span>&lt;<span class="token string">"-x"</span><span class="token punctuation">,</span> <span class="token string">"+x"</span><span class="token punctuation">,</span> <span class="token string">"-y"</span><span class="token punctuation">,</span> <span class="token string">"+y"</span><span class="token punctuation">,</span> <span class="token string">"-z"</span><span class="token punctuation">,</span> <span class="token string">"+z"</span>> <span class="token comment">// Axis that the search will sweep along through the 'search_volume'</span>
+          int <span class="token string">"required_successes"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// Number of valid positions the search must find in order to place the referenced feature</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:single_block_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          block_reference <span class="token string">"places_block"</span> <span class="token comment">// Reference to the block to be placed.</span>
+          bool <span class="token string">"enforce_placement_rules"</span> <span class="token comment">// If true, enforce the block's canPlace check.</span>
+          bool <span class="token string">"enforce_survivability_rules"</span> <span class="token comment">// If true, enforce the block's canSurvive check.</span>
+          object <span class="token property">"may_attach_to"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"min_sides_must_attach"</span>&lt;<span class="token number">1</span><span class="token number">-4</span>> <span class="token operator">:</span> opt
+              bool <span class="token property">"auto_rotate"</span> <span class="token operator">:</span> opt <span class="token comment">// Automatically rotate the block to attach sensibly.</span>
+              block_reference <span class="token property">"top"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"top"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"bottom"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"bottom"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"north"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"north"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"east"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"east"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"south"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"south"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"west"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"west"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"all"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"all"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"sides"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"sides"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token string">"&lt;any array element>"</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          array <span class="token property">"may_replace"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              block_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt <span class="token comment">// A list of blocks that may be replaced during placement. Omit this field to allow any block to be replaced.</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:structure_template_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          structure_reference <span class="token string">"structure_name"</span> <span class="token comment">// Reference to the structure to be placed.</span>
+          int <span class="token string">"adjustment_radius"</span>&lt;<span class="token number">0</span><span class="token number">-16</span>> <span class="token operator">:</span> opt <span class="token comment">// How far the structure is allowed to move when searching for a valid placement position. Search is radial, stopping when the nearest valid position is found. Defaults to 0 if omitted.</span>
+          enumerated_value <span class="token string">"facing_direction"</span>&lt;<span class="token string">"north"</span><span class="token punctuation">,</span> <span class="token string">"south"</span><span class="token punctuation">,</span> <span class="token string">"east"</span><span class="token punctuation">,</span> <span class="token string">"west"</span><span class="token punctuation">,</span> <span class="token string">"random"</span>> <span class="token operator">:</span> opt <span class="token comment">// Direction the structure will face when placed in the world. Defaults to </span><span class="token string">"random"</span> if omitted.
+          object <span class="token string">"constraints"</span> <span class="token comment">// Specific constraints that must be satisfied when placing this structure.</span>
+          <span class="token punctuation">{</span>
+              object <span class="token property">"grounded"</span> <span class="token operator">:</span> opt <span class="token comment">// When specified, ensures the structure is on the ground.</span>
+              object <span class="token property">"unburied"</span> <span class="token operator">:</span> opt <span class="token comment">// When specified, ensures the structure has air above it.</span>
+              object <span class="token property">"block_intersection"</span> <span class="token operator">:</span> opt <span class="token comment">// When specified, ensures the structure only intersects with whitelisted blocks.</span>
+              <span class="token punctuation">{</span>
+                  array <span class="token string">"block_whitelist"</span> <span class="token comment">// List of blocks the owning structure is allowed to intersect with.</span>
+                  <span class="token punctuation">{</span>
+                      block_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:tree_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"can_be_submerged"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"max_depth"</span>&lt;<span class="token number">1</span>-*>
+          <span class="token punctuation">}</span>
+          bool <span class="token property">"can_be_submerged"</span> <span class="token operator">:</span> opt
+          block_reference <span class="token property">"base_block"</span> <span class="token operator">:</span> opt
+          array <span class="token property">"base_block"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              block_reference <span class="token string">"&lt;any array element>"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"base_cluster"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              array <span class="token string">"may_replace"</span>
+              <span class="token punctuation">{</span>
+                  block_reference <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+              int <span class="token string">"num_clusters"</span>&lt;<span class="token number">1</span>-*>
+              int <span class="token string">"cluster_radius"</span>&lt;<span class="token number">0</span>-*>
+          <span class="token punctuation">}</span>
+          array <span class="token property">"may_grow_on"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              block_reference <span class="token string">"&lt;any array element>"</span>
+          <span class="token punctuation">}</span>
+          array <span class="token property">"may_grow_through"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              block_reference <span class="token string">"&lt;any array element>"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"acacia_trunk"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"trunk_width"</span>
+              object <span class="token string">"trunk_height"</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"base"</span>&lt;<span class="token number">1</span>-*>
+                  array <span class="token property">"intervals"</span> <span class="token operator">:</span> opt
+                  <span class="token punctuation">{</span>
+                      int <span class="token string">"&lt;any array element>"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+              object <span class="token string">"trunk_lean"</span>
+              <span class="token punctuation">{</span>
+                  bool <span class="token string">"allow_diagonal_growth"</span>
+                   <span class="token string">"lean_height"</span>
+                   <span class="token string">"lean_steps"</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token string">"trunk_block"</span>
+              object <span class="token property">"branches"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                   <span class="token string">"branch_length"</span>
+                   <span class="token string">"branch_position"</span>
+                  chance_information <span class="token string">"branch_chance"</span>
+                  object <span class="token property">"branch_canopy"</span> <span class="token operator">:</span> opt
+                  <span class="token punctuation">{</span>
+                      object <span class="token property">"acacia_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"canopy_size"</span>&lt;<span class="token number">1</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                          bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          object <span class="token string">"canopy_offset"</span>
+                          <span class="token punctuation">{</span>
+                              int <span class="token string">"min"</span>
+                              int <span class="token string">"max"</span>
+                          <span class="token punctuation">}</span>
+                          int <span class="token string">"min_width"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt
+                          object <span class="token property">"canopy_slope"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              int <span class="token string">"rise"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                              int <span class="token string">"run"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                          chance_information <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+                          array <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              chance_information <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                          block_reference <span class="token string">"leaf_block"</span>
+                          object <span class="token property">"canopy_decoration"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              chance_information <span class="token string">"decoration_chance"</span>
+                              block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                              int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                              enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"fancy_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"height"</span>&lt;<span class="token number">1</span>-*>
+                          int <span class="token string">"radius"</span>&lt;<span class="token number">0</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"mega_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"mega_pine_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+                          float <span class="token string">"radius_step_modifier"</span>&lt;<span class="token number">0.000000</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"pine_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">1</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"roofed_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"canopy_height"</span>&lt;<span class="token number">3</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*>
+                          int <span class="token string">"outer_radius"</span>&lt;<span class="token number">0</span>-*>
+                          int <span class="token string">"inner_radius"</span>&lt;<span class="token number">0</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"spruce_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"lower_offset"</span>
+                           <span class="token string">"upper_offset"</span>
+                           <span class="token string">"max_radius"</span>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+              object <span class="token property">"trunk_decoration"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token string">"decoration_chance"</span>
+                  block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                  int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                  enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"fallen_trunk"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"log_length"</span>
+               <span class="token property">"stump_height"</span> <span class="token operator">:</span> opt
+               <span class="token property">"height_modifier"</span> <span class="token operator">:</span> opt
+              block_reference <span class="token string">"trunk_block"</span>
+              feature_reference <span class="token property">"log_decoration_feature"</span> <span class="token operator">:</span> opt
+              object <span class="token property">"trunk_decoration"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token string">"decoration_chance"</span>
+                  block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                  int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                  enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"fancy_trunk"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              object <span class="token string">"trunk_height"</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"base"</span>&lt;<span class="token number">1</span>-*>
+                  int <span class="token string">"variance"</span>&lt;<span class="token number">1</span>-*>
+                  float <span class="token string">"scale"</span>
+              <span class="token punctuation">}</span>
+              int <span class="token string">"trunk_width"</span>&lt;<span class="token number">1</span>-*>
+              object <span class="token string">"branches"</span>
+              <span class="token punctuation">{</span>
+                  float <span class="token string">"slope"</span>
+                  float <span class="token string">"density"</span>
+                  float <span class="token string">"min_altitude_factor"</span>&lt;<span class="token number">0.000000</span><span class="token number">-1.000000</span>>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token property">"trunk_block"</span> <span class="token operator">:</span> opt
+              float <span class="token string">"width_scale"</span>&lt;<span class="token number">0.000000</span>-*>
+              float <span class="token string">"foliage_altitude_factor"</span>&lt;<span class="token number">0.000000</span><span class="token number">-1.000000</span>>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"mega_trunk"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"trunk_width"</span>
+              object <span class="token string">"trunk_height"</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"base"</span>&lt;<span class="token number">1</span>-*>
+                  array <span class="token property">"intervals"</span> <span class="token operator">:</span> opt
+                  <span class="token punctuation">{</span>
+                      int <span class="token string">"&lt;any array element>"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+              block_reference <span class="token string">"trunk_block"</span>
+              object <span class="token property">"trunk_decoration"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token string">"decoration_chance"</span>
+                  block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                  int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                  enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+              object <span class="token property">"branches"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"branch_length"</span>&lt;<span class="token number">1</span>-*>
+                  float <span class="token string">"branch_slope"</span>
+                   <span class="token string">"branch_interval"</span>
+                  object <span class="token string">"branch_altitude_factor"</span>
+                  <span class="token punctuation">{</span>
+                      float <span class="token string">"min"</span>&lt;<span class="token number">0.000000</span><span class="token number">-1.000000</span>>
+                      float <span class="token string">"max"</span>&lt;<span class="token number">0.000000</span><span class="token number">-1.000000</span>>
+                  <span class="token punctuation">}</span>
+                  object <span class="token property">"branch_canopy"</span> <span class="token operator">:</span> opt
+                  <span class="token punctuation">{</span>
+                      object <span class="token property">"acacia_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"canopy_size"</span>&lt;<span class="token number">1</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                          bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          object <span class="token string">"canopy_offset"</span>
+                          <span class="token punctuation">{</span>
+                              int <span class="token string">"min"</span>
+                              int <span class="token string">"max"</span>
+                          <span class="token punctuation">}</span>
+                          int <span class="token string">"min_width"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt
+                          object <span class="token property">"canopy_slope"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              int <span class="token string">"rise"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                              int <span class="token string">"run"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                          chance_information <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+                          array <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              chance_information <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                          block_reference <span class="token string">"leaf_block"</span>
+                          object <span class="token property">"canopy_decoration"</span> <span class="token operator">:</span> opt
+                          <span class="token punctuation">{</span>
+                              chance_information <span class="token string">"decoration_chance"</span>
+                              block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                              int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                              enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+                          <span class="token punctuation">}</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"fancy_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"height"</span>&lt;<span class="token number">1</span>-*>
+                          int <span class="token string">"radius"</span>&lt;<span class="token number">0</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"mega_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"mega_pine_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+                          float <span class="token string">"radius_step_modifier"</span>&lt;<span class="token number">0.000000</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"pine_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"canopy_height"</span>
+                          int <span class="token string">"base_radius"</span>&lt;<span class="token number">1</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"roofed_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                          int <span class="token string">"canopy_height"</span>&lt;<span class="token number">3</span>-*>
+                          int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*>
+                          int <span class="token string">"outer_radius"</span>&lt;<span class="token number">0</span>-*>
+                          int <span class="token string">"inner_radius"</span>&lt;<span class="token number">0</span>-*>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                      object <span class="token property">"spruce_canopy"</span> <span class="token operator">:</span> opt
+                      <span class="token punctuation">{</span>
+                           <span class="token string">"lower_offset"</span>
+                           <span class="token string">"upper_offset"</span>
+                           <span class="token string">"max_radius"</span>
+                          block_reference <span class="token string">"leaf_block"</span>
+                      <span class="token punctuation">}</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"trunk"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"trunk_height"</span>
+               <span class="token property">"height_modifier"</span> <span class="token operator">:</span> opt
+              block_reference <span class="token string">"trunk_block"</span>
+              object <span class="token property">"trunk_decoration"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token string">"decoration_chance"</span>
+                  block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                  int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                  enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"acacia_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"canopy_size"</span>&lt;<span class="token number">1</span>-*>
+              block_reference <span class="token string">"leaf_block"</span>
+              bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">}</span>
+          object <span class="token property">"canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              object <span class="token string">"canopy_offset"</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"min"</span>
+                  int <span class="token string">"max"</span>
+              <span class="token punctuation">}</span>
+              int <span class="token string">"min_width"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt
+              object <span class="token property">"canopy_slope"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"rise"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+                  int <span class="token string">"run"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+              chance_information <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+              array <span class="token property">"variation_chance"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token property">"&lt;any array element>"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+              block_reference <span class="token string">"leaf_block"</span>
+              object <span class="token property">"canopy_decoration"</span> <span class="token operator">:</span> opt
+              <span class="token punctuation">{</span>
+                  chance_information <span class="token string">"decoration_chance"</span>
+                  block_reference <span class="token property">"decoration_block"</span> <span class="token operator">:</span> opt
+                  int <span class="token property">"num_steps"</span> <span class="token operator">:</span> opt
+                  enumerated_value <span class="token string">"step_direction"</span>&lt;<span class="token string">"down"</span><span class="token punctuation">,</span> <span class="token string">"up"</span><span class="token punctuation">,</span> <span class="token string">"out"</span><span class="token punctuation">,</span> <span class="token string">"away"</span>> <span class="token operator">:</span> opt
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"fancy_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"height"</span>&lt;<span class="token number">1</span>-*>
+              int <span class="token string">"radius"</span>&lt;<span class="token number">0</span>-*>
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"mega_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"canopy_height"</span>
+              int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+              int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+              bool <span class="token property">"simplify_canopy"</span> <span class="token operator">:</span> opt
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"mega_pine_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"canopy_height"</span>
+              int <span class="token string">"base_radius"</span>&lt;<span class="token number">0</span>-*>
+              float <span class="token string">"radius_step_modifier"</span>&lt;<span class="token number">0.000000</span>-*>
+              int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"pine_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"canopy_height"</span>
+              int <span class="token string">"base_radius"</span>&lt;<span class="token number">1</span>-*>
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"roofed_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+              int <span class="token string">"canopy_height"</span>&lt;<span class="token number">3</span>-*>
+              int <span class="token string">"core_width"</span>&lt;<span class="token number">1</span>-*>
+              int <span class="token string">"outer_radius"</span>&lt;<span class="token number">0</span>-*>
+              int <span class="token string">"inner_radius"</span>&lt;<span class="token number">0</span>-*>
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+          object <span class="token property">"spruce_canopy"</span> <span class="token operator">:</span> opt
+          <span class="token punctuation">{</span>
+               <span class="token string">"lower_offset"</span>
+               <span class="token string">"upper_offset"</span>
+               <span class="token string">"max_radius"</span>
+              block_reference <span class="token string">"leaf_block"</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      object <span class="token property">"minecraft:weighted_random_feature"</span> <span class="token operator">:</span> opt
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature in the form 'namespace_name:feature_name'. 'feature_name' must match the filename.</span>
+          <span class="token punctuation">}</span>
+          array <span class="token string">"features"</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span>*<span class="token punctuation">]</span>
+          <span class="token punctuation">{</span>
+              array <span class="token string">"&lt;any array element>"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">:</span> opt <span class="token comment">// Collection of weighted features that placement will select from.</span>
+              <span class="token punctuation">{</span>
+                  feature_reference <span class="token string">"[0..0]"</span> <span class="token comment">// Named reference to a feature.</span>
+                  float <span class="token string">"[1..1]"</span> <span class="token comment">// Weight used in random selection. Value is relative to other weights in the collection.</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+</pre> </br>
+<br><br>
+
+<h1><p id="Attaching features">Attaching features</p></h1>
+
+Features must be attached to at least one biome in order to show up in the world. During world generation, biomes attempt to place their attached features chunk-by-chunk. Features can be attached in two ways:</br>1) Via a feature rule definition</br>2) Via the "minecraft:forced_features" biome component</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Feature rules">Feature rules</p></h1>
+
+Feature rules are separate JSON definition files found in the "feature_rules" subfolder of behavior packs. Feature rules follow the same filename rules as features. Each feature rule controls exactly one feature and serves as the root of a chain of feature data. To attach a feature to a biome with a feature rule, the "conditions" object must include the "minecraft:biome_filter" field. This is a list of filter tests that are performed on each biome to determine if the feature should be attached. Most relevant is the "has_biome_tag" test.</br><h2></h2>
+Here is a sample feature rule<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.13.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:feature_rules"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:birch_forest_surface_trees_feature"</span><span class="token punctuation">,</span>
+      <span class="token property">"places_feature"</span><span class="token operator">:</span> <span class="token string">"minecraft:legacy:birch_forest_tree_feature"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"conditions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"placement_pass"</span><span class="token operator">:</span> <span class="token string">"surface_pass"</span><span class="token punctuation">,</span>
+      <span class="token property">"minecraft:biome_filter"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"has_biome_tag"</span><span class="token punctuation">,</span>
+          <span class="token property">"operator"</span><span class="token operator">:</span> <span class="token string">"=="</span><span class="token punctuation">,</span>
+          <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"forest"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          <span class="token property">"all_of"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"has_biome_tag"</span><span class="token punctuation">,</span>
+              <span class="token property">"operator"</span><span class="token operator">:</span> <span class="token string">"=="</span><span class="token punctuation">,</span>
+              <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"birch"</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span>
+              <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"has_biome_tag"</span><span class="token punctuation">,</span>
+              <span class="token property">"operator"</span><span class="token operator">:</span> <span class="token string">"!="</span><span class="token punctuation">,</span>
+              <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"mutated"</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"distribution"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"iterations"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      <span class="token property">"x"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      <span class="token property">"y"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      <span class="token property">"z"</span><span class="token operator">:</span> <span class="token number">0</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Feature rule schema">Feature rule schema</p></h1>
+
+<h2></h2>
+<br / ><pre class="language-json">
+  <span class="token punctuation">{</span>
+      version <span class="token string">"format_version"</span>
+      object <span class="token string">"minecraft:feature_rules"</span>
+      <span class="token punctuation">{</span>
+          object <span class="token string">"description"</span>
+          <span class="token punctuation">{</span>
+              string <span class="token string">"identifier"</span> <span class="token comment">// The name of this feature rule in the format 'namespace_name:rule_name'. 'rule_name' must match the filename.</span>
+              feature_reference <span class="token string">"places_feature"</span> <span class="token comment">// Named reference to the feature controlled by this rule.</span>
+          <span class="token punctuation">}</span>
+          object <span class="token string">"conditions"</span> <span class="token comment">// Parameters to control where and when the feature will be placed.</span>
+          <span class="token punctuation">{</span>
+              enumerated_value <span class="token string">"placement_pass"</span>&lt;<span class="token string">"first_pass"</span><span class="token punctuation">,</span> <span class="token string">"before_underground_pass"</span><span class="token punctuation">,</span> <span class="token string">"underground_pass"</span><span class="token punctuation">,</span> <span class="token string">"after_underground_pass"</span><span class="token punctuation">,</span> <span class="token string">"before_surface_pass"</span><span class="token punctuation">,</span> <span class="token string">"surface_pass"</span><span class="token punctuation">,</span> <span class="token string">"after_surface_pass"</span><span class="token punctuation">,</span> <span class="token string">"before_sky_pass"</span><span class="token punctuation">,</span> <span class="token string">"sky_pass"</span><span class="token punctuation">,</span> <span class="token string">"after_sky_pass"</span><span class="token punctuation">,</span> <span class="token string">"final_pass"</span>> <span class="token comment">// When the feature should be placed relative to others. Earlier passes in the list are guaranteed to occur before later passes. Order is not guaranteed within each pass.</span>
+              biome_filter_group <span class="token property">"minecraft:biome_filter"</span> <span class="token operator">:</span> opt <span class="token comment">// List of filter tests to determine which biomes this rule will attach to.</span>
+          <span class="token punctuation">}</span>
+          object <span class="token string">"distribution"</span> <span class="token comment">// Parameters controlling the initial scatter of the feature.</span>
+          <span class="token punctuation">{</span>
+              molang <span class="token string">"iterations"</span> <span class="token comment">// Number of scattered positions to generate</span>
+              object <span class="token property">"scatter_chance"</span> <span class="token operator">:</span> opt <span class="token comment">// Probability numerator / denominator that this scatter will occur.  Not evaluated each iteration; either no iterations will run, or all will.</span>
+              <span class="token punctuation">{</span>
+                  int <span class="token string">"numerator"</span>&lt;<span class="token number">1</span>-*>
+                  int <span class="token string">"denominator"</span>&lt;<span class="token number">1</span>-*>
+              <span class="token punctuation">}</span>
+              molang <span class="token property">"scatter_chance"</span> <span class="token operator">:</span> opt <span class="token comment">// Probability (0-100] that this scatter will occur.  Not evaluated each iteration; either no iterations will run, or all will.</span>
+              enumerated_value <span class="token string">"coordinate_eval_order"</span>&lt;<span class="token string">"xyz"</span><span class="token punctuation">,</span> <span class="token string">"xzy"</span><span class="token punctuation">,</span> <span class="token string">"yxz"</span><span class="token punctuation">,</span> <span class="token string">"yzx"</span><span class="token punctuation">,</span> <span class="token string">"zxy"</span><span class="token punctuation">,</span> <span class="token string">"zyx"</span>> <span class="token operator">:</span> opt <span class="token comment">// The order in which coordinates will be evaluated. Should be used when a coordinate depends on another. If omitted, defaults to </span><span class="token string">"xzy"</span>.
+              molang <span class="token property">"x"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+              object <span class="token property">"x"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+              <span class="token punctuation">{</span>
+                  enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+                  int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+                  int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+                  array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+                  <span class="token punctuation">{</span>
+                      molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                      molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+              molang <span class="token property">"z"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+              object <span class="token property">"z"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+              <span class="token punctuation">{</span>
+                  enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+                  int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+                  int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+                  array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+                  <span class="token punctuation">{</span>
+                      molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                      molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+              molang <span class="token property">"y"</span> <span class="token operator">:</span> opt <span class="token comment">// Expression for the coordinate (evaluated each iteration).  Mutually exclusive with random distribution object below.</span>
+              object <span class="token property">"y"</span> <span class="token operator">:</span> opt <span class="token comment">// Distribution for the coordinate (evaluated each iteration).  Mutually exclusive with Molang expression above.</span>
+              <span class="token punctuation">{</span>
+                  enumerated_value <span class="token string">"distribution"</span>&lt;<span class="token string">"uniform"</span><span class="token punctuation">,</span> <span class="token string">"gaussian"</span><span class="token punctuation">,</span> <span class="token string">"inverse_gaussian"</span><span class="token punctuation">,</span> <span class="token string">"fixed_grid"</span><span class="token punctuation">,</span> <span class="token string">"jittered_grid"</span>> <span class="token comment">// Type of distribution - uniform random, gaussian (centered in the range), or grid (either fixed-step or jittered)</span>
+                  int <span class="token string">"step_size"</span>&lt;<span class="token number">1</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the distance between steps along this axis</span>
+                  int <span class="token string">"grid_offset"</span>&lt;<span class="token number">0</span>-*> <span class="token operator">:</span> opt <span class="token comment">// When the distribution type is grid, defines the offset along this axis</span>
+                  array <span class="token string">"extent"</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+                  <span class="token punctuation">{</span>
+                      molang <span class="token property">"[0..0]"</span> <span class="token operator">:</span> opt <span class="token comment">// Lower bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                      molang <span class="token property">"[1..1]"</span> <span class="token operator">:</span> opt <span class="token comment">// Upper bound (inclusive) of the scatter range, as an offset from the input point to scatter around</span>
+                  <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Forced features">Forced features</p></h1>
+
+Features attached with the second method are called "forced" or "explicit" features. Unlike feature rules, forced features are not defined in separate JSON files. Instead, they are specified in the existing biome JSON definitions via the "minecraft:forced_features" component. Like feature rules, this component includes fields that define when features should be placed ("placement_pass") and how they should be scattered ("distribution"). For more information about biome components (including the complete JSON schema), consult the biome documentation.</br><a href="#Index">Back to top</a><br><br>
+

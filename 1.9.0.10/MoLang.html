@@ -1,0 +1,682 @@
+<h1>MOLANG DOCUMENTATION </br>Version: 1.9.0.10</h1>
+<h2><p id="Index">Index</p></h2>
+<table border="1">
+<tr> <th><a href="#Why Does MoLang Exist?">Why Does MoLang Exist?</a></th> </tr>
+<tr> <th><a href="#Lexical Structure">Lexical Structure</a></th> </tr>
+<tr> <td> <a href="#Values"> Values</a> </tr> </td>
+<tr> <td> <a href="#Variables"> Variables</a> </tr> </td>
+<tr> <td> <a href="#Keywords"> Keywords</a> </tr> </td>
+<tr> <td> <a href="#Math Functions"> Math Functions</a> </tr> </td>
+<tr> <td> <a href="#Global Parameters"> Global Parameters</a> </tr> </td>
+<tr> <td> <a href="#Types, Values, and Variables"> Types, Values, and Variables</a> </tr> </td>
+<tr> <td> <a href="#Simple vs Complex Expressions"> Simple vs Complex Expressions</a> </tr> </td>
+<tr> <th><a href="#Domain Examples">Domain Examples</a></th> </tr>
+<tr> <td> <a href="#Entity Definition Scripts"> Entity Definition Scripts</a> </tr> </td>
+<tr> <td> <a href="#Animation and Animation Controller Files"> Animation and Animation Controller Files</a> </tr> </td>
+<tr> <td> <a href="#Render Controllers"> Render Controllers</a> </tr> </td>
+<tr> <th><a href="#Query Functions">Query Functions</a></th> </tr>
+<tr> <td> <a href="#"> </a> </tr> </td>
+<tr> <td> <a href="#List of Entity Flags"> List of Entity Flags</a> </tr> </td>
+</table>
+<a href="#Index">Back to top</a>
+<h1><p id="Why Does MoLang Exist?">Why Does MoLang Exist?</p></h1>
+
+MoLang is a simple expression-based language designed for fast calculation of values at run-time. Its focus is solely to enable script-like capabilities in high-performance systems where JavaScript is not performant at scale. We need scripting capabilities in these low-level systems to support end-user modding capabilities, custom entities, rendering, and animation.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Lexical Structure">Lexical Structure</p></h1>
+
+The language structure is largely based on simple C-style syntax, focusing on handling math expressions. A script is made of either one expression for simple cases, or can be made of several where intermediate values are required or to help reduce compute time.</br></br>In all cases, the value of the last expression in a script provides the script's value. In a multi-expression script, all but the last expression must assign a value to a variable. The last expression can as well, but doesn't need to as it's value is assumed to be the used as the return value.</br><h1><p id="Values">Values</p></h1>
+
+-Value types are concretely specified, or numeric if not.</br>-All numerical values are floats.</br>-Boolean values such as actor flags are converted to a float value of either 0.0 or 1.0 for values of false or true respectively.</br>-For boolean tests, a float value equivalent to 0.0 is false, and anything not equal to 0.0 is true.</br>-For array indices, floats are c-style cast to ints, and clamped at zero for negative values or wrapped by the array size for large values.</br>-Other supported types are textures, materials, and geometry where they make sense (such as render controllers).</br>-Errors generally return a value of 0.0.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Variables">Variables</p></h1>
+
+There are several domains a variable may belong to:</br><h2>Parameters</h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Domain</th> <th style="border-style:solid; border-width:3;">Scope</th> <th style="border-style:solid; border-width:3;">Example</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">Temp</td>
+<td style="border-style:solid; border-width:3; padding:7px">Current expression</td>
+<td style="border-style:solid; border-width:3; padding:7px">Temp.foo = Math.sin(global.anim_time);</br>return Temp.foo * Temp.foo;</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">geometry</td>
+<td style="border-style:solid; border-width:3; padding:7px">Current render controller</td>
+<td style="border-style:solid; border-width:3; padding:7px">"geometry": "array.geos[query.is_sheared]"</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">material</td>
+<td style="border-style:solid; border-width:3; padding:7px">Current render controller</td>
+<td style="border-style:solid; border-width:3; padding:7px">"materials": [ { "*": "material.default" }, { "leg*": "material.legs" } ]</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query</td>
+<td style="border-style:solid; border-width:3; padding:7px">Read-only values, usually related to current entity</td>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_baby</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">texture</td>
+<td style="border-style:solid; border-width:3; padding:7px">Current render controller</td>
+<td style="border-style:solid; border-width:3; padding:7px">"textures": ["array.skins[query.is_saddled]"]</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">variable</td>
+<td style="border-style:solid; border-width:3; padding:7px">Current entity</td>
+<td style="border-style:solid; border-width:3; padding:7px">variable.my_saved_var = variable.my_saved_var + 1;</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Keywords">Keywords</p></h1>
+
+All identifiers not in a scope listed below are reserved for future use</br><h2>Parameters</h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Keyword</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px"><float></td>
+<td style="border-style:solid; border-width:3; padding:7px">Numerical constant value</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">( )</td>
+<td style="border-style:solid; border-width:3; padding:7px">Parentheses for expression term evaluation control</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px"></td>
+<td style="border-style:solid; border-width:3; padding:7px">Brackets for array access</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.<function name></td>
+<td style="border-style:solid; border-width:3; padding:7px">Access to an entity's properties</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.<function></td>
+<td style="border-style:solid; border-width:3; padding:7px">Various math functions (see below)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.<parameter name></td>
+<td style="border-style:solid; border-width:3; padding:7px">Access to environment parameters</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">temp.<variable name></td>
+<td style="border-style:solid; border-width:3; padding:7px">Store an intermediate value for the duration of the current expression</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">variable.<variable name></td>
+<td style="border-style:solid; border-width:3; padding:7px">Store a value on the attached entity for later use</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">geometry.<texture name></td>
+<td style="border-style:solid; border-width:3; padding:7px">A reference to a texture named in the entity definition</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">material.<texture name></td>
+<td style="border-style:solid; border-width:3; padding:7px">A reference to a texture named in the entity definition</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">texture.<texture name></td>
+<td style="border-style:solid; border-width:3; padding:7px">A reference to a texture named in the entity definition</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">! && || < <= >= > == !=</td>
+<td style="border-style:solid; border-width:3; padding:7px">Logical operators</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">* / + -</td>
+<td style="border-style:solid; border-width:3; padding:7px">Basic math operators</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px"><test> ? <if true> : <if false></td>
+<td style="border-style:solid; border-width:3; padding:7px">Conditional operator</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">this</td>
+<td style="border-style:solid; border-width:3; padding:7px">The current value before executing the script (context sensitive)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">return</td>
+<td style="border-style:solid; border-width:3; padding:7px">For complex expressions, this evaluates the following statement and stops execution of the script, returns the value computed</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Math Functions">Math Functions</p></h1>
+
+<h2>Parameters</h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Function</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.abs(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Absolute value of <value></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.sin(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Sine (in degrees) of <value></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.cos(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Cosine (in degrees) of <value></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.exp(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Elevates Euler to the <value>'d power</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.ln(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Natural logarithm of <value></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.pow(<base>, <exponent>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Elevates <base> to the <exponent>'d power</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.sqrt(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Square root of <value></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.random(<low>, <high>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Random value between <low> and <high> inclusive</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.ceil(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Round <value> up to nearest integral number</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.round(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Round <value> to nearest integral number</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.trunc(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Round <value> towards zero</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.floor(<value>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Round <value> down to nearest integral number</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.mod(<value>, <denominator>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Return the remainder of value / denominator</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.min(<A>, <B>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Return lowest value of <A> or <B></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.max(<A>, <B>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Return highest value of <A> or <B></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.clamp(<value>, <min>, <max>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Clamp <value> to between <min> and <max> inclusive</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.lerp(<start>, <end>, <0_to_1>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Lerp from <start> to <end> via <0_to_1></br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">math.lerprotate(<start>, <end>, <0_to_1>)</td>
+<td style="border-style:solid; border-width:3; padding:7px">Lerp the shortest direction around a circle from <start> degrees to <end> degrees via <0_to_1></br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Global Parameters">Global Parameters</p></h1>
+
+<h2>Parameters</h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.anim_time</td>
+<td style="border-style:solid; border-width:3; padding:7px">Time since the current animation start</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.delta_time</td>
+<td style="border-style:solid; border-width:3; padding:7px">Time since the last time this animation was updated</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.key_frame_lerp_time</td>
+<td style="border-style:solid; border-width:3; padding:7px">Normalized time between current key frames as[0 - 1]</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.life_time</td>
+<td style="border-style:solid; border-width:3; padding:7px">Lifetime of the current entity</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">global.frame_alpha</td>
+<td style="border-style:solid; border-width:3; padding:7px">The render frame interpolation amount between AI frames(assuming the rendering is running at a different rate than the AI) as[0 - 1]</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Types, Values, and Variables">Types, Values, and Variables</p></h1>
+
+In general, all expression values are floats. In render controllers, some expressions result in a texture or material depending on the context. All array index expressions are processed as floats, and cast to integers when performing the final lookup into the array.Positive array indices wrap by the size of the array.Negative array indices clamp to 0.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Simple vs Complex Expressions">Simple vs Complex Expressions</p></h1>
+
+<h2></h2>
+
+A simple expression is a single statement, the value of which is returned to the system that evaluated the expression. eg:</br><h3></h3>
+<br / ><textarea readonly="true" cols="34" rows="2">
+math.sin(global.anim_time * 1.23)
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+A complex expression is one with multiple statements, each ending in a ';'. Each statement is evaluated in order. In the current implementation, the last statement requires the use of the return keyword and defines the resulting value of the expression.eg:</br><h3></h3>
+<br / ><textarea readonly="true" cols="69" rows="4">
+temp.my_temp_var = Math.sin(global.anim_time * 1.23);
+temp.my_other_temp_var = Math.cos(global.life_time + 2.0);
+return temp.my_temp_var * temp.my_temp_var + temp.my_other_temp_var;
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+Note that in a simple expression, ';' is not allowed, whereas in a complex expression, each statement requires a ';' including the last.</br><a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<br><br>
+
+<h1><p id="Domain Examples">Domain Examples</p></h1>
+
+<h1><p id="Entity Definition Scripts">Entity Definition Scripts</p></h1>
+
+In the definition file there is a section for pre-computing values. These are executed immediately before animation and render controllers are processed, and stored in the entity. The purpose is to pre-compute any expensive and complex values you may want to reuse in your scripts, long-living index variable updates, or generally any one-off computation per render tick.</br><h2></h2>
+<br / ><textarea readonly="true" cols="87" rows="7">
+"scripts": {
+    "pre_animation": [
+     "variable.my_constant = (Math.cos(global.anim_pos * 38.17) * global.anim_speed;",
+      "variable.my_constant2 = Math.exp(1.5);",
+    ]
+  },
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Animation and Animation Controller Files">Animation and Animation Controller Files</p></h1>
+
+These are always numerical operations to control which animations are playing and how to animate bones. "variable.<variable name>" and "query.<function name>" refers to the entity currently being rendered.They have access to everything in the language except material, texture, and geometry types.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Render Controllers">Render Controllers</p></h1>
+
+There are a few different kinds of expressions here, where context implies what is allowed. As with animations, the entity accessors refer to the current entity, however depending on the context one also has access to materials, textures, and geometries.There are two sections in a render controller:</br>-Array definitions (optional)</br>-Resource usage (required)</br>The array definition section allows you to create arrays of resources by resource type if you so desire.These can then be referenced in the resource usage section.</br><h2>Parameters</h2>
+
+<h3></h3>
+<br / ><textarea readonly="true" cols="83" rows="30">
+{
+	"controller.render.<my render controller name>": {
+  // array definitions
+  "arrays": {
+   "materials": {
+    "Array.<array name>": ["Material.<material name>", "Array.<array name>, ...],
+    ...
+   },
+   "textures" : {
+    "Array.<array name>": ["Texture.<texture name>", "Array.<array name>", ...],
+    ...
+   },
+   "geometries" : {
+    "Array.<array name>": ["Geometry.<geometry name>", "Array.<array name>", ...],
+    ...
+   }
+  },
+  // resource usage
+  "geometry": "<geometry expression>",
+  "materials" : [
+   { <string regex>: "<material expression>" },
+   ...
+  ],
+  "textures" : [
+   "Array.<array name>[<numerical expression>]",
+    ...
+  ]
+ }
+}
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="Array Expressions">Array Expressions</p></h2>
+
+For each of the three resource types (materials, textures, and geometry), you can define an array of resources. The name of the resource is the nice-name from the definition file. Using materials as an example:</br><h3></h3>
+
+<h4></h4>
+<br / ><textarea readonly="true" cols="96" rows="11">
+  "arrays": {
+      "materials": {
+      "array.my_array_1": ["material.a", "material.b", "material.c"],
+       "array.my_array_2" : ["material.d", "material.e"],
+       "array.my_array_3" : ["array.my_array_1", "material.my_array_2"],
+       "array.my_array_4" : ["array.my_array_2", "material.my_array_3"],
+       "array.my_array_5" : ["array.my_array_1", "material.my_array_1", "material.my_array_4"],
+       "array.my_array_6" : ["array.my_array_1", "material.f"],
+       ...
+     }, 
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+Note that all elements of an array must be of the same type. eg: a texture array must only contain textures.</br></br>An array can reference any combination of zero or more arrays (including duplicates if desired) and/or zero or more materails (again, including duplicates if you like), and you can have as many arrays as you like, each with as many elements as you like.If an array includes arrays in its members, they do not need to be the same length.When indexing into an array in the resource usage section, you use numerical expressions.If the resulting number is negative, it will use zero as the index.Any non - negative index will converted to an integer, and will wrap based on the size of the array:</br><h4></h4>
+<br / ><textarea readonly="true" cols="51" rows="2">
+index = max(0, <expression_result>) % <array_size>
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<h2><p id="Resource Expression">Resource Expression</p></h2>
+
+A resource expression must return a single resource of a specific type depending on the context. </br>For example, in the "geometry" section, you must produce an expression that will result in a single geometry. Some examples:</br><h3></h3>
+Always use a specific geometry<br / ><textarea readonly="true" cols="30" rows="2">
+"geometry": "geometry.my_geo"
+</textarea> </br>
+Cycle through an array of geometries at a rate of one per second<br / ><textarea readonly="true" cols="52" rows="2">
+"geometry": "array.my_geometries[global.anim_time]"
+</textarea> </br>
+Pick a geo based on an entity flag<br / ><textarea readonly="true" cols="68" rows="2">
+"geometry": "query.is_sheared ? geometry.sheared : geometry.woolly"
+</textarea> </br>
+Use specific geo when sleeping, otherwise flip through an array based on a cosine curve, using index zero for almost half the time while the cosine curve is negative<br / ><textarea readonly="true" cols="128" rows="2">
+"geometry": "query.is_sleeping ? geometry.my_sleeping_geo : array.my_geos[math.cos(global.anim_time * 12.3 + 41.9) * 10 + 0.6]"
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="Resource Sections">Resource Sections</p></h2>
+
+<h3></h3>
+
+<h3><p id="Geometry">Geometry</p></h3>
+
+The geometry section specifies which geometry to use when rendering. As you can specify as many render controllers as you like in the definition file, a single render controller is only concerned with how to render a single geometry.Note that a geometry can be arbitrarily complex using any number of bones and polygons.</br><a href="#Index">Back to top</a><br><br>
+
+<h3><p id="Materials">Materials</p></h3>
+
+The materials section specifies how to map what material to what bone of the geometry. A single material is mapped to a whole bone. Material expressions are evaluated in the order listed. The first part of each statement is the name of the model part to apply the material to, and the second part is the material to use. The model part name can use * for wild - card matching of characters.For example : </br><h4></h4>
+
+<h6></h6>
+<br / ><textarea readonly="true" cols="100" rows="7">
+  "materials": [
+      { "*": "Material.default" },
+      { "TailA": "array.hair_colors[variable.hair_color]" },
+      { "Mane": "array.hair_colors[variable.hair_color]" },
+      { "*Saddle*": "variable.is_leather_saddle ? material.leather_saddle : material.iron_saddle" }
+    ],
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+-This will start by applying Material.default to all model parts.</br>-Next, it will set the material on a model part named "TailA" to the result of the expression "Array.hairColors[variable.hair_color]". This will look up some previously created variable on the entity named hair_color and use that to index into a material array called "array.hair_colors" defined in this render controller. This will overwrite the Material.default material set in the line above.</br>-Third, it will look up the same material as the expression is identical, and apply it to the "Mane" model part.</br>-Lastly, if will find any model part starting with, ending with, or containing "Saddle" (case sensitive) and change its material to either material.leather_saddle or material.iron_saddle depending on the previously set entity variable variable.is_leather_saddle.</br><a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<br><br>
+
+<br><br>
+
+<br><br>
+
+<h1><p id="Query Functions">Query Functions</p></h1>
+
+Query Functions are boolean expressions that allow you to query for values owned by the engine under different circumstances. They can be used in MoLang expressionsUseful for controlling things like changing positions, textures, animations, etc if a mob is a baby. For example:</br><h2></h2>
+<br / ><textarea readonly="true" cols="79" rows="2">
+"position": [ 0.0, "query.is_baby ? -8.0 : 0.0", "query.is_baby ? 4.0 : 0.0" ]
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="List of Entity Flags">List of Entity Flags</p></h1>
+
+<h2></h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_climb</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is able to climb</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_damage_nearby_mobs</td>
+<td style="border-style:solid; border-width:3; padding:7px">Set by the player's spin attack using the Trident</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_fall_through_scaffolding</td>
+<td style="border-style:solid; border-width:3; padding:7px">Set when the player is able to fall through scaffolding, for example when flying or descending in scaffolding</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_fly</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is able fly</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_power_jump</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob can power jump(added with the minecraft : can_power_jump component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_rider_pick</td>
+<td style="border-style:solid; border-width:3; padding:7px">This is set by the "rider_can_interact" Parameter of the minecraft : rideable component.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_show_name</td>
+<td style="border-style:solid; border-width:3; padding:7px">This flag is set is the entity can show a name tag</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_swim</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is able to swim</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.can_walk</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is able to walk</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.ground_speed</td>
+<td style="border-style:solid; border-width:3; padding:7px">Entity speed in meters</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_angry</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is currently angry(i.e.wolves that been hit, zombie pigman once hit).Added via the minecraft : angry component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_baby</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is a baby</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_breathing</td>
+<td style="border-style:solid; border-width:3; padding:7px">if false, HUD bubbles render(water only)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_bribed</td>
+<td style="border-style:solid; border-width:3; padding:7px">Added when the mob is bribed(added through the minecraft : bribable component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_casting</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is casting a spell. (i.e.Evoker animation of arms in air and to have particles play next to its hands)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_charged</td>
+<td style="border-style:solid; border-width:3; padding:7px">This is set on a mob by the charge_charged_trigger parameter on the minecraft : behavior.ranged_attack component(i.e.the blaze's fireball attack)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_charging</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is using a charge attack(i.e.the vex's charge attack)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_chested</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the Mob has a chest on them(i.e.Horses and Donkey chests)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_critical</td>
+<td style="border-style:solid; border-width:3; padding:7px">When a critical attach is achieved(i.e.when the player firs a fully charged bow or gets a critical melee attach this causes the particles to play</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_dancing</td>
+<td style="border-style:solid; border-width:3; padding:7px">When a mob is dancing(i.e.used by parrots to indicate they should dance)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_eating</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the mob is eating(i.e.When horses are fed hay or pandas eating)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_elder</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the Mob is an elder version(only used on Elder Guardian)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_fire_immune</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the mob has minecraft : fire_immune component or the fire resistance potion applied</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_gliding</td>
+<td style="border-style:solid; border-width:3; padding:7px">Player is gliding(using elytra)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_idling</td>
+<td style="border-style:solid; border-width:3; padding:7px">Used when the Agent is idling</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_ignited</td>
+<td style="border-style:solid; border-width:3; padding:7px">If a mob is ignited.Added through the is_ignited and explode components</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_in_love</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is in its "Love" state by being fed it's tempt item</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_in_scaffolding</td>
+<td style="border-style:solid; border-width:3; padding:7px">Managed by the minecraft : scaffolding_climber component for when a mob is in scaffolding</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_in_transition_sitting</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the mob is currently transitioning from sitting or standing(i.e.Pandas when randomly sitting or snacking)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_in_water</td>
+<td style="border-style:solid; border-width:3; padding:7px">Is entity in water</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_interested</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is attracted to food the player is holding food they like(added via the minecraft : behavior.beg.) (i.e.tamed wolf sits and turn its head)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_invisible</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is invisible / affected by Invisibility potion effect</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_laying_down</td>
+<td style="border-style:solid; border-width:3; padding:7px">Managed by the minecraft : behavior.lay_down goal(i.e.lazy pandas)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_laying_egg</td>
+<td style="border-style:solid; border-width:3; padding:7px">If the turtle is laying an egg</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_leashed</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob currently has a leash on it.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_lingering</td>
+<td style="border-style:solid; border-width:3; padding:7px">Used on potions that are thrown to know it creates a lingering effect.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_moving</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is currently swimming through water</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_onfire</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is on fire</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_orphaned</td>
+<td style="border-style:solid; border-width:3; padding:7px">Pets that have lost their owners.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_over_scaffolding</td>
+<td style="border-style:solid; border-width:3; padding:7px">Managed by the minecraft : scaffolding_climber component for when a mob is over scaffolding</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_powered</td>
+<td style="border-style:solid; border-width:3; padding:7px">If mob is charged(i.e.Creeper's blue shield). Added via minecraft:charged component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_pregnant</td>
+<td style="border-style:solid; border-width:3; padding:7px">Set by some turtle behavior goals.Used to make pregnant turtles render larger</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_resting</td>
+<td style="border-style:solid; border-width:3; padding:7px">Pet sleeping with its owner or boat is resting</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_riding</td>
+<td style="border-style:solid; border-width:3; padding:7px">Player / Mob is riding another Mob</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_rolling</td>
+<td style="border-style:solid; border-width:3; padding:7px">Set by the minecraft : behavior.roll goal(i.e.baby or playful pandas)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_saddled</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob has a saddle on its back(i.e.pigs and horses)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_scared</td>
+<td style="border-style:solid; border-width:3; padding:7px">Managed by the minecraft : behavior.scared goal for when the mob is scared(i.e.scared pandas)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_shaking</td>
+<td style="border-style:solid; border-width:3; padding:7px">When Mobs shake off water(i.e.Wolves shaking off water when wet from swimming / rain</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_sheared</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob has been sheared.Set with the minecraft : sheared component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_sitting</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is currently sitting(i.e.dogs and cats)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_sneaking</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is Sneaking(i.e.players and ocelots)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_sneezing</td>
+<td style="border-style:solid; border-width:3; padding:7px">Set by the minecraft : behavior.sneeze goal when the mob is sneezing</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_sprinting</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is Sprinting</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_stackable</td>
+<td style="border-style:solid; border-width:3; padding:7px">Used on minecarts and boats so that they don't collide through each other. Set via minecraft:stackable component</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_standing</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is stomping(i.e.zombie's minecraft:behavior.stomp_turtle_egg, or Horses and the player jumping )</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_swimming</td>
+<td style="border-style:solid; border-width:3; padding:7px">True if the Mob is currently swimming</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_tamed</td>
+<td style="border-style:solid; border-width:3; padding:7px">If Mob is currently tamed(i.e.Dogs use this to draw their collars)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_tempted</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is tempted by a food item</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_transforming</td>
+<td style="border-style:solid; border-width:3; padding:7px">This flag is set by the minecraft : transformation component(i.e.Zombie villagers when they are transforming back to villagers)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_using_item</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is using an item(i.e.players eating food, or players and witches using potions)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_wall_climbing</td>
+<td style="border-style:solid; border-width:3; padding:7px">Mob is currently climbing a wall(i.e.spiders)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_wasd_controlled</td>
+<td style="border-style:solid; border-width:3; padding:7px">When the mob is being controller by a player riding it</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+

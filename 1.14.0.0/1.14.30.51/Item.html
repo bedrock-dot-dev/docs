@@ -1,0 +1,90 @@
+<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>ITEM DOCUMENTATION </br>Version: 1.14.30.51</h1>
+This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
+<h2><p id="Index">Index</p></h2>
+<table border="1">
+<tr> <th><a href="#Overview">Overview</a></th> </tr>
+<tr> <td> <a href="#Item Components"> Item Components</a> </tr> </td>
+<tr> <td> <a href="#Items"> Items</a> </tr> </td>
+</table>
+<a href="#Index">Back to top</a>
+<h1><p id="Overview">Overview</p></h1>
+
+Items are setup in Json files under the behavior_packs, /'name of pack'/, items directory.</br><h1><p id="Item Components">Item Components</p></h1>
+
+Here is a list of all item components and their settings.</br><h2>Item Component Settings:</h2>
+<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12.0"</span><span class="token punctuation">,</span>
+<span class="token property">"minecraft:item"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:apple"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+ 
+  <span class="token property">"components"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"minecraft:max_damage"</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>          <span class="token comment">// max damage item has, this is used like item max health.</span>
+    <span class="token property">"minecraft:hand_equipped"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>    <span class="token comment">// is this a hand equipped item.</span>
+    <span class="token property">"minecraft:stacked_by_data"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>  <span class="token comment">// stacked by data aux value or not?</span>
+    <span class="token property">"minecraft:foil"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>             <span class="token comment">// foil or glint.</span>
+    <span class="token property">"minecraft:block"</span><span class="token operator">:</span> <span class="token punctuation">,</span>               <span class="token comment">// block name, leave blank for no block.</span>
+    <span class="token property">"minecraft:max_stack_size"</span><span class="token operator">:</span> <span class="token number">64</span><span class="token punctuation">,</span>      <span class="token comment">// max stack size.</span>
+    <span class="token property">"minecraft:use_duration"</span><span class="token operator">:</span> <span class="token number">32</span><span class="token punctuation">,</span>        <span class="token comment">// how long to use before item is done being used.</span>
+    <span class="token property">"minecraft:food"</span><span class="token operator">:</span> <span class="token punctuation">{</span> 
+      <span class="token property">"nutrition"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>                    <span class="token comment">// nutrition amount.</span>
+      <span class="token property">"saturation_modifier"</span><span class="token operator">:</span> <span class="token string">"low"</span>     <span class="token comment">// choose: poor, low, normal, good, max, supernatural.</span>
+      <span class="token property">"using_converts_to"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>            <span class="token comment">// after using,  item converts it to this item.</span>
+      <span class="token property">"on_use_action"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>                <span class="token comment">// 'chorus_teleport' or 'none'.</span>
+      <span class="token property">"on_use_range"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>                 <span class="token comment">// array of 3 ranges.</span>
+      <span class="token property">"cooldown_type"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>                <span class="token comment">// 'chorusfruit' or 'none'.</span>
+      <span class="token property">"cooldown_time"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>                <span class="token comment">// cooldown time in ticks.</span>
+      <span class="token property">"can_always_eat"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>               <span class="token comment">// can always eat this item? true or false.</span>
+      
+      <span class="token property">"effects"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">,</span>                      <span class="token comment">// effects.</span>
+         <span class="token punctuation">{</span> 
+           <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"regeneration"</span><span class="token punctuation">,</span>     <span class="token comment">// name of effect: regeneration, absorption, resistance, fire_resistance</span>
+            <span class="token property">"chance"</span><span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>                <span class="token comment">// float chance for effect to happen </span>
+            <span class="token property">"duration"</span><span class="token operator">:</span> <span class="token number">30</span><span class="token punctuation">,</span>               <span class="token comment">// int duration of effect </span>
+            <span class="token property">"amplifier"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>               <span class="token comment">// int amplifier</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>                                                
+          <span class="token punctuation">{</span>                                                 
+            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"absorption"</span><span class="token punctuation">,</span>                       
+            <span class="token property">"chance"</span> <span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>                               
+            <span class="token property">"duration"</span> <span class="token operator">:</span> <span class="token number">120</span><span class="token punctuation">,</span>                             
+            <span class="token property">"amplifier"</span> <span class="token operator">:</span> <span class="token number">3</span>                               
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>                                                
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>                                                     
+                                                           
+    <span class="token property">"minecraft:seed"</span><span class="token operator">:</span> <span class="token punctuation">{</span>                                  
+      <span class="token property">"crop_result"</span><span class="token operator">:</span> <span class="token string">"sweet_berry_bush"</span><span class="token punctuation">,</span>        <span class="token comment">// crop seed item result </span>
+      <span class="token property">"plant_at"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"grass"</span><span class="token punctuation">,</span><span class="token string">"dirt"</span><span class="token punctuation">,</span><span class="token string">"podzol"</span><span class="token punctuation">]</span> <span class="token comment">// valid blocks you can plant this item at.</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>                                                       
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Items">Items</p></h1>
+
+Represents a single item.'Input' items will burn and transform into items specified in 'output'.</br><h2>Item Example:</h2>
+<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12.0"</span><span class="token punctuation">,</span>
+<span class="token property">"minecraft:item"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:apple"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+ 
+  <span class="token property">"components"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"minecraft:use_duration"</span><span class="token operator">:</span> <span class="token number">32</span><span class="token punctuation">,</span>
+    <span class="token property">"minecraft:food"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"nutrition"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+      <span class="token property">"saturation_modifier"</span><span class="token operator">:</span> <span class="token string">"low"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
