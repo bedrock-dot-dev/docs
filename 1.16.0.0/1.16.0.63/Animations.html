@@ -1,0 +1,672 @@
+<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>ANIMATIONS DOCUMENTATION </br>Version: 1.16.0.63</h1>
+This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
+<h2><p id="Index">Index</p></h2>
+<table border="1">
+<tr> <th><a href="#Animation Controllers">Animation Controllers</a></th> </tr>
+<tr> <td> <a href="#"> </a> </tr> </td>
+<tr> <td> <a href="#State Blending"> State Blending</a> </tr> </td>
+<tr> <td> <a href="#State Transitions"> State Transitions</a> </tr> </td>
+<tr> <td> <a href="#States"> States</a> </tr> </td>
+<tr> <th><a href="#Channels (Rotation, Position, Scale)">Channels (Rotation, Position, Scale)</a></th> </tr>
+<tr> <th><a href="#Entity Animation Format Examples">Entity Animation Format Examples</a></th> </tr>
+<tr> <th><a href="#Getting Started">Getting Started</a></th> </tr>
+<tr> <td> <a href="#Adding Animations"> Adding Animations</a> </tr> </td>
+<tr> <td> <a href="#Animation Hierarchy"> Animation Hierarchy</a> </tr> </td>
+<tr> <td> <a href="#Upgrade from v1.7 Beta to v1.8"> Upgrade from v1.7 Beta to v1.8</a> </tr> </td>
+<tr> <td> <a href="#Upgrade from v1.8 Beta to v1.10"> Upgrade from v1.8 Beta to v1.10</a> </tr> </td>
+<tr> <th><a href="#Key Frames">Key Frames</a></th> </tr>
+<tr> <td> <a href="#Interpolation"> Interpolation</a> </tr> </td>
+<tr> <th><a href="#Names">Names</a></th> </tr>
+<tr> <th><a href="#Overview">Overview</a></th> </tr>
+<tr> <th><a href="#Render Controllers">Render Controllers</a></th> </tr>
+<tr> <td> <a href="#Examples"> Examples</a> </tr> </td>
+<tr> <td> <a href="#Getting Started"> Getting Started</a> </tr> </td>
+<tr> <th><a href="#Transforms">Transforms</a></th> </tr>
+</table>
+<a href="#Index">Back to top</a>
+<h1><p id="Animation Controllers">Animation Controllers</p></h1>
+
+Animation controllers decide which animations to play when.  Each controller contains a list of states that play one or more animations, each of which can be blended by a Molang expression if so desired.  Controller files are stored as JSON in the animation_controllers folder</br><h2></h2>
+Animation Controller Format:<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.10.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"animation_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.animation.sheep.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"query.modified_move_speed"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> <span class="token property">"grazing"</span><span class="token operator">:</span> <span class="token string">"query.is_grazing"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"grazing"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"grazing"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"query.all_animations_finished"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="State Blending">State Blending</p></h1>
+
+If you would like there to be a cross-fade between states when transitioning, simply set "blend_transition" to the time you would like the system to take in blending between the two states.  This is done as a simple lerp between the two states over the time specified.</br><h2></h2>
+For example: <br / ><pre class="language-json">
+<span class="token property">"controller.animation.tiger.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"base_pose"</span><span class="token punctuation">,</span> <span class="token string">"walk"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> <span class="token property">"angry"</span><span class="token operator">:</span> <span class="token string">"query.is_angry"</span> <span class="token punctuation">}</span> <span class="token comment">// transition to angry state if query.is_angry returns true</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"blend_transition"</span><span class="token operator">:</span> <span class="token number">0.2</span>          <span class="token comment">// when transitioning away from this state, cross-fade over 0.2 seconds</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"angry"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"roar"</span><span class="token punctuation">,</span> <span class="token string">"extend_claws"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"query.any_animation_finished"</span> <span class="token punctuation">}</span> <span class="token comment">// transition back to default state when either the roar animation or extend_claws animation finishes</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="State Transitions">State Transitions</p></h1>
+
+A state can specify any number of transition scripts, listed in order.  Each transition has a target state to switch to, and a script for whether it should switch or not.  For each transition in order, evaluate the script, and if it returns non-zero, switch to the specified state immediately.  NOTE: Only one transition will be processed per frame.</br><h2></h2>
+<br / ><pre class="language-json">
+<span class="token property">"&lt;controller_name>"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"&lt;state_name>"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      ...
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token comment">// Evaluate the below expressions in order.</span>
+        <span class="token comment">// The first to return non-zero is the state to transition to.</span>
+        <span class="token comment">// If all are zero, then don't transition.</span>
+        <span class="token punctuation">{</span> <span class="token string">"&lt;target_state_name_A>"</span><span class="token punctuation">,</span> <span class="token string">"&lt;expression>"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span> <span class="token string">"&lt;target_state_name_B>"</span><span class="token punctuation">,</span> <span class="token string">"&lt;expression>"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        ...
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  ...
+<span class="token punctuation">}</span>
+</pre> </br>
+For example: <br / ><pre class="language-json">
+<span class="token property">"controller.animation.tiger.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"base_pose"</span><span class="token punctuation">,</span> <span class="token string">"walk"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> <span class="token property">"angry"</span><span class="token operator">:</span> <span class="token string">"query.is_angry"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token comment">// transition to angry state if query.is_angry returns true</span>
+        <span class="token punctuation">{</span> <span class="token property">"tired"</span><span class="token operator">:</span> <span class="token string">"variable.is_tired"</span> <span class="token punctuation">}</span> <span class="token comment">// transition to tired state if variable.is_tired returns true</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"angry"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"roar"</span><span class="token punctuation">,</span> <span class="token string">"extend_claws"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"query.any_animation_finished"</span> <span class="token punctuation">}</span> <span class="token comment">// transition back to default state when either the roar animation or extend_claws animation finishes</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"tired"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"yawn"</span><span class="token punctuation">,</span> <span class="token string">"stretch"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span> <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"query.all_animation_finished"</span> <span class="token punctuation">}</span> <span class="token comment">// transition back to default state when the yawn and stretch animations have both finished</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="States">States</p></h1>
+
+A state defines a group of animations to process (each of which can have it's own blend value). Each state has an optional variables section, listing any number of variables that referenced animations can use.  Each state also has one or more animations, using the name given in the entity's definition json.</br><h2></h2>
+
+<h2><p id="State Variables">State Variables</p></h2>
+
+Variables are either set by the game or by a user defined script that can be found in the entity definition json found in definitions/entity/<entity_name>.json.  Variables have their value set by a Molang Expression.  They can also have their value remapped via a linearly-interpolated curve.</br><h3></h3>
+
+<h3><p id="For Example:">For Example:</p></h3>
+
+This defines a controller with a single state.  It will create a variable `variable.ground_speed_curve` that lives on the entity only while processing the animation controller for that frame.  It will take the value of `query.ground_speed`, then remap it to between 0.2 and 0.7 based on the value of `query.ground_speed` going from 0.0 to 1.0It will play one animation walk that will blend from 0.0 to 1.0 as the ground speed increases from stopped to 2.3 m/s.  The remap curve can have any number of entries.  The animation controller will then play the entity-referenced `wiggle_nose` animations, followed by the `walk` animation, scaling the latter by the value of `variable.ground_speed_curve`</br><h4></h4>
+<br / ><pre class="language-json">
+```
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.10.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"animation_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.animation.sheep.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"variables"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"ground_speed_curve"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+              <span class="token property">"input"</span><span class="token operator">:</span> <span class="token string">"query.ground_speed"</span><span class="token punctuation">,</span>
+              <span class="token property">"remap_curve"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token property">"0.0"</span><span class="token operator">:</span> <span class="token number">0.2</span><span class="token punctuation">,</span>
+                <span class="token property">"1.0"</span><span class="token operator">:</span> <span class="token number">0.7</span>
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token string">"wiggle_nose"</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"variable.ground_speed_curve"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+```
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<h2><p id="User-Defined Script Example">User-Defined Script Example</p></h2>
+
+This script will set foo to the result of the sine of query.life_time to later be used in the animation or animation controller.</br></br>Note: "pre_animation" tells the script to figure out the values of those variables once a frame, before animation occurs, so that the animation can use those values in their own formulas. If a variable didn't exist, it will create a new variable and its default value will be 0.0</br><h3>Parameters</h3>
+
+Note in this example that because foo is equal to a sin wave, that its values will range from -1 to 1.  This means that you will have a period from 0 to -1 to 0 where only "base_pose" will play and then an equal amount of time where Walk will play on top of base_pose as foo goes from 0 to 1 back to 0.  Base_pose will have a blend value of 1.0.</br><h4></h4>
+<br / ><pre class="language-json">
+<span class="token property">"controller.animation.tiger.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token comment">//animations are ADDITIVE unless otherwise specified</span>
+        <span class="token comment">//in this case, base_pose will always be playing in the default state</span>
+        <span class="token comment">//walk will play as well if Entity.foo is greater than 0.0</span>
+        <span class="token string">"base_pose"</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span> <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"variable.foo > 0.0"</span> <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h3><p id="In definitions\entity\tiger.json:">In definitions\entity\tiger.json:</p></h3>
+
+<h4></h4>
+<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"custom:tiger"</span><span class="token operator">:</span><span class="token punctuation">{</span>
+    <span class="token property">"scripts"</span><span class="token operator">:</span><span class="token punctuation">{</span>
+      <span class="token property">"pre_animation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"variable.foo = math.sin(query.life_time)"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<br><br>
+
+<br><br>
+
+<h1><p id="Channels (Rotation, Position, Scale)">Channels (Rotation, Position, Scale)</p></h1>
+
+The engine tracks the animation of rotation, position, and scale separately.  Within a channel, one or more key frames are specified at arbitrary times, in seconds, from the start of the animation.  If no key frames are specified, a single key frame is created at t=0.0 and all channel data is stored within that key frame.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Entity Animation Format Examples">Entity Animation Format Examples</p></h1>
+
+The json format for an animation is as follows.  Note Matching the geometry format, units are in 1/16ths of meters.</br><h2></h2>
+<br / ><pre class="language-json">
+
+```
+&lt;animation_name>"<span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token comment">// optional</span>
+  <span class="token property">"loop"</span><span class="token operator">:</span> &lt;bool>                                       <span class="token comment">// default = false.  Should the animation loop back to t=0.0 when it finishes?</span>
+  <span class="token property">"blend_weight"</span><span class="token operator">:</span> &lt;expression>                         <span class="token comment">// default = </span><span class="token string">"1.0"</span>.  How much this animation is blended with the others.  <span class="token number">0.0</span> = off.  <span class="token number">1.0</span> = fully apply all transforms.  Can be an expression - see the Animation Controller section below
+  <span class="token property">"animation_length"</span><span class="token operator">:</span> &lt;float>                          <span class="token comment">// default = time of last key frame.  At what time does the system consider this animation finished?</span>
+  <span class="token property">"override_previous_animation"</span><span class="token operator">:</span> &lt;bool>                <span class="token comment">// default = false.  Should the animation pose of the bone be set to the bind pose before applying this animation, thereby overriding any previous animations to this point?</span>
+
+  <span class="token comment">// required</span>
+  <span class="token property">"bones"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+    <span class="token property">"&lt;bone_name>"</span><span class="token operator">:</span> <span class="token punctuation">{</span>                                   <span class="token comment">// must match the name of the bone specified in the geometry skeleton</span>
+      <span class="token comment">// various flavours of setting data</span>
+      <span class="token comment">// omitting a channel skips that channel for this animation of this bone</span>
+      <span class="token comment">// any number of floats below can be replaced by a string expression as described above; you don't have to replace all the floats on a line with expressions, only the ones you want to be expression-based</span>
+      <span class="token property">"position"</span><span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>                                 <span class="token comment">// set x, y, and z to 1</span>
+      <span class="token property">"position"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                               <span class="token comment">// set x, y, and z to 1</span>
+      <span class="token property">"position"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">2.0</span><span class="token punctuation">,</span> <span class="token number">3.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                     <span class="token comment">// set x=1 , y=2 , and z=3</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token number">45.0</span><span class="token punctuation">,</span>                                <span class="token comment">// set x, y, and z to 45 degrees</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">45.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                              <span class="token comment">// set x, y, and z to 45 degrees</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">30.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">45.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                   <span class="token comment">// set x, y, and z to the respective values (in degrees)</span>
+      <span class="token comment">// note: only uniform scaling is supported at this time</span>
+      <span class="token property">"scale"</span><span class="token operator">:</span> <span class="token number">2.0</span><span class="token punctuation">,</span>                                    <span class="token comment">// scales the bone by 2.0</span>
+      <span class="token property">"scale"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">2.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                                  <span class="token comment">// scales the bone by 2.0</span>
+      <span class="token comment">// Key frame data is described below</span>
+      <span class="token comment">// Note that any of the above styles of values will work for </span><span class="token string">"pre"</span> and <span class="token string">"post"</span><span class="token punctuation">,</span> and <span class="token string">"pre"</span> does not have to have the same format as <span class="token string">"post"</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"0.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"0.1667"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">-80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"0.333"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+      <span class="token comment">// For discontinuous channel curve, you can specify a different value when interpolating to/from this key frame</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"0.3"</span><span class="token operator">:</span> <span class="token punctuation">{</span>                                       <span class="token comment">// the key field is the time stamp for this key frame: the value can be any of the above examples</span>
+        <span class="token property">"pre"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">30.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">45.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                      <span class="token comment">// when interpolating towards this key frame from the previous, use this value</span>
+        <span class="token property">"post"</span><span class="token operator">:</span> <span class="token string">"180.0 * Math.Sin(global.key_frame_lerp_time)"</span>  <span class="token comment">// when at interpolating away from this key frame to the next, use this value</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      <span class="token comment">// another example</span>
+      <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"0.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                       <span class="token comment">// start at an x rotation of 80 degrees</span>
+        <span class="token property">"0.4"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"pre"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                       <span class="token comment">// stay at 80 until 0.4 seconds have elapsed</span>
+        <span class="token property">"post"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>                       <span class="token comment">// discontinuously pop the x rotation to 0.0 degrees</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"0.8"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">-80.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span>                       <span class="token comment">// using the previous frame's lerp mode, lerp to a x rotation of -80 degrees by 0.8 seconds</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+```
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Getting Started">Getting Started</p></h1>
+
+<h1><p id="Adding Animations">Adding Animations</p></h1>
+
+<h2></h2>
+
+<h2><p id="Animation Controller">Animation Controller</p></h2>
+
+One needs to be able to control how animations are played, when, and how they interact with other animations.  to group animations While a lot of this can be managed in the entity definition `scripts/animate` section, animation controllers give you the functionality of a state machine into states and control them as a block.  Animations in an animation controller state can be animation controllers themselves, allowing for arbitrarily complex animation hierarchies.</br><h3></h3>
+Here's a sample animation controller<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.10.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"animation_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.animation.my_mob.move"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"initial_state"</span><span class="token operator">:</span> <span class="token string">"moving"</span><span class="token punctuation">,</span>
+      <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"moving"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token string">"wag_tail"</span><span class="token punctuation">,</span>
+            <span class="token string">"wiggle_ears"</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"query.modified_move_speed"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> <span class="token property">"grazing"</span><span class="token operator">:</span> <span class="token string">"query.is_grazing"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"grazing"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"grazing"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">"transitions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+            <span class="token punctuation">{</span> <span class="token property">"moving"</span><span class="token operator">:</span> <span class="token string">"query.all_animations_finished"</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="Animations">Animations</p></h2>
+
+At the beginning of each frame, the skeleton is reset to its default pose from its geometry definition and then animations are applied per-channel-additively in order.  Note that the channels (x, y, and z) are added separately across animations first, then converted to a transform once all animations have been cumulatively applied.</br><h3></h3>
+
+<h3><p id="Animation data can be either raw data:">Animation data can be either raw data:</p></h3>
+
+<h4></h4>
+By default, rotations are in degrees, in euler X-then-Y-then-Z format<br / ><pre class="language-json">
+<span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">90.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h3><p id="or a run-time interpreted script:">or a run-time interpreted script:</p></h3>
+
+<h4></h4>
+<br / ><pre class="language-json">
+<span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"cos(query.anim_pos * 38.17) * 80.0 * query.anim_speed"</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">]</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h3></h3>
+Here is an example from quadruped.animation.json in the vanilla resource pack's animation folder:<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"animation.quadruped.walk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"anim_time_update"</span><span class="token operator">:</span> <span class="token string">"query.modified_distance_moved"</span><span class="token punctuation">,</span>
+      <span class="token property">"loop"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+      <span class="token property">"bones"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"leg0"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"Math.cos(query.anim_time * 38.17) *  80.0"</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span> <span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"leg1"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"Math.cos(query.anim_time * 38.17) * -80.0"</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span> <span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"leg2"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"Math.cos(query.anim_time * 38.17) * -80.0"</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span> <span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"leg3"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"Math.cos(query.anim_time * 38.17) *  80.0"</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token number">0.0</span> <span class="token punctuation">]</span> <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<br><br>
+
+<h2><p id="Entity Definition">Entity Definition</p></h2>
+
+In order to define what animations an entity has, you must add both an `animations` and a `scripts/animate` section to an entity's entity definition file.</br><h3>Parameters</h3>
+
+Here you can see the entity definition for pig.json:This means you will not see the move animation in the pig.json animation file either.  If you would like to make a custom pig walk you can change this line to point to your custom animation.</br></br>Animations are specified as a short name, followed by their full resource name.  The short name is used in animation controllers and the `scripts/animate` list, while the long name is used in the animations file.</br></br>In the `scripts/animate` section, you list the animations to play and in which order.  You can either specify an animation directly, or specify a blend expression.</br><h4></h4>
+<br / ><pre class="language-json">
+<span class="token punctuation">{</span>
+  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.10.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"minecraft:client_entity"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:pig"</span><span class="token punctuation">,</span>
+      <span class="token property">"min_engine_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+      <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"pig"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"textures/entity/pig/pig"</span><span class="token punctuation">,</span>
+        <span class="token property">"saddled"</span><span class="token operator">:</span> <span class="token string">"textures/entity/pig/pig_saddle"</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"default"</span><span class="token operator">:</span> <span class="token string">"geometry.pig.v1.8"</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"setup"</span><span class="token operator">:</span> <span class="token string">"animation.pig.setup"</span><span class="token punctuation">,</span>
+        <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"animation.quadruped.walk"</span><span class="token punctuation">,</span>
+        <span class="token property">"look_at_target"</span><span class="token operator">:</span> <span class="token string">"animation.common.look_at_target"</span><span class="token punctuation">,</span>
+        <span class="token property">"baby_transform"</span><span class="token operator">:</span> <span class="token string">"animation.pig.baby_transform"</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"animate"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token string">"setup"</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"walk"</span><span class="token operator">:</span> <span class="token string">"query.modified_move_speed"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token string">"look_at_target"</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"baby_transform"</span><span class="token operator">:</span> <span class="token string">"query.is_baby"</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"controller.render.pig"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"spawn_egg"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"texture"</span><span class="token operator">:</span> <span class="token string">"spawn_egg"</span><span class="token punctuation">,</span>
+        <span class="token property">"texture_index"</span><span class="token operator">:</span> <span class="token number">2</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<br><br>
+
+<h1><p id="Animation Hierarchy">Animation Hierarchy</p></h1>
+
+Animations are channel based (rotation, position, or scale), and within that, they are key-framed:</br></br>EntityAnimation: animation name</br>__BoneAnimation[]: bone name to animation for this animation</br>____AnimationChannel[]: rotation, scale, or translation to animate</br>______KeyFrame[]: the value for the channel to be at, at a specific time</br></br>All of the above concepts are described in a detailed, bottom-up approach below</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Upgrade from v1.7 Beta to v1.8">Upgrade from v1.7 Beta to v1.8</p></h1>
+
+There have been few changes as we clean things up based on feedback and as we push the tech along the road map.To upgrade previous scripts, you'll want to do the following steps to all of your Molang scripts in the order listed:</br>1) entity.flags.foo --> query.foo</br>2) entity.member.foo --> query.foo</br>3) entity.foo --> variable.foo</br>4) params.foo --> global.foo</br>5) The general rule is that 'query' represents read-only values from the entity the script is running on, and 'variable' represents read-write data created by the user.</br>6) We've adopted snake_case for all names of things.  You are welcome to use upper-case letters if you wish as we are case-insensitive, however we recommend snake_case in general.</br>7) Several variables previously set on mobs have been changed to use the query.foo format.  Look through the updated list below to see what has been added and changed.</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Upgrade from v1.8 Beta to v1.10">Upgrade from v1.8 Beta to v1.10</p></h1>
+
+The three major changes with 1.10 are</br>- the ability to have animations reference other animations in an arbitrarily deep hierarchy.</br>- the parameters section of animation controllers has been replaced with the `variables` section.</br>- in the entity definition file, animation controllers are now listed in the `animations` section, and a `scriptsnimate` section has been added to define which root animations to play.</br>The v1.8 file format is backwards-compatible with v1.10 so you don't _need_ to change anything (although we recommend refactoring your files in the spirit of v1.10 as there is a slight performance win with the new format, as well as it being simpler to understand.</br><a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<h1><p id="Key Frames">Key Frames</p></h1>
+
+A key frame defines two values for a channel-specific transform to a specific bone at a specified time, one as time approaches the key frame time, and the second from that key frame time onwards.</br>As such, when interpolating between two key frames, one can define the slope of the animation curve in either a continuous or discontinuous manner.</br><h1><p id="Interpolation">Interpolation</p></h1>
+
+Currently only linear interpolation is supported.  Key frame "pre" and "post" settings allow control of the interpolation curve at any key frame.</br><h2></h2>
+
+<h2><p id="Continuous Example">Continuous Example</p></h2>
+
+This example spins the bone "head" around the y axis 1 rotation in 1 second.</br>Note that because interpolation is linear, at .25 seconds the head will be rotated to 90 degrees.</br><h3></h3>
+<br / ><pre class="language-json">
+<span class="token property">"head"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"rotation"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"0.0"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"0.5"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"1.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="Discontinuous Example">Discontinuous Example</p></h2>
+
+Discontinuous just means that there won't be a smooth transition between key frames.  It is useful if you want something to happen immediately.</br>This example scales the bone "head":</br>1. From 0 to 0.5 seconds (in the "pre" tag), the head bone is set to its normal scale of 1 in all dimensions [X, Y, Z]</br>2. At 0.5 seconds, the bone will instantly scale up to 2 times its normal size</br>3. From 0.5 to 1 second ("post"), the bone will re-scale back to its normal size of scale of 1 in all dimensions</br></br>Note In the larger example above of the file format, "pre" and "post" can also be defined by a Molang expression that calculates that value at runtime, allowing you to have a mathematically defined curve instead of being purely linear.</br><h3></h3>
+<br / ><pre class="language-json">
+<span class="token property">"head"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"scale"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"0.5"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"pre"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"post"</span><span class="token operator">:</span> <span class="token number">2.0</span>
+    <span class="token punctuation">}</span>
+    <span class="token property">"1.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">1.0</span> <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<br><br>
+
+<h1><p id="Names">Names</p></h1>
+
+All names: animations, bones, states, etc, must all start with a letter and contain only alphanumerics, underscore, or period.  It is recommended to use names in all lower-case</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Overview">Overview</p></h1>
+
+The follows the current Minecraft JSON paradigms:</br>- Fields should be lower-case and use underscores (no spaces)</br>- All JSON files in the definitions directory and subtree will be read into and interpreted by the animation system</br><a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Render Controllers">Render Controllers</p></h1>
+
+The Render Controller needs an identifier and needs to follow the format of "controller.render.<name>".  This name needs to match the name set in the Client Entity Definitions JSON.</br></br>Render Controllers are a way for the player to determine what renders on the entity.  Players can set the geometry, materials, textures, and part visibility of the entity.  In addition to setting the keys directly, players can use arrays to have the entity choose between different options.</br><h1><p id="Examples">Examples</p></h1>
+
+<h2>Parameters</h2>
+
+<h3></h3>
+Example Array for geometry from the sheep JSON<br / ><pre class="language-json">
+<span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"geometries"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"Array.geos"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Geometry.default"</span><span class="token punctuation">,</span> <span class="token string">"Geometry.sheared"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"Array.geos[query.is_sheared]"</span><span class="token punctuation">,</span>
+
+</pre> </br>
+Example Array for materials from the spider JSON<br / ><pre class="language-json">
+<span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"Array.materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Material.default"</span><span class="token punctuation">,</span> <span class="token string">"Material.invisible"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Array.materials[query.is_invisible]"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span> 
+
+</pre> </br>
+Example Array for textures from the villager JSON<br / ><pre class="language-json">
+<span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"Array.skins"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Texture.farmer"</span><span class="token punctuation">,</span> <span class="token string">"Texture.librarian"</span><span class="token punctuation">,</span> <span class="token string">"Texture.priest"</span><span class="token punctuation">,</span> <span class="token string">"Texture.smith"</span><span class="token punctuation">,</span> <span class="token string">"Texture.butcher"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Array.skins[query.variant]"</span><span class="token punctuation">]</span>
+
+</pre> </br>
+Example with color for tinting of parts from Armor 1.0 render controller JSON:<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.render.armor.chest.v1.0"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"array.armor_material"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+              <span class="token string">"material.armor"</span><span class="token punctuation">,</span>
+              <span class="token string">"material.armor_enchanted"</span><span class="token punctuation">,</span>
+              <span class="token string">"material.armor_leather"</span><span class="token punctuation">,</span>
+              <span class="token string">"material.armor_leather_enchanted"</span>
+            <span class="token punctuation">]</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"array.armor_texture"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+              <span class="token string">"texture.leather"</span><span class="token punctuation">,</span>
+              <span class="token string">"texture.chain"</span><span class="token punctuation">,</span>
+              <span class="token string">"texture.iron"</span><span class="token punctuation">,</span>
+              <span class="token string">"texture.diamond"</span><span class="token punctuation">,</span>
+              <span class="token string">"texture.gold"</span>
+            <span class="token punctuation">]</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"geometry.armor"</span><span class="token punctuation">,</span>
+        <span class="token property">"materials"</span> <span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">{</span> <span class="token property">"body"</span><span class="token operator">:</span> <span class="token string">"array.armor_material[query.armor_material_slot(1)]"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"leftarm"</span><span class="token operator">:</span> <span class="token string">"array.armor_material[query.armor_material_slot(1)]"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"rightarm"</span><span class="token operator">:</span> <span class="token string">"array.armor_material[query.armor_material_slot(1)]"</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"part_visibility"</span> <span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"body"</span><span class="token operator">:</span> <span class="token string">"query.has_armor_slot(1)"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"leftarm"</span><span class="token operator">:</span> <span class="token string">"query.has_armor_slot(1)"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token punctuation">{</span> <span class="token property">"rightarm"</span><span class="token operator">:</span> <span class="token string">"query.has_armor_slot(1)"</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"color"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"r"</span><span class="token operator">:</span> <span class="token string">"query.armor_color_slot(1, 0)"</span><span class="token punctuation">,</span>
+          <span class="token property">"g"</span><span class="token operator">:</span> <span class="token string">"query.armor_color_slot(1, 1)"</span><span class="token punctuation">,</span>
+          <span class="token property">"b"</span><span class="token operator">:</span> <span class="token string">"query.armor_color_slot(1, 2)"</span><span class="token punctuation">,</span>
+          <span class="token property">"a"</span><span class="token operator">:</span> <span class="token string">"query.armor_color_slot(1, 3)"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"array.armor_texture[query.armor_texture_slot(1)]"</span><span class="token punctuation">,</span> <span class="token string">"texture.enchanted"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+Example with is_hurt_color from Creeper render controller JSON:<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.render.creeper"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"geometry"</span> <span class="token operator">:</span> <span class="token string">"Geometry.default"</span><span class="token punctuation">,</span>
+        <span class="token property">"materials"</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"textures"</span> <span class="token operator">:</span> <span class="token string">"Texture.default"</span><span class="token punctuation">,</span>
+        <span class="token property">"is_hurt_color"</span> <span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"r"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+          <span class="token property">"g"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+          <span class="token property">"b"</span><span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span>
+          <span class="token property">"a"</span><span class="token operator">:</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+Example with on_fire_color from Fireball render controller JSON:<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.render.fireball"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"geometry"</span> <span class="token operator">:</span> <span class="token string">"Geometry.default"</span><span class="token punctuation">,</span>
+        <span class="token property">"materials"</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"textures"</span> <span class="token operator">:</span> <span class="token string">"Texture.default"</span><span class="token punctuation">,</span>
+        <span class="token property">"on_fire_color"</span> <span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"r"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+          <span class="token property">"g"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+          <span class="token property">"b"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+          <span class="token property">"a"</span><span class="token operator">:</span> <span class="token number">0.0</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+Example with overlay_color from Wither Boss render controller JSON:<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"controller.render.wither_boss"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"Array.wither_state"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Texture.invulnerable"</span><span class="token punctuation">,</span> <span class="token string">"Texture.default"</span><span class="token punctuation">]</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token property">"geometry"</span> <span class="token operator">:</span> <span class="token string">"Geometry.default"</span><span class="token punctuation">,</span>
+        <span class="token property">"materials"</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"textures"</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Array.wither_state[variable.display_normal_skin]"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"overlay_color"</span> <span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"r"</span><span class="token operator">:</span> <span class="token string">"variable.is_invulnerable ? 1.0 : this"</span><span class="token punctuation">,</span>
+          <span class="token property">"g"</span><span class="token operator">:</span> <span class="token string">"variable.is_invulnerable ? 1.0 : this"</span><span class="token punctuation">,</span>
+          <span class="token property">"b"</span><span class="token operator">:</span> <span class="token string">"variable.is_invulnerable ? 1.0 : this"</span><span class="token punctuation">,</span>
+          <span class="token property">"a"</span><span class="token operator">:</span> <span class="token string">"variable.is_invulnerable ? query.overlay_alpha : this"</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+Example with part_visibility for turning on and off visibility of parts from Llama JSON:<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"controller.render.llama"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"Array.base"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Texture.creamy"</span><span class="token punctuation">,</span> <span class="token string">"Texture.white"</span><span class="token punctuation">,</span> <span class="token string">"Texture.brown"</span><span class="token punctuation">,</span> <span class="token string">"Texture.gray"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token property">"Array.decor"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Texture.decor_none"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_white"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_orange"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_magenta"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_light_blue"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_yellow"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_lime"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_pink"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_gray"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_silver"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_cyan"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_purple"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_blue"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_brown"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_green"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_red"</span><span class="token punctuation">,</span> <span class="token string">"Texture.decor_black"</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"Geometry.default"</span><span class="token punctuation">,</span> 
+    <span class="token property">"part_visibility"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"chest*"</span><span class="token operator">:</span> <span class="token string">"query.is_chested"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"Array.base[query.variant]"</span><span class="token punctuation">,</span>
+      <span class="token string">"Array.decor[variable.decor_texture_index]"</span><span class="token punctuation">,</span>
+      <span class="token string">"Texture.decor_none"</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+Material array example from Horse render controllers.  Saddle will override Mane, which will override TailA, etc.:<br / ><pre class="language-json">
+<span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> <span class="token property">"TailA"</span><span class="token operator">:</span> <span class="token string">"Material.horse_hair"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> <span class="token property">"Mane"</span><span class="token operator">:</span> <span class="token string">"Material.horse_hair"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> <span class="token property">"*Saddle*"</span><span class="token operator">:</span> <span class="token string">"Material.horse_saddle"</span> <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<h1><p id="Getting Started">Getting Started</p></h1>
+
+To begin create a new folder named "render_controllers" in the root of the Resource Pack you want to add the new Render Controller JSON inside.</br><h2></h2>
+Example render controllers JSON for the ocelot<br / ><pre class="language-json">
+<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
+<span class="token property">"render_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"controller.render.ocelot"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"arrays"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"Array.skins"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Texture.wild"</span><span class="token punctuation">,</span> <span class="token string">"Texture.black"</span><span class="token punctuation">,</span> <span class="token string">"Texture.red"</span><span class="token punctuation">,</span> <span class="token string">"Texture.siamese"</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"Geometry.default"</span><span class="token punctuation">,</span>
+    <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"textures"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Array.skins[query.variant]"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<br><br>
+
+<h1><p id="Transforms">Transforms</p></h1>
+
+- Order of operations: vertices are translated, rotated, then scaled.</br>- Animation data is assumed to be hierarchical, and is applied to a bone by name matching the bone name in the animation data to the targeted geometry's skeleton.</br>- Not every bone needs to be animated</br>- You can animate bones that don't exist in the targeted geometry (missing bones are ignored).</br>- For each of scale, rotation, position, one can set the fields individually or uniformly with a single value.  For example, these are equivalent.</br><h2></h2>
+<br / ><pre class="language-json">
+<span class="token property">"scale"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">2.0</span><span class="token punctuation">,</span> <span class="token number">2.0</span><span class="token punctuation">,</span> <span class="token number">2.0</span><span class="token punctuation">]</span>
+<span class="token property">"scale"</span><span class="token operator">:</span> <span class="token number">2.0</span>
+<span class="token property">"scale"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">2.0</span><span class="token punctuation">]</span>
+</pre> </br>
+<a href="#Index">Back to top</a><br><br>
+
