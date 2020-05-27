@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>ENTITY EVENTS DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>ENTITY EVENTS DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -12,124 +12,124 @@ This is documentation for a beta release of Minecraft. New features, components,
 <h1><p id="Animation Controller Events">Animation Controller Events</p></h1>
 
 </br>Animation controllers can trigger events on entry or exit of a state.  Events to trigger on state entry go in the "on_entry" section, those on exit go in the "on_exit" section.</br><h2></h2>
-<br / ><pre class="language-json">
+<br / ><textarea readonly="true" cols="105" rows="23">
 
-<span class="token punctuation">{</span>
-  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
-  <span class="token property">"animation_controllers"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"controller.animation.test"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"states"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"default"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-          <span class="token property">"on_entry"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-            <span class="token string">"event1"</span><span class="token punctuation">,</span> <span class="token comment">// note that these events can be any event, slash command, MoLang, or entity event</span>
-            <span class="token string">"event2"</span><span class="token punctuation">,</span>
-            <span class="token string">"event3"</span>
-          <span class="token punctuation">]</span><span class="token punctuation">,</span>
-          <span class="token property">"on_exit"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-            <span class="token string">"event1"</span><span class="token punctuation">,</span>
-            <span class="token string">"event2"</span>
-          <span class="token punctuation">]</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+{
+  "format_version": "1.8.0",
+  "animation_controllers": {
+    "controller.animation.test": {
+      "states": {
+        "default": {
+          "on_entry": [
+            "event1", // note that these events can be any event, slash command, MoLang, or entity event
+            "event2",
+            "event3"
+          ],
+          "on_exit": [
+            "event1",
+            "event2"
+          ]
+        },
+      }
+    }
+  }
+}
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Animation Events">Animation Events</p></h1>
 
 </br>Animations can have a timeline dedicated to events. The "timeline" section contains the event timeline list.  Below there are various examples where particular times can trigger a single event, or an array of events:</br><h2></h2>
-<br / ><pre class="language-json">
+<br / ><textarea readonly="true" cols="68" rows="32">
 
-<span class="token punctuation">{</span>
-  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
-  <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"animation.test_events"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"timeline"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"2.0"</span><span class="token operator">:</span> <span class="token string">"@s minecraft:entity_born"</span><span class="token punctuation">,</span>
-        <span class="token property">"4.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"@s minecraft:ageable_grow_up"</span> <span class="token punctuation">]</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"animation_length"</span><span class="token operator">:</span> <span class="token number">5.0</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"animation.test_molang"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"timeline"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"0.0"</span><span class="token operator">:</span> <span class="token string">"variable.pop_smoke = 1; variable.pop_bubbles = 0;"</span><span class="token punctuation">,</span>
-        <span class="token property">"3.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-          <span class="token string">"variable.pop_smoke = 0;"</span><span class="token punctuation">,</span>
-          <span class="token string">"variable.pop_bubbles = 1;"</span>
-        <span class="token punctuation">]</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"animation.test_commands"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"timeline"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"1.0"</span><span class="token operator">:</span> <span class="token string">"/tell @a timeline command1"</span><span class="token punctuation">,</span>
-        <span class="token property">"2.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-          <span class="token string">"/tell @a timeline command 2.1"</span><span class="token punctuation">,</span>
-          <span class="token string">"/tell @a timeline command 2.2"</span>
-        <span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token property">"3.0"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"/tell @a command 3"</span> <span class="token punctuation">]</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.test_events": {
+      "timeline": {
+        "2.0": "@s minecraft:entity_born",
+        "4.0": [ "@s minecraft:ageable_grow_up" ]
+      },
+      "animation_length": 5.0
+    },
+    "animation.test_molang": {
+      "timeline": {
+        "0.0": "variable.pop_smoke = 1; variable.pop_bubbles = 0;",
+        "3.0": [
+          "variable.pop_smoke = 0;",
+          "variable.pop_bubbles = 1;"
+        ]
+      }
+    },
+    "animation.test_commands": {
+      "timeline": {
+        "1.0": "/tell @a timeline command1",
+        "2.0": [
+          "/tell @a timeline command 2.1",
+          "/tell @a timeline command 2.2"
+        ],
+        "3.0": [ "/tell @a command 3" ]
+      }
+    }
+  }
+}
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Animation Notes">Animation Notes</p></h1>
 
 </br>Entity events occur in animations, which normally occur on the client (via resource packs), but can also occur on the server (via behavior packs). As the server side of the game has no visual aspects to it, obviously no bone-based animations can occur.  However, a traditional animation is basically a timeline of events, with the events being bone positions for an animated visual rig that moves the entity's visual shape around.  The mechanisms for the Bedrock animation system are state machines (Animation Controllers), and timelines (Animations).  These concepts apply directly to the triggering of events, thus the animation system can execute on the server (minus the visual aspects), with the intent of driving entity events. </br></br>To use entity events on the server (in a behavior pack), add animation controllers and animations to a behavior pack just as you would to a resource pack.  Add animation and animation controllers to an "animations" section in the description field of an entity.  These animations and animation controllers will run on the server just as if they were on the client in a resource pack.  Add the "scripts" section with an "animate" subsection to specify which animations/animation-controllers to have run.</br></br>Client side (resource pack) events do not require special setup as the client side entities usually already have animations and animation controllers in place.  Just add your events where you need them in animations or animation controllers.</br><h2></h2>
-<br / ><pre class="language-json">
+<br / ><textarea readonly="true" cols="106" rows="30">
 
-<span class="token punctuation">{</span>
-  <span class="token comment">// Example of the schema for a server-side entity, modified to run animations and animation controllers</span>
-  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.8.0"</span><span class="token punctuation">,</span>
-  <span class="token property">"minecraft:entity"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:cat"</span><span class="token punctuation">,</span>
+{
+  // Example of the schema for a server-side entity, modified to run animations and animation controllers
+  "format_version": "1.8.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "minecraft:cat",
       ...
-      <span class="token property">"animations"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"anim1"</span><span class="token operator">:</span> <span class="token string">"animation.anim1"</span><span class="token punctuation">,</span>
-        <span class="token property">"anim2"</span><span class="token operator">:</span> <span class="token string">"animation.anim2"</span><span class="token punctuation">,</span>
-        <span class="token property">"anim_controller1"</span><span class="token operator">:</span> <span class="token string">"controller.animation.test1"</span><span class="token punctuation">,</span>
-        <span class="token property">"anim_controller2"</span><span class="token operator">:</span> <span class="token string">"controller.animation.test2"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token comment">// note that only these animations and animation controllers will automatically run:</span>
-        <span class="token property">"animate"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-          <span class="token string">"anim1"</span><span class="token punctuation">,</span>
-          <span class="token string">"anim_controller1"</span><span class="token punctuation">,</span>
+      "animations": {
+        "anim1": "animation.anim1",
+        "anim2": "animation.anim2",
+        "anim_controller1": "controller.animation.test1",
+        "anim_controller2": "controller.animation.test2"
+      },
+      "scripts": {
+        // note that only these animations and animation controllers will automatically run:
+        "animate": [
+          "anim1",
+          "anim_controller1",
           ...
-         <span class="token punctuation">]</span>
-      <span class="token punctuation">}</span>
+         ]
+      }
       ...
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    },
     ...
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  },
   ...
-<span class="token punctuation">}</span>
+}
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Events">Events</p></h1>
 
 </br>Events consist of three categories, all represented by a string:</br>- Entity events</br>- Slash Commands</br>- MoLang Expressions</br></br>In detail:</br></br>Entity Events: Server side (behavior packs) only.  Currently, we only support entity events to self, and these take the form "@s event".  These are events declared in the events section of the entity definition file.  For example, in the cat.json, "minecraft:ageable_grow_up" event causes the kitten to grow up.  This would take the form of "@s minecraft:ageable_grow_up"</br></br>Slash commands: Server side (behavior packs) only.  Any slash command can be invoked, such as "/particle minecraft:example_smoke_puff ~ ~ ~".  The assumed entity for the slash command is the invoking entity, so this particular slash command will spawn a smoke puff effect at the entity's location.</br></br>MoLang Expressions: This executes a MoLang expression.  The primary usage is to set MoLang variables that can be used later.  For example, a state transition might be looking at a particluar MoLang variable, and this expression could change that variable.  A particle effect on the entity might change color due to MoLang variables that the effect uses for color tints.  An animation to move an arm might use a MoLang variable that was set by an animation event.</br><h2></h2>
-<br / ><pre class="language-json">
+<br / ><textarea readonly="true" cols="95" rows="12">
 
-<span class="token comment">// entity event (behavior packs only), put the particular event name after the @s</span>
-<span class="token string">"@s minecraft:entity_event"</span>
+// entity event (behavior packs only), put the particular event name after the @s
+"@s minecraft:entity_event"
 
-<span class="token comment">// slash command (behavior packs only), can be any server-side slash command</span>
-<span class="token comment">// is invoked from the entity, so a teleport, for example, will teleport the entity by default</span>
-<span class="token string">"/tell @a this is a message"</span>
+// slash command (behavior packs only), can be any server-side slash command
+// is invoked from the entity, so a teleport, for example, will teleport the entity by default
+"/tell @a this is a message"
 
-<span class="token comment">// MoLang Expressions, executes a molang expression on the entity</span>
-<span class="token string">"variable.something_to_set = 3;"</span>
+// MoLang Expressions, executes a molang expression on the entity
+"variable.something_to_set = 3;"
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="General Notes">General Notes</p></h1>

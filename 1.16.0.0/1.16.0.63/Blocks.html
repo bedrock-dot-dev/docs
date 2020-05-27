@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>BLOCKS DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>BLOCKS DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -31,27 +31,27 @@ These properties are part of the Block Definition. This helps the system determi
 </tr>
 </table>
 <h2>Code Example</h2>
-Example<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-  <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.16.0"</span><span class="token punctuation">,</span>
-  <span class="token property">"minecraft:block"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"design:lavenderstone"</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"components"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"minecraft:loot"</span><span class="token operator">:</span> <span class="token string">"loot_tables/chests/simple_dungeon.json"</span><span class="token punctuation">,</span>
-      <span class="token property">"minecraft:destroy_time"</span><span class="token operator">:</span> <span class="token number">4.0</span><span class="token punctuation">,</span>
-      <span class="token property">"minecraft:friction"</span><span class="token operator">:</span> <span class="token number">0.6</span><span class="token punctuation">,</span>
-      <span class="token property">"minecraft:map_color"</span><span class="token operator">:</span> <span class="token string">"#00ff00"</span><span class="token punctuation">,</span>
-      <span class="token property">"minecraft:flammable"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"flame_odds"</span><span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span>
-        <span class="token property">"burn_odds"</span><span class="token operator">:</span> <span class="token number">0</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"minecraft:block_light_emission"</span><span class="token operator">:</span> <span class="token number">1.0</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+Example<br / ><textarea readonly="true" cols="66" rows="20">
+{
+  "format_version": "1.16.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "design:lavenderstone"
+    },
+    "components": {
+      "minecraft:loot": "loot_tables/chests/simple_dungeon.json",
+      "minecraft:destroy_time": 4.0,
+      "minecraft:friction": 0.6,
+      "minecraft:map_color": "#00ff00",
+      "minecraft:flammable": {
+        "flame_odds": 50,
+        "burn_odds": 0
+    },
+      "minecraft:block_light_emission": 1.0
+    }
+  }
+}
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Block Description Properties">Block Description Properties</p></h1>

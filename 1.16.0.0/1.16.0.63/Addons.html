@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>ADDONS DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>ADDONS DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -6702,61 +6702,61 @@ The manifest file contains all the basic information about the pack that Minecra
 </tr>
 </table>
 <h2>Examples</h2>
-Behavior Pack<br / ><pre class="language-json">
+Behavior Pack<br / ><textarea readonly="true" cols="60" rows="32">
 
-<span class="token punctuation">{</span>
-    <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-    <span class="token property">"header"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Example vanilla behavior pack"</span><span class="token punctuation">,</span>
-        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Vanilla Behavior Pack"</span><span class="token punctuation">,</span>
-        <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"ee649bcf-256c-4013-9068-6a802b89d756"</span><span class="token punctuation">,</span>
-        <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">{</span>
-            <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Example behavior pack module"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"data"</span><span class="token punctuation">,</span>
-            <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"fa6e90c8-c925-460f-8155-c8a60b753caa"</span><span class="token punctuation">,</span>
-            <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        <span class="token punctuation">{</span>
-            <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Example client scripts module"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"client_data"</span><span class="token punctuation">,</span>
-            <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"c05a992e-482a-455f-898c-58bbb4975e47"</span><span class="token punctuation">,</span>
-            <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token property">"dependencies"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">{</span>
-            <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"66c6e9a8-3093-462a-9c36-dbb052165822"</span><span class="token punctuation">,</span>
-            <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">]</span>
-<span class="token punctuation">}</span>
+{
+    "format_version": 1,
+    "header": {
+        "description": "Example vanilla behavior pack",
+        "name": "Vanilla Behavior Pack",
+        "uuid": "ee649bcf-256c-4013-9068-6a802b89d756",
+        "version": [0, 0, 1]
+    },
+    "modules": [
+        {
+            "description": "Example behavior pack module",
+            "type": "data",
+            "uuid": "fa6e90c8-c925-460f-8155-c8a60b753caa",
+            "version": [0, 0, 1]
+        },
+        {
+            "description": "Example client scripts module",
+            "type": "client_data",
+            "uuid": "c05a992e-482a-455f-898c-58bbb4975e47",
+            "version": [0, 0, 1]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "66c6e9a8-3093-462a-9c36-dbb052165822",
+            "version": [0, 0, 1]
+        }
+    ]
+}
 
-</pre> </br>
-Resource Pack<br / ><pre class="language-json">
+</textarea> </br>
+Resource Pack<br / ><textarea readonly="true" cols="60" rows="22">
 
-<span class="token punctuation">{</span>
-    <span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-    <span class="token property">"header"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Example vanilla resource pack"</span><span class="token punctuation">,</span>
-        <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Vanilla Resource Pack"</span><span class="token punctuation">,</span>
-        <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"66c6e9a8-3093-462a-9c36-dbb052165822"</span><span class="token punctuation">,</span>
-        <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token property">"min_engine_version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span>
-        <span class="token property">"vanilla"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">{</span>
-            <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Example vanilla resource pack"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"resources"</span><span class="token punctuation">,</span>
-            <span class="token property">"uuid"</span><span class="token operator">:</span> <span class="token string">"743f6949-53be-44b6-b326-398005028819"</span><span class="token punctuation">,</span>
-            <span class="token property">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">]</span>
-<span class="token punctuation">}</span>
+{
+    "format_version": 1,
+    "header": {
+        "description": "Example vanilla resource pack",
+        "name": "Vanilla Resource Pack",
+        "uuid": "66c6e9a8-3093-462a-9c36-dbb052165822",
+        "version": [0, 0, 1],
+        "min_engine_version": [1, 2, 6]
+        "vanilla": [1, 12, 0]
+    },
+    "modules": [
+        {
+            "description": "Example vanilla resource pack",
+            "type": "resources",
+            "uuid": "743f6949-53be-44b6-b326-398005028819",
+            "version": [0, 0, 1]
+        }
+    ]
+}
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 

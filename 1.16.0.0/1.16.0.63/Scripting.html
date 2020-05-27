@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>SCRIPTING DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>SCRIPTING DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -594,24 +594,24 @@ Applies the component and any changes made to it in script back to the entity. W
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Apply updates to an entity's component<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  pig<span class="token operator">:</span> <span class="token keyword">null</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Apply updates to an entity's component<br / ><textarea readonly="true" cols="82" rows="17">
+let globals = {
+  pig: null
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>pig <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    globals<span class="token punctuation">.</span>pig <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEntity</span><span class="token punctuation">(</span><span class="token string">"entity"</span><span class="token punctuation">,</span> <span class="token string">"minecraft:pig"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">else</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> positionComponent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>pig<span class="token punctuation">,</span> <span class="token string">"minecraft:position"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    positionComponent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>y <span class="token operator">+=</span> <span class="token number">0.1</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">applyComponentChanges</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>pig<span class="token punctuation">,</span> positionComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  if(globals.pig == null) {
+    globals.pig = this.createEntity("entity", "minecraft:pig");
+  }
+  else {
+    let positionComponent = this.getComponent(globals.pig, "minecraft:position");
+    positionComponent.data.y += 0.1;
+    this.applyComponentChanges(globals.pig, positionComponent);
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="createComponent(EntityObject, ComponentIdentifier)">createComponent(EntityObject, ComponentIdentifier)</p></h2>
@@ -651,27 +651,27 @@ Creates the specified component and adds it to the entity. This should only be u
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Creating a custom component<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  ready<span class="token operator">:</span> <span class="token boolean">false</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Creating a custom component<br / ><textarea readonly="true" cols="125" rows="20">
+let globals = {
+  ready: false
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerComponent</span><span class="token punctuation">(</span><span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> myString<span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span> myNumber<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> myBool<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> myArray<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+mySystem.initialize = function() {
+  this.registerComponent("myPack:myCustomComponent", { myString: "string", myNumber: 0, myBool: true, myArray: [1, 2, 3] });
+}
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>ready <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    globals<span class="token punctuation">.</span>ready <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> myEntity <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>myEntity <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">let</span> myComponent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createComponent</span><span class="token punctuation">(</span>myEntity<span class="token punctuation">,</span> <span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  if(globals.ready == false) {
+    globals.ready = true;
+    let myEntity = this.createEntity();
+    if(myEntity != null) {
+      let myComponent = this.createComponent(myEntity, "myPack:myCustomComponent");
+    }
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="destroyComponent(EntityObject, ComponentIdentifier)">destroyComponent(EntityObject, ComponentIdentifier)</p></h2>
@@ -711,31 +711,31 @@ Removes the specified component from the given entity. If the entity has the com
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Destroy an entity's component<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  myEntity<span class="token operator">:</span> <span class="token keyword">null</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Destroy an entity's component<br / ><textarea readonly="true" cols="125" rows="24">
+let globals = {
+  myEntity: null
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerComponent</span><span class="token punctuation">(</span><span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> myString<span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span> myNumber<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> myBool<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> myArray<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.registerComponent("myPack:myCustomComponent", { myString: "string", myNumber: 0, myBool: true, myArray: [1, 2, 3] });
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>myEntity <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    globals<span class="token punctuation">.</span>myEntity <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">else</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">hasComponent</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>myEntity<span class="token punctuation">,</span> <span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">destroyComponent</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>myEntity<span class="token punctuation">,</span> <span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">else</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createComponent</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>myEntity<span class="token punctuation">,</span> <span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  if(globals.myEntity == null) {
+    globals.myEntity = this.createEntity();
+  }
+  else {
+    if(this.hasComponent(globals.myEntity, "myPack:myCustomComponent")) {
+      this.destroyComponent(globals.myEntity, "myPack:myCustomComponent");
+    }
+    else {
+      this.createComponent(globals.myEntity, "myPack:myCustomComponent");
+    }
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="getComponent(EntityObject, ComponentIdentifier)">getComponent(EntityObject, ComponentIdentifier)</p></h2>
@@ -796,26 +796,26 @@ Looks for the specified component in the entity. If it exists, retrieves the dat
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Get a specified component from an entity<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  ready<span class="token operator">:</span> <span class="token boolean">false</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Get a specified component from an entity<br / ><textarea readonly="true" cols="77" rows="19">
+let globals = {
+  ready: false
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>ready <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    globals<span class="token punctuation">.</span>ready <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> entity <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEntity</span><span class="token punctuation">(</span><span class="token string">"entity"</span><span class="token punctuation">,</span> <span class="token string">"minecraft:pig"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> positionComponent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>entity<span class="token punctuation">,</span> <span class="token string">"minecraft:position"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>positionComponent <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      positionComponent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-      positionComponent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-      positionComponent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>z <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  if(globals.ready == false) {
+    globals.ready = true;
+    let entity = this.createEntity("entity", "minecraft:pig");
+    let positionComponent = this.getComponent(entity, "minecraft:position");
+    if (positionComponent != null) {
+      positionComponent.data.x = 0;
+      positionComponent.data.y = 0;
+      positionComponent.data.z = 0;
+    }
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="hasComponent(EntityObject, ComponentIdentifier)">hasComponent(EntityObject, ComponentIdentifier)</p></h2>
@@ -855,23 +855,23 @@ Checks if the given entity has the specified component.</br><h3></h3>
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Check whether an entity has specified component<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  ready<span class="token operator">:</span> <span class="token boolean">false</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Check whether an entity has specified component<br / ><textarea readonly="true" cols="63" rows="16">
+let globals = {
+  ready: false
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>ready <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    globals<span class="token punctuation">.</span>ready <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> entity <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEntity</span><span class="token punctuation">(</span><span class="token string">"entity"</span><span class="token punctuation">,</span> <span class="token string">"minecraft:pig"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">hasComponent</span><span class="token punctuation">(</span>entity<span class="token punctuation">,</span> <span class="token string">"minecraft:nameable"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token comment">// Do some work</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  if(globals.ready == false) {
+    globals.ready = true;
+    let entity = this.createEntity("entity", "minecraft:pig");
+    if(this.hasComponent(entity, "minecraft:nameable")) {
+      // Do some work
+    }
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="registerComponent(ComponentIdentifier, ComponentData)">registerComponent(ComponentIdentifier, ComponentData)</p></h2>
@@ -911,13 +911,13 @@ Creates a custom component that only exists in script. It can be then added, rem
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Registering a custom component<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Registering a custom component<br / ><textarea readonly="true" cols="125" rows="6">
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerComponent</span><span class="token punctuation">(</span><span class="token string">"myPack:myCustomComponent"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> myString<span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span> myNumber<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> myBool<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> myArray<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.initialize = function() {
+  this.registerComponent("myPack:myCustomComponent", { myString: "string", myNumber: 0, myBool: true, myArray: [1, 2, 3] });
+};
+</textarea> </br>
 <br><br>
 
 <br><br>
@@ -1073,24 +1073,24 @@ Allows you to add filters to your query. The query will only contain entities th
 </tr>
 </table>
 <h3>Code Example:</h3>
-Adding a filter to a query<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  simpleQuery<span class="token operator">:</span> <span class="token keyword">null</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Adding a filter to a query<br / ><textarea readonly="true" cols="140" rows="17">
+let globals = {
+  simpleQuery: null
+};
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  globals<span class="token punctuation">.</span>simpleQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  globals.simpleQuery = this.registerQuery();
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  globals<span class="token punctuation">.</span>simpleQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">addFilterToQuery</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>simpleQuery<span class="token punctuation">,</span> <span class="token string">"minecraft:explode"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token keyword">let</span> explodingEntities <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getEntitiesFromQuery</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>simpleQuery<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> entity <span class="token keyword">in</span> explodingEntities<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    server<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>entity<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  globals.simpleQuery = this.registerQuery();
+  this.addFilterToQuery(globals.simpleQuery, "minecraft:explode");  let explodingEntities = this.getEntitiesFromQuery(globals.simpleQuery);
+  for(var entity in explodingEntities) {
+    server.log(JSON.stringify(entity));
+  }
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="getEntitiesFromQuery(Query)">getEntitiesFromQuery(Query)</p></h2>
@@ -1125,17 +1125,17 @@ Allows you to fetch the entities captured by a query.</br><h3></h3>
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Get a list of entities from a query<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Get a list of entities from a query<br / ><textarea readonly="true" cols="60" rows="10">
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> simpleQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">let</span> allEntities <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getEntitiesFromQuery</span><span class="token punctuation">(</span>simpleQuery<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> entity <span class="token keyword">in</span> allEntities<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    server<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>entity<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  let simpleQuery = this.registerQuery();
+  let allEntities = this.getEntitiesFromQuery(simpleQuery);
+  for(var entity in allEntities) {
+    server.log(JSON.stringify(entity));
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="getEntitiesFromQuery(Query, ComponentField1_Min, ComponentField2_Min, ComponentField3_Min, ComponentField1_Max, ComponentField2_Max, ComponentField3_Max)">getEntitiesFromQuery(Query, ComponentField1_Min, ComponentField2_Min, ComponentField3_Min, ComponentField1_Max, ComponentField2_Max, ComponentField3_Max)</p></h2>
@@ -1200,24 +1200,24 @@ Allows you to fetch the entities captured by a query that was created with a com
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Get a list of entities from a query<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> globals <span class="token operator">=</span> <span class="token punctuation">{</span>
-  spatialQuery<span class="token operator">:</span> <span class="token keyword">null</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Get a list of entities from a query<br / ><textarea readonly="true" cols="91" rows="17">
+let globals = {
+  spatialQuery: null
+};
 
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  globals<span class="token punctuation">.</span>spatialQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token string">"minecraft:position"</span><span class="token punctuation">,</span> <span class="token string">"x"</span><span class="token punctuation">,</span> <span class="token string">"y"</span><span class="token punctuation">,</span> <span class="token string">"z"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  globals.spatialQuery = this.registerQuery("minecraft:position", "x", "y", "z");
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> closeEntities <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getEntitiesFromQuery</span><span class="token punctuation">(</span>globals<span class="token punctuation">.</span>spatialQuery<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> entity <span class="token keyword">in</span> closeEntities<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    server<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>entity<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  let closeEntities = this.getEntitiesFromQuery(globals.spatialQuery, 0, 10, 0, 5, 0, 10);
+  for(var entity in closeEntities) {
+    server.log(JSON.stringify(entity));
+  }
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="registerQuery()">registerQuery()</p></h2>
@@ -1238,13 +1238,13 @@ Allows you to register a query. A query will contain all entities that meet the 
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Query Registration<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Query Registration<br / ><textarea readonly="true" cols="46" rows="6">
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> myQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.initialize = function() {
+  let myQuery = this.registerQuery();
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="registerQuery(Component, ComponentField1, ComponentField2, ComponentField3)">registerQuery(Component, ComponentField1, ComponentField2, ComponentField3)</p></h2>
@@ -1298,13 +1298,13 @@ Allows you to register a query that will only show entities that have the given 
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Query Registration<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Query Registration<br / ><textarea readonly="true" cols="78" rows="6">
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> spatialQuery <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerQuery</span><span class="token punctuation">(</span><span class="token string">"minecraft:position"</span><span class="token punctuation">,</span> <span class="token string">"x"</span><span class="token punctuation">,</span> <span class="token string">"y"</span><span class="token punctuation">,</span> <span class="token string">"z"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.initialize = function() {
+  let spatialQuery = this.registerQuery("minecraft:position", "x", "y", "z");
+};
+</textarea> </br>
 <br><br>
 
 <br><br>
@@ -1350,16 +1350,16 @@ Allows you to trigger an event with the desired data from script. Anything that 
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Broadcasting an event<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Broadcasting an event<br / ><textarea readonly="true" cols="72" rows="9">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> eventData <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Hello, World!"</span><span class="token punctuation">;</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> eventData<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  let eventData = this.createEventData("minecraft:display_chat_event");
+  eventData.data.message = "Hello, World!";
+  this.broadcastEvent("minecraft:display_chat_event", eventData);
+};
 
-</pre> </br>
+</textarea> </br>
 <br><br>
 
 <h2><p id="createEventData(EventIdentifier)">createEventData(EventIdentifier)</p></h2>
@@ -1432,19 +1432,19 @@ Allows you to register a JavaScript object that gets called whenever the specifi
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Register a callback for a specified event<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Register a callback for a specified event<br / ><textarea readonly="true" cols="110" rows="12">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:client_entered_world"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onClientEnteredWorld</span><span class="token punctuation">(</span>eventData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.listenForEvent("minecraft:client_entered_world", (eventData) => this.onClientEnteredWorld(eventData));
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">onClientEnteredWorld</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> messageData <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  messageData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Player has entered the world"</span><span class="token punctuation">;</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> messageData<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.onClientEnteredWorld = function(eventData) {
+  let messageData = this.createEventData("minecraft:display_chat_event");
+  messageData.data.message = "Player has entered the world";
+  this.broadcastEvent("minecraft:display_chat_event", messageData);
+};
+</textarea> </br>
 <br><br>
 
 <h2><p id="registerEventData(EventIdentifier, EventData)">registerEventData(EventIdentifier, EventData)</p></h2>
@@ -1510,11 +1510,11 @@ The log function is accessed through the server or client objects and allows for
 <a href="#Index">Back to top</a><br><br>
 
 <h3>Code Example:</h3>
-Log<br / ><pre class="language-javascript">
-system<span class="token punctuation">.</span><span class="token function-variable function">exampleFunction</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  client<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"example log message"</span><span class="token punctuation">)</span> 
-<span class="token punctuation">}</span><span class="token punctuation">;</span> 
-</pre> </br>
+Log<br / ><textarea readonly="true" cols="38" rows="4">
+system.exampleFunction = function() {
+  client.log("example log message") 
+}; 
+</textarea> </br>
 <br><br>
 
 <br><br>
@@ -1541,18 +1541,18 @@ Allows you to execute a Slash Command on the server. The command will be queried
 </tr>
 </table>
 <h3>Example</h3>
-<br / ><pre class="language-javascript">
-system<span class="token punctuation">.</span><span class="token function">executeCommand</span><span class="token punctuation">(</span><span class="token string">"/fill ~ ~ ~ ~100 ~5 ~50 stone"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">commandResultData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">commandCallback</span><span class="token punctuation">(</span>commandResultData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<br / ><textarea readonly="true" cols="183" rows="11">
+system.executeCommand("/fill ~ ~ ~ ~100 ~5 ~50 stone", (commandResultData) => this.commandCallback(commandResultData));
 
-system<span class="token punctuation">.</span><span class="token function-variable function">commandCallback</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">commandResultData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> eventData <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>eventData<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> message<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> <span class="token string">"Callback called! Command: "</span> <span class="token operator">+</span> commandResultData<span class="token punctuation">.</span>command <span class="token operator">+</span> <span class="token string">" Data: "</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>commandResultData<span class="token punctuation">.</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">"    "</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+system.commandCallback = function (commandResultData) {
+  let eventData = this.createEventData("minecraft:display_chat_event");
+  if (eventData) {
+    eventData.data.message = message;
+    this.broadcastEvent("minecraft:display_chat_event", "Callback called! Command: " + commandResultData.command + " Data: " + JSON.stringify(commandResultData.data, null, "    ") );
+  }
+};
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -1568,12 +1568,12 @@ These components are only found on block objects and can only be on block object
 <h2><p id="minecraft:blockstate">minecraft:blockstate</p></h2>
 
 This component contains all the blockstates on a block object. Blockstates control all different aspects of blocks from their orientation to the type of wood they are. Blockstates are represented by numbers, bools, or strings. Please see the Blockstates Documentation to see the valid values for each state. This component allows for the getting and setting of these states.</br><h3>Code Example:</h3>
-<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> blockstateComponent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>block<span class="token punctuation">,</span> <span class="token string">"minecraft:blockstate"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-blockstateComponent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>coral_color <span class="token operator">=</span> <span class="token string">"blue"</span><span class="token punctuation">;</span>
-<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">applyComponentChanges</span><span class="token punctuation">(</span>block<span class="token punctuation">,</span> blockstateComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<br / ><textarea readonly="true" cols="76" rows="5">
+let blockstateComponent = this.getComponent(block, "minecraft:blockstate");
+blockstateComponent.data.coral_color = "blue";
+this.applyComponentChanges(block, blockstateComponent);
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -1585,12 +1585,12 @@ These components only run on the client where the script ran and can only be use
 <h2><p id="minecraft:molang">minecraft:molang</p></h2>
 
 The MoLang component gives access to the MoLang variables in an entity. To learn more about MoLang varibles review the add-on documentation. In scripts, you can get and set these varibles that are defined in the entity's JSON files. Because of how the MoLang variables are formatted (variable.isgrazing for example) you must use the [] operator on the object to access the variable. The example below shows how to use the [] operator to access the variable.</br><h3>Code Example:</h3>
-<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> molangComponent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createComponent</span><span class="token punctuation">(</span>entity<span class="token punctuation">,</span> <span class="token string">"minecraft:molang"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-molangComponent<span class="token punctuation">[</span><span class="token string">"variable.molangexample"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1.0</span><span class="token punctuation">;</span> 
-<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">applyComponentChanges</span><span class="token punctuation">(</span>molangComponent<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<br / ><textarea readonly="true" cols="73" rows="5">
+let molangComponent = this.createComponent(entity, "minecraft:molang"); 
+molangComponent["variable.molangexample"] = 1.0; 
+this.applyComponentChanges(molangComponent); 
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -1646,19 +1646,19 @@ These are the components that run on the server and are synced with all the clie
 <h2><p id="minecraft:armor_container">minecraft:armor_container</p></h2>
 
 This component represents the armor contents of an entity. The component contains an array of ItemStack JS API Objects representing each slot in the armor container. NOTE: Currently items and containers are read-only. Slots are ordered from head to feet.</br><h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will check the players helmet armor slot for a specific item after the player attacks an entity.</span>
-system<span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:player_attacked_entity"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Get the players armor container</span>
-    <span class="token keyword">let</span> playerArmor <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>player<span class="token punctuation">,</span> <span class="token string">"minecraft:armor_container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Get the players helmet</span>
-    <span class="token keyword">let</span> playerHelmet <span class="token operator">=</span> playerArmor<span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token comment">// Destroy the attacked entity if the player has a gold helmet equipped</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>playerHelmet<span class="token punctuation">.</span>item <span class="token operator">==</span> <span class="token string">"minecraft:golden_helmet"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        system<span class="token punctuation">.</span><span class="token function">destroyEntity</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="113" rows="12">
+// This example will check the players helmet armor slot for a specific item after the player attacks an entity.
+system.listenForEvent("minecraft:player_attacked_entity", function(eventData) {
+    // Get the players armor container
+    let playerArmor = system.getComponent(eventData.data.player, "minecraft:armor_container");
+    // Get the players helmet
+    let playerHelmet = playerArmor.data[0];
+    // Destroy the attacked entity if the player has a gold helmet equipped
+    if (playerHelmet.item == "minecraft:golden_helmet") {
+        system.destroyEntity(eventData.data.attacked_entity);
+    }
+});
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:attack">minecraft:attack</p></h2>
@@ -1715,15 +1715,15 @@ Controls the collision box of the entity. When changes to the component are appl
 <h2><p id="minecraft:container">minecraft:container</p></h2>
 
 This component represents the container of a block. The component contains an array of ItemStack JS API Objects representing each slot in the container. This specific component is used for blocks. Refer to inventory components for entities. NOTE: Currently items and containers are read-only. Slots are ordered left to right.</br><h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will check if a block has a container.</span>
-<span class="token keyword">let</span> block<span class="token punctuation">;</span> <span class="token comment">// check getBlock API on how to access a block</span>
-<span class="token keyword">let</span> has_container <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">hasComponent</span><span class="token punctuation">(</span>block<span class="token punctuation">,</span> <span class="token string">"minecraft:container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span>has_container <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> container <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>block<span class="token punctuation">,</span> <span class="token string">"minecraft:container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// you can now use the container to read items.</span>
+<br / ><textarea readonly="true" cols="71" rows="8">
+// This example will check if a block has a container.
+let block; // check getBlock API on how to access a block
+let has_container = system.hasComponent(block, "minecraft:container");
+if (has_container === true) {
+  let container = system.getComponent(block, "minecraft:container");
+  // you can now use the container to read items.
 
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:damage_sensor">minecraft:damage_sensor</p></h2>
@@ -1773,15 +1773,15 @@ Defines what events to call when this entity is damaged by specific entities or 
 </tr>
 </table>
 <h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will cause an entity (in this case, a creeper) to start exploding when the player attacks it.</span>
-<span class="token comment">// Note: the entity must have the damage_sensor component and the associated events defined in their JSON description.</span>
-<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:player_attacked_entity"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> damageSensorComponent <span class="token operator">=</span> serverSystem<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">,</span> <span class="token string">"minecraft:damage_sensor"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  damageSensorComponent<span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>on_damage <span class="token operator">=</span> <span class="token punctuation">{</span> event<span class="token operator">:</span><span class="token string">"minecraft:start_exploding"</span><span class="token punctuation">,</span> filters<span class="token operator">:</span><span class="token punctuation">[</span><span class="token punctuation">{</span>test<span class="token operator">:</span><span class="token string">"has_component"</span><span class="token punctuation">,</span> operator<span class="token operator">:</span><span class="token string">"=="</span><span class="token punctuation">,</span> value<span class="token operator">:</span><span class="token string">"minecraft:breathable"</span><span class="token punctuation">}</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
-  serverSystem<span class="token punctuation">.</span><span class="token function">applyComponentChanges</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">,</span> damageSensorComponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="162" rows="8">
+// This example will cause an entity (in this case, a creeper) to start exploding when the player attacks it.
+// Note: the entity must have the damage_sensor component and the associated events defined in their JSON description.
+this.listenForEvent("minecraft:player_attacked_entity", function(eventData) {
+  let damageSensorComponent = serverSystem.getComponent(eventData.attacked_entity, "minecraft:damage_sensor");
+  damageSensorComponent.data[0].on_damage = { event:"minecraft:start_exploding", filters:[{test:"has_component", operator:"==", value:"minecraft:breathable"}] };
+  serverSystem.applyComponentChanges(eventData.attacked_entity, damageSensorComponent);
+});
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:equipment">minecraft:equipment</p></h2>
@@ -1916,19 +1916,19 @@ Defines how the entity explodes.</br><h3>Parameters</h3>
 <h2><p id="minecraft:hand_container">minecraft:hand_container</p></h2>
 
 This component represents the contents of an entity's hands. The component contains an array of ItemStack JS API Objects representing each slot in the hand container. NOTE: Currently items and containers are read-only. Slot 0 is main-hand Slot 1 is off-hand.</br><h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will check the players offhand slot for a specific item after the player attacks an entity.</span>
-system<span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:player_attacked_entity"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Get the players hand container</span>
-    <span class="token keyword">let</span> handContainer <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>player<span class="token punctuation">,</span> <span class="token string">"minecraft:hand_container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Get the players offhand item</span>
-    <span class="token keyword">let</span> offhandItem <span class="token operator">=</span> handContainer<span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token comment">// Destroy the attacked entity if the player has a totem in their offhand</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>offhandItem<span class="token punctuation">.</span>item <span class="token operator">==</span> <span class="token string">"minecraft:totem"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        system<span class="token punctuation">.</span><span class="token function">destroyEntity</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="108" rows="12">
+// This example will check the players offhand slot for a specific item after the player attacks an entity.
+system.listenForEvent("minecraft:player_attacked_entity", function(eventData) {
+    // Get the players hand container
+    let handContainer = system.getComponent(eventData.data.player, "minecraft:hand_container");
+    // Get the players offhand item
+    let offhandItem = handContainer.data[1];
+    // Destroy the attacked entity if the player has a totem in their offhand
+    if (offhandItem.item == "minecraft:totem") {
+        system.destroyEntity(eventData.data.attacked_entity);
+    }
+});
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:healable">minecraft:healable</p></h2>
@@ -1997,19 +1997,19 @@ Defines the current and maximum possible health of the entity. Upon applying the
 <h2><p id="minecraft:hotbar_container">minecraft:hotbar_container</p></h2>
 
 This component represents the hotbar contents of a player. The component contains an array of ItemStack JS API Objects representing each slot in the hotbar. NOTE: Currently items and containers are read-only. Slots are ordered left to right.</br><h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will check the players first hotbar item slot for a specific item after the player attacks an entity.</span>
-system<span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:player_attacked_entity"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Get the players hotbar</span>
-    <span class="token keyword">let</span> playerHotbar <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>player<span class="token punctuation">,</span> <span class="token string">"minecraft:hotbar_container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Get the item at the first slot in the hotbar</span>
-    <span class="token keyword">let</span> firstHotbarSlot <span class="token operator">=</span> playerHotbar<span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token comment">// Destroy the attacked entity if the player has an apple in their first hotbar slot</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>firstHotbarSlot<span class="token punctuation">.</span>item <span class="token operator">==</span> <span class="token string">"minecraft:apple"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        system<span class="token punctuation">.</span><span class="token function">destroyEntity</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="118" rows="12">
+// This example will check the players first hotbar item slot for a specific item after the player attacks an entity.
+system.listenForEvent("minecraft:player_attacked_entity", function(eventData) {
+    // Get the players hotbar
+    let playerHotbar = system.getComponent(eventData.data.player, "minecraft:hotbar_container");
+    // Get the item at the first slot in the hotbar
+    let firstHotbarSlot = playerHotbar.data[0];
+    // Destroy the attacked entity if the player has an apple in their first hotbar slot
+    if (firstHotbarSlot.item == "minecraft:apple") {
+        system.destroyEntity(eventData.data.attacked_entity);
+    }
+});
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:interact">minecraft:interact</p></h2>
@@ -2180,19 +2180,19 @@ Defines the entity's inventory (size, restrictions, etc.). Currently this does n
 <h2><p id="minecraft:inventory_container">minecraft:inventory_container</p></h2>
 
 This component represents the inventory contents of an entity. The component contains an array of ItemStack JS API Objects representing each slot in the inventory. NOTE: Currently items and containers are read-only.Slot 0-8 is the hotbar, 9-16 is the top row of the player's inventory, 17-24 is the middle row, 25-32 is the bottom row</br><h3></h3>
-<br / ><pre class="language-javascript">
-<span class="token comment">// This example will check the players third inventory item slot for a specific item after the player attacks an entity.</span>
-system<span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:player_attacked_entity"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Get the players inventory</span>
-    <span class="token keyword">let</span> playerInventory <span class="token operator">=</span> system<span class="token punctuation">.</span><span class="token function">getComponent</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>player<span class="token punctuation">,</span> <span class="token string">"minecraft:inventory_container"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Get the item at the third slot in the inventory</span>
-    <span class="token keyword">let</span> thirdItemSlot <span class="token operator">=</span> playerInventory<span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token comment">// Destroy the attacked entity if the player has an apple in their third item slot</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>thirdItemSlot<span class="token punctuation">.</span>item <span class="token operator">==</span> <span class="token string">"minecraft:apple"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        system<span class="token punctuation">.</span><span class="token function">destroyEntity</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>data<span class="token punctuation">.</span>attacked_entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="121" rows="12">
+// This example will check the players third inventory item slot for a specific item after the player attacks an entity.
+system.listenForEvent("minecraft:player_attacked_entity", function(eventData) {
+    // Get the players inventory
+    let playerInventory = system.getComponent(eventData.data.player, "minecraft:inventory_container");
+    // Get the item at the third slot in the inventory
+    let thirdItemSlot = playerInventory.data[2];
+    // Destroy the attacked entity if the player has an apple in their third item slot
+    if (thirdItemSlot.item == "minecraft:apple") {
+        system.destroyEntity(eventData.data.attacked_entity);
+    }
+});
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:lookat">minecraft:lookat</p></h2>
@@ -2603,21 +2603,21 @@ This event is triggered whenever the reticle changes from pointing at a block or
 </tr>
 </table>
 <h4>Code Example:</h4>
-Responding to hit_result_changed<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Responding to hit_result_changed<br / ><textarea readonly="true" cols="127" rows="14">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:hit_result_changed"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onHitChanged</span><span class="token punctuation">(</span>eventData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.listenForEvent("minecraft:hit_result_changed", (eventData) => this.onHitChanged(eventData));
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">onHitChanged</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>position <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> chatEvent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    chatEvent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Hit at x:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">" y:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">" z:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>z<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> chatEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.onHitChanged = function(eventData) {
+  if(eventData.position != null) {
+    let chatEvent = this.createEventData("minecraft:display_chat_event");
+    chatEvent.data.message = "Hit at x:" + eventData.position.x + " y:" + eventData.position.y + " z:" + eventData.position.z;
+    this.broadcastEvent("minecraft:display_chat_event", chatEvent);
+  }
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h3><p id="minecraft:hit_result_continuous">minecraft:hit_result_continuous</p></h3>
@@ -2638,21 +2638,21 @@ This event is triggered every update and tells you what entity the reticle is po
 </tr>
 </table>
 <h4>Code Example:</h4>
-Responding to hit_result_continuous<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Responding to hit_result_continuous<br / ><textarea readonly="true" cols="132" rows="14">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:hit_result_continuous"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onHit</span><span class="token punctuation">(</span>eventData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.listenForEvent("minecraft:hit_result_continuous", (eventData) => this.onHit(eventData));
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">onHit</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>position <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> chatEvent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    chatEvent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Position at x:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">" y:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">" z:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>z<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> chatEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.onHit = function(eventData) {
+  if(eventData.position != null) {
+    let chatEvent = this.createEventData("minecraft:display_chat_event");
+    chatEvent.data.message = "Position at x:" + eventData.position.x + " y:" + eventData.position.y + " z:" + eventData.position.z;
+    this.broadcastEvent("minecraft:display_chat_event", chatEvent);
+  }
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h3><p id="minecraft:pick_hit_result_changed">minecraft:pick_hit_result_changed</p></h3>
@@ -2673,21 +2673,21 @@ This event is triggered whenever the mouse pointer changes from pointing at a bl
 </tr>
 </table>
 <h4>Code Example:</h4>
-Responding to pick_hit_result_changed<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Responding to pick_hit_result_changed<br / ><textarea readonly="true" cols="128" rows="14">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:pick_hit_result_changed"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onPickChanged</span><span class="token punctuation">(</span>eventData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.listenForEvent("minecraft:pick_hit_result_changed", (eventData) => this.onPickChanged(eventData));
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">onPickChanged</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>position <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> chatEvent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    chatEvent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Pick at x:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">" y:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">" z:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>z<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> chatEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.onPickChanged = function(eventData) {
+  if(eventData.position != null) {
+    let chatEvent = this.createEventData("minecraft:display_chat_event");
+    chatEvent.data.message = "Pick at x:" + eventData.position.x + " y:" + eventData.position.y + " z:" + eventData.position.z;
+    this.broadcastEvent("minecraft:display_chat_event", chatEvent);
+  }
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h3><p id="minecraft:pick_hit_result_continuous">minecraft:pick_hit_result_continuous</p></h3>
@@ -2708,21 +2708,21 @@ This event is triggered every update and tells you what entity the mouse pointer
 </tr>
 </table>
 <h4>Code Example:</h4>
-Responding to pick_hit_result_continuous<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Responding to pick_hit_result_continuous<br / ><textarea readonly="true" cols="157" rows="14">
+const mySystem = client.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">listenForEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:pick_hit_result_continuous"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onPick</span><span class="token punctuation">(</span>eventData<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
+mySystem.initialize = function() {
+  this.listenForEvent("minecraft:pick_hit_result_continuous", (eventData) => this.onPick(eventData));
+};
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">onPick</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">eventData</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span>eventData<span class="token punctuation">.</span>position <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">let</span> chatEvent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    chatEvent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Pick at:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">" y:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">" z:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">" z:"</span> <span class="token operator">+</span> eventData<span class="token punctuation">.</span>position<span class="token punctuation">.</span>z<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> chatEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.onPick = function(eventData) {
+  if(eventData.position != null) {
+    let chatEvent = this.createEventData("minecraft:display_chat_event");
+    chatEvent.data.message = "Pick at:" + eventData.position.x + " y:" + eventData.position.y + " z:" + eventData.position.y + " z:" + eventData.position.z;
+    this.broadcastEvent("minecraft:display_chat_event", chatEvent);
+  }
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -2745,15 +2745,15 @@ This event is used to display a chat message to the specific player that is runn
 </tr>
 </table>
 <h4>Code Example:</h4>
-Trigger chat event<br / ><pre class="language-javascript">
-<span class="token keyword">const</span> mySystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Trigger chat event<br / ><textarea readonly="true" cols="72" rows="8">
+const mySystem = server.registerSystem(0, 0);
 
-mySystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">let</span> chatEvent <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createEventData</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  chatEvent<span class="token punctuation">.</span>data<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">"Hello, World!"</span><span class="token punctuation">;</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token string">"minecraft:display_chat_event"</span><span class="token punctuation">,</span> chatEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+mySystem.update = function() {
+  let chatEvent = this.createEventData("minecraft:display_chat_event");
+  chatEvent.data.message = "Hello, World!";
+  this.broadcastEvent("minecraft:display_chat_event", chatEvent);
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h3><p id="minecraft:load_ui">minecraft:load_ui</p></h3>
@@ -3755,25 +3755,25 @@ Here are some demos from your friends at Minecraft to help you get started with 
 <h1><p id="Getting Started">Getting Started</p></h1>
 
 First you will need to download the latest Vanilla Behavior Pack. You can get this from the following link: https://aka.ms/behaviorpacktemplate </br>Once you have downloaded the Behavior Pack, unzip it to a folder. Inside the Behavior Pack you will find the scripts folder which contains all the scripting files you want to run.</br>In the scripts folder you will find two folders: one for client scripts and one for server scripts.</br>-Server Scripts: These scripts run on the server side of the game. This includes spawning new entities, adding components, or modifying components on an entity.</br>-Client Scripts: These scripts run on each individual player's side of the game. This is a good place to respond to events and manage anything specific to the player.</br>Once you have chosen whether you are making a client or server script, simply add a new blank text file with .js extension to the appropriate folder, and open it in your preferred code editor. Then code away! You can have as many or as few JavaScript files as you want here (the name of the files doesn't matter) and they will all be run independently of each other!</br></br> NOTE: For scripts to be run by the game, you need to enable Experimental Gameplay on the world where you will run scripts on. This will be necessary while scripting is still in beta.</br>When entering a world that has client scripts in it, you will be prompted to accept that you wish to run scripts on your device (this will show up both for local worlds as well as multiplayer worlds).</br>Additionally, if your pack contains client scripts, you need to include a client_data module in the pack's manifest. This tells the game anything in the scripts/client folder needs to be sent over to the clients. Please refer to the Add-on Documentation page for more information on the pack's manifest contents.</br><h2>Folder Structure</h2>
-Example of manifest module needed for client scripts<br / ><pre class="language-javascript">
+Example of manifest module needed for client scripts<br / ><textarea readonly="true" cols="60" rows="9">
 
-        <span class="token punctuation">{</span>
-            <span class="token string">"description"</span><span class="token operator">:</span> <span class="token string">"Example client scripts module"</span><span class="token punctuation">,</span>
-            <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"client_data"</span><span class="token punctuation">,</span>
-            <span class="token string">"uuid"</span><span class="token operator">:</span> <span class="token string">"c05a992e-482a-455f-898c-58bbb4975e47"</span><span class="token punctuation">,</span>
-            <span class="token string">"version"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
-        <span class="token punctuation">}</span>
+        {
+            "description": "Example client scripts module",
+            "type": "client_data",
+            "uuid": "c05a992e-482a-455f-898c-58bbb4975e47",
+            "version": [0, 0, 1]
+        }
 
-</pre> </br>
-vanilla_behavior_pack<br / ><pre class="language-javascript">
-<span class="token operator">|</span><span class="token operator">-</span>scripts
-<span class="token operator">|</span><span class="token operator">--</span>client
-<span class="token operator">|</span><span class="token operator">--</span><span class="token operator">-</span>myClientScript<span class="token punctuation">.</span>js
-<span class="token operator">|</span><span class="token operator">--</span>server
-<span class="token operator">|</span><span class="token operator">--</span><span class="token operator">-</span>myServerScript<span class="token punctuation">.</span>js
-<span class="token operator">|</span><span class="token operator">-</span>manifest<span class="token punctuation">.</span>json
-<span class="token operator">|</span><span class="token operator">-</span>pack_icon<span class="token punctuation">.</span>png
-</pre> </br>
+</textarea> </br>
+vanilla_behavior_pack<br / ><textarea readonly="true" cols="22" rows="8">
+|-scripts
+|--client
+|---myClientScript.js
+|--server
+|---myServerScript.js
+|-manifest.json
+|-pack_icon.png
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Known Issues">Known Issues</p></h1>
@@ -3861,42 +3861,42 @@ First off we need to register the system for our file. This signs up our script 
 </tr>
 </table>
 <h3>Code Examples:</h3>
-Client System<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> sampleClientSystem <span class="token operator">=</span> client<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
-Server System<br / ><pre class="language-javascript">
-<span class="token keyword">let</span> sampleServerSystem <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">registerSystem</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+Client System<br / ><textarea readonly="true" cols="54" rows="2">
+let sampleClientSystem = client.registerSystem(0, 0);
+</textarea> </br>
+Server System<br / ><textarea readonly="true" cols="54" rows="2">
+let sampleServerSystem = server.registerSystem(0, 0);
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="2. System Initialization">2. System Initialization</p></h2>
 
 This is the first method that gets called immediately after the system is registered. It will run as soon as the script loads at world start.</br>You can use this to set up the environment for your script: register custom components and events, sign up event listeners, etc. This will run BEFORE the world is ready and the player has been added to it. This function should be used to initialize variables and setup event listeners. 					You shouldn't try to spawn or interact with any entities at this point! You should also avoid interaction with UI elements or sending messages to the chat window since this is called before the player is ready.</br><h3>Code Example:</h3>
-<br / ><pre class="language-javascript">
-sampleSystem<span class="token punctuation">.</span><span class="token function-variable function">initialize</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">//register event data, register components, register queries, listen for events</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="82" rows="4">
+sampleSystem.initialize = function() {
+  //register event data, register components, register queries, listen for events
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="3. System Update">3. System Update</p></h2>
 
 This method gets called once every game tick. The server and client tick at 20 times per second. This is a good place to get, check, and react to component changes.</br><h3>Code Example:</h3>
-<br / ><pre class="language-javascript">
-sampleSystem<span class="token punctuation">.</span><span class="token function-variable function">update</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">//Update all the things</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="35" rows="4">
+sampleSystem.update = function() {
+  //Update all the things
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="4. System Shutdown">4. System Shutdown</p></h2>
 
 This method gets called when the Minecraft Script Engine is shutting down. For the client this is when they leave the world; for the server this is after the last player has exited the world.</br><h3>Code Example:</h3>
-<br / ><pre class="language-javascript">
-sampleSystem<span class="token punctuation">.</span><span class="token function-variable function">shutdown</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">//Cleanup script only things</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="37" rows="4">
+sampleSystem.shutdown = function() {
+  //Cleanup script only things
+};
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -3906,8 +3906,8 @@ sampleSystem<span class="token punctuation">.</span><span class="token function-
 <h1><p id="User-Defined Components">User-Defined Components</p></h1>
 
 User-Defined components are a special kind of component that can be defined in script and no built-in game system acts on it.</br>The component needs to be registered with the Script Engine by giving it a name and a set of fields in the format name:value. Once applied, the component behaves like any of the built-in components: you can get it from an entity, modify its values, and apply the changes.</br>Currently User-Defined components are the only components that can be dynamically added and removed from an entity using scripts. They don't need to be previously defined in an entity's JSON file. In the current version these components will NOT be saved out or loaded back in: they only exist while the entity is there and need to be added back when reloading the level.</br><h2>Code Example:</h2>
-Component Registration<br / ><pre class="language-javascript">
-<span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerComponent</span><span class="token punctuation">(</span><span class="token string">"myNamespace:myComponent"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> myString<span class="token operator">:</span> <span class="token string">"TamerJeison"</span><span class="token punctuation">,</span> myInt<span class="token operator">:</span> <span class="token number">42</span><span class="token punctuation">,</span> myFloat<span class="token operator">:</span> <span class="token number">1.0</span><span class="token punctuation">,</span> myArray<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</pre> </br>
+Component Registration<br / ><textarea readonly="true" cols="125" rows="2">
+this.registerComponent("myNamespace:myComponent", { myString: "TamerJeison", myInt: 42, myFloat: 1.0, myArray: [1, 2, 3] });
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 

@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>RECIPES DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>RECIPES DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -36,23 +36,23 @@ Represents a furnace recipe for a furnace.'Input' items will burn and transform 
 <a href="#Index">Back to top</a><br><br>
 
 <h2>Furnace Recipe Example:</h2>
-<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12"</span><span class="token punctuation">,</span>
-<span class="token property">"minecraft:recipe_furnace"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:furnace_beef"</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token property">"tags"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"furnace"</span><span class="token punctuation">,</span> <span class="token string">"smoker"</span><span class="token punctuation">,</span> <span class="token string">"campfire"</span><span class="token punctuation">,</span> <span class="token string">"soul_campfire"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-<span class="token property">"input"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:beef"</span><span class="token punctuation">,</span>
-<span class="token property">"data"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-<span class="token property">"count"</span><span class="token operator">:</span> <span class="token number">4</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token property">"output "</span><span class="token operator">:</span> <span class="token string">"minecraft:cooked_beef"</span>
-<span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="60" rows="16">
+{
+"format_version": "1.12",
+"minecraft:recipe_furnace": {
+"description": {
+"identifier": "minecraft:furnace_beef"
+},
+"tags": ["furnace", "smoker", "campfire", "soul_campfire"],
+"input": {
+"item": "minecraft:beef",
+"data": 0,
+"count": 4
+},
+"output ": "minecraft:cooked_beef"
+}
+}
+</textarea> </br>
 <br><br>
 
 <h1><p id="Potion Brewing Container Recipe">Potion Brewing Container Recipe</p></h1>
@@ -89,23 +89,23 @@ Represents a Potion Brewing Container Recipe..</br><h2></h2>
 <a href="#Index">Back to top</a><br><br>
 
 <h2>Potion Brewing Container Recipe Example:</h2>
-<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12"</span><span class="token punctuation">,</span>
-<span class="token property">"minecraft:recipe_brewing_container"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:brew_potion_sulphur"</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<br / ><textarea readonly="true" cols="48" rows="16">
+{
+"format_version": "1.12",
+"minecraft:recipe_brewing_container": {
+"description": {
+  "identifier": "minecraft:brew_potion_sulphur"
+  },
  
- <span class="token property">"tags"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"brewing_stand"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+ "tags": [ "brewing_stand" ],
  
-  <span class="token property">"input"</span><span class="token operator">:</span> <span class="token string">"minecraft:potion"</span><span class="token punctuation">,</span>
-  <span class="token property">"reagent"</span><span class="token operator">:</span> <span class="token string">"minecraft:gunpowder"</span><span class="token punctuation">,</span>
-  <span class="token property">"output"</span><span class="token operator">:</span> <span class="token string">"minecraft:splash_potion"</span><span class="token punctuation">,</span>
+  "input": "minecraft:potion",
+  "reagent": "minecraft:gunpowder",
+  "output": "minecraft:splash_potion",
  
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+  }
+}
+</textarea> </br>
 <br><br>
 
 <h1><p id="Potion Brewing Mix">Potion Brewing Mix</p></h1>
@@ -142,23 +142,23 @@ Represents a Potion Brewing Mix..</br><h2></h2>
 <a href="#Index">Back to top</a><br><br>
 
 <h2>Potion Brewing Mix Example:</h2>
-<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12"</span><span class="token punctuation">,</span>
-<span class="token property">"minecraft:recipe_brewing_mix"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:brew_awkward_blaze_powder"</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<br / ><textarea readonly="true" cols="54" rows="16">
+{
+"format_version": "1.12",
+"minecraft:recipe_brewing_mix": {
+"description": {
+  "identifier": "minecraft:brew_awkward_blaze_powder"
+  },
  
- <span class="token property">"tags"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"brewing_stand"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+ "tags": [ "brewing_stand" ],
  
-  <span class="token property">"input"</span><span class="token operator">:</span> <span class="token string">"minecraft:potion_type:awkward"</span><span class="token punctuation">,</span>
-  <span class="token property">"reagent"</span><span class="token operator">:</span> <span class="token string">"minecraft:blaze_powder"</span><span class="token punctuation">,</span>
-  <span class="token property">"output"</span><span class="token operator">:</span> <span class="token string">"minecraft:potion_type:strength"</span><span class="token punctuation">,</span>
+  "input": "minecraft:potion_type:awkward",
+  "reagent": "minecraft:blaze_powder",
+  "output": "minecraft:potion_type:strength",
  
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+  }
+}
+</textarea> </br>
 <br><br>
 
 <h1><p id="Shaped Recipe">Shaped Recipe</p></h1>
@@ -200,34 +200,34 @@ Represents a shaped crafting recipe for a crafting table.</br>The key used in th
 <a href="#Index">Back to top</a><br><br>
 
 <h2>Shaped Recipe Example:</h2>
-<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12"</span><span class="token punctuation">,</span>
-<span class="token property">"minecraft:recipe_shaped"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:acacia_boat"</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token property">"tags"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"crafting_table"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
-<span class="token property">"pattern"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token string">"#P#"</span><span class="token punctuation">,</span>
-        <span class="token string">"###"</span>
-        <span class="token punctuation">]</span><span class="token punctuation">,</span>
-  <span class="token property">"key"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"P"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:wooden_shovel"</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token property">"#"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:planks"</span><span class="token punctuation">,</span>
-      <span class="token property">"data"</span><span class="token operator">:</span> <span class="token number">4</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token property">"result"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:boat"</span><span class="token punctuation">,</span>
-    <span class="token property">"data"</span><span class="token operator">:</span> <span class="token number">4</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="40" rows="27">
+{
+"format_version": "1.12",
+"minecraft:recipe_shaped": {
+"description": {
+  "identifier": "minecraft:acacia_boat"
+  },
+"tags": [ "crafting_table" ],
+"pattern": [
+        "#P#",
+        "###"
+        ],
+  "key": {
+    "P": {
+      "item": "minecraft:wooden_shovel"
+    },
+    "#": {
+      "item": "minecraft:planks",
+      "data": 4
+      }
+    },
+"result": {
+    "item": "minecraft:boat",
+    "data": 4
+    }
+  }
+}
+</textarea> </br>
 <br><br>
 
 <h1><p id="Shapeless Recipe">Shapeless Recipe</p></h1>
@@ -264,26 +264,26 @@ Represents a shapeless crafting recipe..</br><h2></h2>
 <a href="#Index">Back to top</a><br><br>
 
 <h2>Shapeless Recipe Example:</h2>
-<br / ><pre class="language-json">
-<span class="token punctuation">{</span>
-<span class="token property">"format_version"</span><span class="token operator">:</span> <span class="token string">"1.12"</span><span class="token punctuation">,</span>
-<span class="token property">"minecraft:recipe_shapeless"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-<span class="token property">"description"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-  <span class="token property">"identifier"</span><span class="token operator">:</span> <span class="token string">"minecraft:firecharge_coal_sulphur"</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
- <span class="token property">"priority"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
- <span class="token property">"ingredients"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:fireball"</span><span class="token punctuation">,</span>
-      <span class="token property">"data"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-      <span class="token property">"count"</span><span class="token operator">:</span> <span class="token number">4</span>
- <span class="token punctuation">}</span><span class="token punctuation">,</span>
-<span class="token property">"result"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"item"</span><span class="token operator">:</span> <span class="token string">"minecraft:blaze_powder"</span><span class="token punctuation">,</span>
-      <span class="token property">"data"</span><span class="token operator">:</span> <span class="token number">4</span>
-      <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="52" rows="19">
+{
+"format_version": "1.12",
+"minecraft:recipe_shapeless": {
+"description": {
+  "identifier": "minecraft:firecharge_coal_sulphur"
+  },
+ "priority": 0,
+ "ingredients": {
+      "item": "minecraft:fireball",
+      "data": 0,
+      "count": 4
+ },
+"result": {
+      "item": "minecraft:blaze_powder",
+      "data": 4
+      }
+  }
+}
+</textarea> </br>
 <br><br>
 
 <br><br>

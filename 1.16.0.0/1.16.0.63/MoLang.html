@@ -1,4 +1,4 @@
-<style> pre { font-size: 14px !important; } </style><link rel="stylesheet" type="text/css" href="https://unpkg.com/prismjs@1.19.0/themes/prism.css"></link><h1>MOLANG DOCUMENTATION </br>Version: 1.16.0.63</h1>
+<h1>MOLANG DOCUMENTATION </br>Version: 1.16.0.63</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -28,14 +28,14 @@ These are always numerical operations to control which animations are playing an
 <h1><p id="Entity Definition Scripts">Entity Definition Scripts</p></h1>
 
 In the definition file there is a section for pre-computing values.  These are executed immediately before animation and render controllers are processed, and stored in the entity.  The purpose is to pre-compute any expensive and complex values you may want to reuse in your scripts, long-living index variable updates, or generally any one-off computation per render tick.</br><h2></h2>
-<br / ><pre class="language-json">
-<span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"pre_animation"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-      <span class="token string">"variable.my_constant = (Math.cos(query.modified_distance_moved * 38.17) * query.modified_move_speed;"</span><span class="token punctuation">,</span>
-      <span class="token string">"variable.my_constant2 = Math.exp(1.5);"</span><span class="token punctuation">,</span>
-    <span class="token punctuation">]</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="110" rows="7">
+"scripts": {
+    "pre_animation": [
+      "variable.my_constant = (Math.cos(query.modified_distance_moved * 38.17) * query.modified_move_speed;",
+      "variable.my_constant2 = Math.exp(1.5);",
+    ]
+  },
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="Render Controllers">Render Controllers</p></h1>
@@ -47,9 +47,9 @@ There are a few different kinds of expressions here, where context implies what 
 For each of the three resource types (materials, textures, and geometry), you can define an array of resources.  The name of the resource is the nice-name from the definition file.  Using materials as an example:</br><h3></h3>
 
 An array can reference any combination of zero or more arrays (including duplicates if desired) and/or zero or more materails (again, including duplicates if you like), and you can have as many arrays as you like, each with as many elements as you like.  If an array includes arrays in its members, they do not need to be the same length.  When indexing into an array in the resource usage section, you use numerical expressions.  If the resulting number is negative, it will use zero as the index.  Any non - negative index will converted to an integer, and will wrap based on the size of the array:</br><h4></h4>
-<br / ><pre class="language-json">
-index = max(<span class="token number">0</span><span class="token punctuation">,</span> expression_result) % array_size
-</pre> </br>
+<br / ><textarea readonly="true" cols="47" rows="2">
+index = max(0, expression_result) % array_size
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -57,18 +57,18 @@ index = max(<span class="token number">0</span><span class="token punctuation">,
 <h2><p id="Resource Expression">Resource Expression</p></h2>
 
 A resource expression must return a single resource of a specific type depending on the context.</br>For example, in the "geometry" section, you must produce an expression that will result in a single geometry.  Some examples:</br><h3></h3>
-Always use a specific geometry<br / ><pre class="language-json">
-<span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"geometry.my_geo"</span>
-</pre> </br>
-Cycle through an array of geometries at a rate of one per second<br / ><pre class="language-json">
-<span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"array.my_geometries[query.anim_time]"</span>
-</pre> </br>
-Pick a geo based on an entity flag<br / ><pre class="language-json">
-<span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"query.is_sheared ? geometry.sheared : geometry.woolly"</span>
-</pre> </br>
-Use specific geo when sleeping, otherwise flip through an array based on a cosine curve, using index zero for almost half the time while the cosine curve is negative<br / ><pre class="language-json">
-<span class="token property">"geometry"</span><span class="token operator">:</span> <span class="token string">"query.is_sleeping ? geometry.my_sleeping_geo : array.my_geos[math.cos(query.anim_time * 12.3 + 41.9) * 10 + 0.6]"</span>
-</pre> </br>
+Always use a specific geometry<br / ><textarea readonly="true" cols="30" rows="2">
+"geometry": "geometry.my_geo"
+</textarea> </br>
+Cycle through an array of geometries at a rate of one per second<br / ><textarea readonly="true" cols="51" rows="2">
+"geometry": "array.my_geometries[query.anim_time]"
+</textarea> </br>
+Pick a geo based on an entity flag<br / ><textarea readonly="true" cols="68" rows="2">
+"geometry": "query.is_sheared ? geometry.sheared : geometry.woolly"
+</textarea> </br>
+Use specific geo when sleeping, otherwise flip through an array based on a cosine curve, using index zero for almost half the time while the cosine curve is negative<br / ><textarea readonly="true" cols="127" rows="2">
+"geometry": "query.is_sleeping ? geometry.my_sleeping_geo : array.my_geos[math.cos(query.anim_time * 12.3 + 41.9) * 10 + 0.6]"
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="Resource Sections">Resource Sections</p></h2>
@@ -84,14 +84,14 @@ The geometry section specifies which geometry to use when rendering.  As you can
 The materials section specifies how to map what material to what bone of the geometry.  A single material is mapped to a whole bone.  Material expressions are evaluated in the order listed.  The first part of each statement is the name of the model part to apply the material to, and the second part is the material to use.  The model part name can use * for wild - card matching of characters.  For example : </br><h4></h4>
 
 - Next, it will set the material on a model part named "TailA" to the result of the expression "Array.hairColors[variable.hair_color]".  This will look up some previously created variable on the entity named hair_color and use that to index into a material array called "array.hair_colors" defined in this render controller.  This will overwrite the Material.default material set in the line above.</br>- Third, it will look up the same material as the expression is identical, and apply it to the "Mane" model part.</br>- Lastly, if will find any model part starting with, ending with, or containing "Saddle" (case sensitive) and change its material to either material.leather_saddle or material.iron_saddle depending on the previously set entity variable variable.is_leather_saddle.</br><h6></h6>
-<br / ><pre class="language-json">
-  <span class="token property">"materials"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-      <span class="token punctuation">{</span> <span class="token property">"*"</span><span class="token operator">:</span> <span class="token string">"Material.default"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">{</span> <span class="token property">"TailA"</span><span class="token operator">:</span> <span class="token string">"array.hair_colors[variable.hair_color]"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">{</span> <span class="token property">"Mane"</span><span class="token operator">:</span> <span class="token string">"array.hair_colors[variable.hair_color]"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">{</span> <span class="token property">"*Saddle*"</span><span class="token operator">:</span> <span class="token string">"variable.is_leather_saddle ? material.leather_saddle : material.iron_saddle"</span> <span class="token punctuation">}</span>
-    <span class="token punctuation">]</span><span class="token punctuation">,</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="100" rows="7">
+  "materials": [
+      { "*": "Material.default" },
+      { "TailA": "array.hair_colors[variable.hair_color]" },
+      { "Mane": "array.hair_colors[variable.hair_color]" },
+      { "*Saddle*": "variable.is_leather_saddle ? material.leather_saddle : material.iron_saddle" }
+    ],
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -259,11 +259,11 @@ All identifiers not in a scope listed below are reserved for future use</br><h2>
 <h2></h2>
 
 A simple expression is a single statement, the value of which is returned to the system that evaluated the expression.  eg:In the current implementation, the last statement requires the use of the return keyword and defines the resulting value of the expression.  eg:</br><h3></h3>
-<br / ><pre class="language-json">
-temp.my_temp_var = Math.sin(query.anim_time * <span class="token number">1.23</span>);
-temp.my_other_temp_var = Math.cos(query.life_time + <span class="token number">2.0</span>);
+<br / ><textarea readonly="true" cols="69" rows="4">
+temp.my_temp_var = Math.sin(query.anim_time * 1.23);
+temp.my_other_temp_var = Math.cos(query.life_time + 2.0);
 return temp.my_temp_var * temp.my_temp_var + temp.my_other_temp_var;
-</pre> </br>
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -320,9 +320,9 @@ There are several domains a variable may belong to:</br><h2>Parameters</h2>
 <h1><p id="Query Functions">Query Functions</p></h1>
 
 Query Functions are boolean expressions that allow you to query for values owned by the engine under different circumstances.  They can be used in MoLang expressionsUseful for controlling things like changing positions, textures, animations, etc if a mob is a baby.  For example:</br><h2></h2>
-<br / ><pre class="language-json">
-<span class="token property">"position"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token number">0.0</span><span class="token punctuation">,</span> <span class="token string">"query.is_baby ? -8.0 : 0.0"</span><span class="token punctuation">,</span> <span class="token string">"query.is_baby ? 4.0 : 0.0"</span> <span class="token punctuation">]</span>
-</pre> </br>
+<br / ><textarea readonly="true" cols="79" rows="2">
+"position": [ 0.0, "query.is_baby ? -8.0 : 0.0", "query.is_baby ? 4.0 : 0.0" ]
+</textarea> </br>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="List of Entity Queries">List of Entity Queries</p></h1>
