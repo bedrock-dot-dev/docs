@@ -26,5 +26,6 @@ jobs:
         env:
           DOCS_VERSION: ${{ steps.docs-updated.outputs.version }}
         run: |
+          git add --all
           git commit -am "Docs update: $DOCS_VERSION"
           git push
