@@ -22,13 +22,16 @@ jobs:
         id: docs-updated
         working-directory: scripts
         run: |
-          output=$(yarn -s check-update)
+          output="$(yarn -s check-update)"
           echo "::set-output name=version::$output"
       - name: Push to GitHub
         if: steps.docs-updated.outputs.version != 'false'
         env:
           DOCS_VERSION: ${{ steps.docs-updated.outputs.version }}
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           git add --all
           git commit -m "Docs update: $DOCS_VERSION"
           git push
+          sleep 1m
+          curl -X POST $VERCEL_DEPLOY_HOOK
