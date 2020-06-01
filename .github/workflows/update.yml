@@ -1,0 +1,30 @@
+name: update
+
+on:
+  schedule:
+    # run this every two hours
+    - cron:  '0 */2 * * *'
+
+jobs:
+  updater:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Setup git environment
+        run: |
+          git config --global user.name 'destruc7i0n'
+          git config --global user.email 'destruc7i0n@users.noreply.github.com'
+      - run: yarn
+      - name: Check for bedrock docs update
+        id: docs-updated
+        run: echo "::set-output name=version::$(yarn -s check-update)"
+      - name: Push to GitHub
+        if: steps.docs-updated.outputs.version != 'false'
+        env:
+          DOCS_VERSION: ${{ steps.docs-updated.outputs.version }}
+        run: |
+          git commit -am "Docs update: $DOCS_VERSION"
+          git push
