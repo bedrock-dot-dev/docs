@@ -20,12 +20,15 @@ jobs:
       - run: yarn
       - name: Check for bedrock docs update
         id: docs-updated
-        run: echo "::set-output name=version::$(yarn -s check-update)"
+        working-directory: scripts
+        run: |
+          output=$(yarn -s check-update)
+          echo "::set-output name=version::$output"
       - name: Push to GitHub
         if: steps.docs-updated.outputs.version != 'false'
         env:
           DOCS_VERSION: ${{ steps.docs-updated.outputs.version }}
         run: |
           git add --all
-          git commit -am "Docs update: $DOCS_VERSION"
+          git commit -m "Docs update: $DOCS_VERSION"
           git push

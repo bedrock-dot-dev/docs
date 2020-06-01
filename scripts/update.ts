@@ -9,7 +9,9 @@ import request from 'request-promise-native'
 const betaUrl = 'https://aka.ms/MinecraftBetaBehaviors'
 const retailUrl = 'https://aka.ms/behaviorpacktemplate'
 
-const versionsPath = path.resolve('../tags.json')
+const isLocal = process.platform !== 'linux'
+
+const versionsPath = path.resolve('./tags.json')
 const tmpDirectory = './scripts/tmp/'
 
 type TagsType = {
