@@ -92,11 +92,11 @@ const main = async (force: boolean = false) => {
 
   // copy the files to the new directory
   if (newBeta || force) {
-    const betaDirectory = path.resolve(`../${versions.beta.join('/')}`)
+    const betaDirectory = path.resolve(`./${versions.beta.join('/')}`)
     if (!fsExtra.pathExistsSync(betaDirectory)) fsExtra.copySync(betaPath, betaDirectory)
   }
   if (newRetail || force) {
-    const stableDirectory = path.resolve(`../${versions.stable.join('/')}`)
+    const stableDirectory = path.resolve(`./${versions.stable.join('/')}`)
     if (!fsExtra.pathExistsSync(stableDirectory)) fsExtra.copySync(retailPath, stableDirectory)
   }
 
