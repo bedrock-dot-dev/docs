@@ -35,5 +35,5 @@ jobs:
           git add --all
           git commit -m "Docs update: $DOCS_VERSION"
           git push
-          sleep 1m
-          curl -X POST $VERCEL_DEPLOY_HOOK
+          # sleep 1m
+          # curl -X POST $VERCEL_DEPLOY_HOOK
