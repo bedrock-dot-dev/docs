@@ -1,12 +1,12 @@
-name: update
+name: Check for docs updates
 
 on:
   schedule:
-    # run this every two hours
-    - cron:  '0 */2 * * *'
+    # run this every two hours during the week
+    - cron:  '0 */2 * * 1-5'
 
 jobs:
-  updater:
+  check:
     if: github.repository == 'bedrock-dot-dev/docs'
     runs-on: ubuntu-latest
     steps:
@@ -40,5 +40,5 @@ jobs:
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          # sleep 1m
-          # curl -X POST $VERCEL_DEPLOY_HOOK
+          sleep 1m
+          curl -X POST $VERCEL_DEPLOY_HOOK
