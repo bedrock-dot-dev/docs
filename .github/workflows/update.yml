@@ -27,13 +27,18 @@ jobs:
           echo "::set-output name=result::$output"
           echo "$output"
       - name: Push to GitHub
+        id: github-push
         if: ${{ fromJSON(steps.docs-updated.outputs.result).error == 'false' && fromJSON(steps.docs-updated.outputs.result).update != 'false' }}
         env:
           DOCS_VERSION: ${{ fromJSON(steps.docs-updated.outputs.result).update }}
-          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           git add --all
           git commit -m "Docs update: $DOCS_VERSION"
           git push
+      - name: Deploy site
+        if: steps.github-push.outcome == 'success'
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
           # sleep 1m
           # curl -X POST $VERCEL_DEPLOY_HOOK
