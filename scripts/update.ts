@@ -19,6 +19,12 @@ type TagsType = {
   beta: string[]
 }
 
+type ResultType = {
+  versions?: TagsType
+  update?: string | false
+  error: boolean
+}
+
 const unzip = async (url: string, type: 'beta' | 'retail') => {
   // @ts-ignore
   const directory = await unzipper.Open.url(request, url)
@@ -98,11 +104,24 @@ const main = async (force: boolean = false) => {
   if (newBeta) commitTitleParts.push(`Beta ${betaMinor}`)
   if (newRetail) commitTitleParts.push(`Release ${retailMinor}`)
 
+  let result: ResultType = { versions, update: false, error: false }
+
   // talk to github actions
-  if (newBeta || newRetail) console.log(commitTitleParts.join(', '))
-  else console.log(false)
+  if (newBeta || newRetail) {
+    result['update'] = commitTitleParts.join(', ')
+  }
 
   fsExtra.removeSync(path.resolve(tmpDirectory))
+
+  return result
 }
 
-main()
+(async () => {
+  let output: ResultType = { error: true }
+  try {
+    output = await main()
+  } catch (e) {
+    output = { error: e }
+  }
+  console.log(JSON.stringify(output))
+})()

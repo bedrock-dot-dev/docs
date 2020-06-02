@@ -7,6 +7,7 @@ on:
 
 jobs:
   updater:
+    if: github.repository == 'bedrock-dot-dev/docs'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,11 +24,12 @@ jobs:
         working-directory: scripts
         run: |
           output="$(yarn -s check-update)"
-          echo "::set-output name=version::$output"
+          echo "::set-output name=result::$output"
+          echo "$output"
       - name: Push to GitHub
-        if: steps.docs-updated.outputs.version != 'false'
+        if: ${{ fromJSON(steps.docs-updated.outputs.result).error == 'false' && fromJSON(steps.docs-updated.outputs.result).update != 'false' }}
         env:
-          DOCS_VERSION: ${{ steps.docs-updated.outputs.version }}
+          DOCS_VERSION: ${{ fromJSON(steps.docs-updated.outputs.result).update }}
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           git add --all
