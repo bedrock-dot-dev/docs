@@ -25,10 +25,10 @@ jobs:
         run: |
           output="$(yarn -s check-update)"
           echo "::set-output name=result::$output"
-          echo "$output"
+          echo "result: $output"
       - name: Push to GitHub
         id: github-push
-        if: ${{ fromJSON(steps.docs-updated.outputs.result).error == 'false' && fromJSON(steps.docs-updated.outputs.result).update != 'false' }}
+        if: ${{ !fromJSON(steps.docs-updated.outputs.result).error && fromJSON(steps.docs-updated.outputs.result).update }}
         env:
           DOCS_VERSION: ${{ fromJSON(steps.docs-updated.outputs.result).update }}
         run: |
