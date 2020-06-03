@@ -6,8 +6,20 @@ import fsExtra from 'fs-extra'
 import unzipper from 'unzipper'
 import request from 'request-promise-native'
 
-const betaUrl = 'https://aka.ms/MinecraftBetaBehaviors'
-const retailUrl = 'https://aka.ms/behaviorpacktemplate'
+const betaUrls = {
+  b: 'https://aka.ms/MinecraftBetaBehaviors',
+  r: 'https://aka.ms/MinecraftBetaResources'
+}
+const retailUrls = {
+  b: 'https://aka.ms/behaviorpacktemplate',
+  r: 'https://aka.ms/resourcepacktemplate'
+}
+const urls = {
+  beta: betaUrls,
+  retail: retailUrls,
+}
+
+type FileTypes = 'beta' | 'retail'
 
 const isLocal = process.platform !== 'linux'
 
@@ -25,7 +37,19 @@ type ResultType = {
   error: boolean
 }
 
-const unzip = async (url: string, type: 'beta' | 'retail') => {
+const downloadFiles = async (type: FileTypes, version: string) => {
+  // download the file for storage
+  fsExtra.ensureDirSync('./scripts/cache/behaviours')
+  fsExtra.ensureDirSync('./scripts/cache/resources')
+
+  let location = path.resolve(`./scripts/cache/behaviours/${version}.zip`)
+  if (!fs.existsSync(location)) await request(urls[type].b).pipe(fs.createWriteStream(location))
+
+  location = path.resolve(`./scripts/cache/resources/${version}.zip`)
+  if (!fs.existsSync(location)) await request(urls[type].r).pipe(fs.createWriteStream(location))
+}
+
+const unzip = async (url: string, type: FileTypes) => {
   // @ts-ignore
   const directory = await unzipper.Open.url(request, url)
 
@@ -70,8 +94,8 @@ const unzip = async (url: string, type: 'beta' | 'retail') => {
 }
 
 const main = async (force: boolean = false) => {
-  const { minor: betaMinor, major: betaMajor, path: betaPath } = await unzip(betaUrl, 'beta')
-  const { minor: retailMinor, major: retailMajor, path: retailPath } = await unzip(retailUrl, 'retail')
+  const { minor: betaMinor, major: betaMajor, path: betaPath } = await unzip(betaUrls.b, 'beta')
+  const { minor: retailMinor, major: retailMajor, path: retailPath } = await unzip(retailUrls.b, 'retail')
 
   const versions: TagsType = JSON.parse(fs.readFileSync(versionsPath, 'utf8'))
 
@@ -94,10 +118,12 @@ const main = async (force: boolean = false) => {
   if (newBeta || force) {
     const betaDirectory = path.resolve(`./${versions.beta.join('/')}`)
     if (!fsExtra.pathExistsSync(betaDirectory)) fsExtra.copySync(betaPath, betaDirectory)
+    await downloadFiles('beta', betaMinor) // download the files for the cache
   }
   if (newRetail || force) {
     const stableDirectory = path.resolve(`./${versions.stable.join('/')}`)
     if (!fsExtra.pathExistsSync(stableDirectory)) fsExtra.copySync(retailPath, stableDirectory)
+    await downloadFiles('retail', retailMinor) // download the files for the cache
   }
 
   let commitTitleParts = []
