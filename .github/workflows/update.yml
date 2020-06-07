@@ -2,8 +2,10 @@ name: Check for docs updates
 
 on:
   schedule:
-    # run this every two hours during the week
-    - cron:  '0 */2 * * 1-5'
+    # run this every few hours during the week
+    # at 8am, 12pm, 4pm, 8pm
+    # Redmond time (UTC-7)
+    - cron:  '0 15,19,23,3 * * 2-5'
 
 jobs:
   check:
@@ -32,6 +34,7 @@ jobs:
         env:
           DOCS_VERSION: ${{ fromJSON(steps.docs-updated.outputs.result).update }}
         run: |
+          cp -vr ./scripts/out/* .
           git add --all
           git commit -m "Docs update: $DOCS_VERSION"
           git push

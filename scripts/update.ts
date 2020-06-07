@@ -116,12 +116,12 @@ const main = async (force: boolean = false) => {
 
   // copy the files to the new directory
   if (newBeta || force) {
-    const betaDirectory = path.resolve(`./${versions.beta.join('/')}`)
+    const betaDirectory = path.resolve(`./scripts/out/${versions.beta.join('/')}`)
     if (!fsExtra.pathExistsSync(betaDirectory)) fsExtra.copySync(betaPath, betaDirectory)
     await downloadFiles('beta', betaMinor) // download the files for the cache
   }
   if (newRetail || force) {
-    const stableDirectory = path.resolve(`./${versions.stable.join('/')}`)
+    const stableDirectory = path.resolve(`./scripts/out/${versions.stable.join('/')}`)
     if (!fsExtra.pathExistsSync(stableDirectory)) fsExtra.copySync(retailPath, stableDirectory)
     await downloadFiles('retail', retailMinor) // download the files for the cache
   }
