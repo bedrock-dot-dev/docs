@@ -57,6 +57,7 @@ jobs:
 
           if [ -n "$msg" ]; then
             echo "commit message: $msg"
+            echo "::set-output name=msg::$msg"
           fi
 
           # commit with the previous version
@@ -68,6 +69,12 @@ jobs:
           git add --all
           git commit -m "Docs update: $msg"
           git push
+      - name: Archive documentation files
+        if: steps.github-push.outcome == 'success'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.github-push.outputs.msg }}
+          path: scripts/out
       - name: Upload resources and behaviours to S3
         if: steps.github-push.outcome == 'success'
         uses: jakejarvis/s3-sync-action@master
