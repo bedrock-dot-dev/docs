@@ -4938,7 +4938,11 @@ Example Spawn Rules for the zombie<br / ><textarea readonly="true" cols="72" row
 
 Filters allow data objects to specify test criteria which allows their use.</br></br>For example, a model that includes a filter will only be used when the filter criteria is true.</br></br></br></br>A typical filter consists of four parameters:</br></br> name: the name of the test to apply.</br></br> domain: the domain the test should be performed in. An armor slot, for example. This parameter is only used by a few tests.</br></br> operator: the comparison to apply with the value, such as 'equal' or 'greater'.</br></br> value: the value being compared with the test.</br></br></br></br>A typical filter looks like the following:</br></br> { "test" : "moon_intensity", "subject" : "self", "operator" : "greater", "value" : "0.5" } </br></br>Which results in the calling entity (self) calculating the moon_intensity at its location and returning true if the result is greater than 0.5.</br></br></br></br>Tests can be combined into groups using the collections 'all_of', 'any_of', or 'none_of'.</br></br> All tests in an 'all_of' group must pass in order for the group to pass.</br></br> One or more tests in an 'any_of' group must pass in order for the group to pass.</br></br> All tests in a 'none_of' group must fail in order for the group to pass.</br></br><h1><p id="clock_time">clock_time</p></h1>
 
-Compares the current time with a float value in the range (0.0, 1.0).0.0= Noon0.25= Sunset0.5= Midnight0.75= Sunrise</br><h2>Parameters</h2>
+Compares the current time with a float value in the range (0.0, 1.0).
+0.0= Noon
+0.25= Sunset
+0.5= Midnight
+0.75= Sunrise</br><h2>Parameters</h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Default</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
