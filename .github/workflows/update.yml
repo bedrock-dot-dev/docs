@@ -20,6 +20,14 @@ jobs:
         run: |
           git config --global user.name 'destruc7i0n'
           git config --global user.email 'destruc7i0n@users.noreply.github.com'
+      - name: Store current versions
+        id: current
+        run: |
+          stable="./$(cat tags.json | jq -r '.stable | join("/")')"
+          beta="./$(cat tags.json | jq -r '.beta | join("/")')"
+          echo "current stable: $stable, current beta: $beta"
+          echo "::set-output name=stable::$stable"
+          echo "::set-output name=beta::$beta"
       - run: yarn
       - name: Check for bedrock docs update
         id: docs-updated
@@ -30,13 +38,35 @@ jobs:
           echo "result: $output"
       - name: Push to GitHub
         id: github-push
-        if: ${{ !fromJSON(steps.docs-updated.outputs.result).error && fromJSON(steps.docs-updated.outputs.result).update }}
-        env:
-          DOCS_VERSION: ${{ fromJSON(steps.docs-updated.outputs.result).update }}
+        if: ${{ !fromJSON(steps.docs-updated.outputs.result).error && (fromJSON(steps.docs-updated.outputs.result).update.stable.updated || fromJSON(steps.docs-updated.outputs.result).update.beta.updated) }}
         run: |
+          # copy the files from the older version
+          msg=""
+          if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}" == "true" ]; then
+            cp -vr ${{ steps.current.outputs.stable }} ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
+            msg="Stable ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.name }}"
+          fi
+
+          if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}" == "true" ]; then
+            cp -vr ${{ steps.current.outputs.beta }} ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
+            if [ -n "$msg" ]; then
+              msg="${msg}, "
+            fi
+            msg="${msg}Beta ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.name }}"
+          fi
+
+          if [ -n "$msg" ]; then
+            echo "commit message: $msg"
+          fi
+
+          # commit with the previous version
+          git add --all
+          git commit -m "Copy older files for $msg"
+
+          # now we actually copy the new files and commit, to generate diff
           cp -vr ./scripts/out/* .
           git add --all
-          git commit -m "Docs update: $DOCS_VERSION"
+          git commit -m "Docs update: $msg"
           git push
       - name: Upload resources and behaviours to S3
         if: steps.github-push.outcome == 'success'
@@ -54,5 +84,5 @@ jobs:
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          sleep 1m
+          sleep 30s
           curl -X POST $VERCEL_DEPLOY_HOOK

@@ -31,9 +31,18 @@ type TagsType = {
   beta: string[]
 }
 
+type UpdateVersionType = {
+  name?: string
+  path?: string
+  updated: boolean
+}
+
 type ResultType = {
   versions?: TagsType
-  update?: string | false
+  update?: {
+    beta: UpdateVersionType
+    stable: UpdateVersionType
+  }
   error: boolean
 }
 
@@ -126,15 +135,32 @@ const main = async (force: boolean = false) => {
     await downloadFiles('retail', retailMinor) // download the files for the cache
   }
 
-  let commitTitleParts = []
-  if (newBeta) commitTitleParts.push(`Beta ${betaMinor}`)
-  if (newRetail) commitTitleParts.push(`Release ${retailMinor}`)
-
-  let result: ResultType = { versions, update: false, error: false }
+  let result: ResultType = {
+    versions,
+    update: {
+      stable: { updated: false },
+      beta: { updated: false },
+    },
+    error: false
+  }
 
   // talk to github actions
-  if (newBeta || newRetail) {
-    result['update'] = commitTitleParts.join(', ')
+  if (result.update) {
+    if (newBeta) {
+      result.update.beta = {
+        updated: true,
+        name: betaMinor,
+        path: [betaMajor, betaMinor].join('/')
+      }
+    }
+    if (newRetail) {
+      result.update.stable = {
+        updated: true,
+        name: retailMinor,
+        path: [retailMajor, retailMinor].join('/')
+      }
+    }
+    
   }
 
   fsExtra.removeSync(path.resolve(tmpDirectory))
