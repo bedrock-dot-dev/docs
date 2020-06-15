@@ -3,9 +3,9 @@ name: Check for docs updates
 on:
   schedule:
     # run this every few hours during the week
-    # at 8am, 12pm, 4pm, 8pm
+    # at 9am, 1pm, 5pm, 9pm
     # Redmond time (UTC-7)
-    - cron:  '0 15,19,23,3 * * 2-5'
+    - cron:  '0 16,20,0,4 * * 2-5'
 
 jobs:
   check:
