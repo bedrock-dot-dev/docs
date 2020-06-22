@@ -1,6 +1,6 @@
 # docs
 
-The Docs Files. 
+The documentation files. 
 
 The source of the website is available at [destruc7i0n/bedrock-dot-dev](https://github.com/destruc7i0n/bedrock-dot-dev)
 
