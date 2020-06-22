@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: denolib/setup-deno@master
         with:
-          node-version: 14
+          deno-version: 1.1.1
       - name: Setup git environment
         run: |
           git config --global user.name 'destruc7i0n'
@@ -28,12 +28,11 @@ jobs:
           echo "current stable: $stable, current beta: $beta"
           echo "::set-output name=stable::$stable"
           echo "::set-output name=beta::$beta"
-      - run: yarn
       - name: Check for bedrock docs update
         id: docs-updated
-        working-directory: scripts
         run: |
-          output="$(yarn -s check-update)"
+          echo "deno version: $(deno -V)"
+          output="$(deno run --unstable --allow-net --allow-read --allow-write --quiet ./scripts/update.ts)"
           echo "::set-output name=result::$output"
           echo "result: $output"
       - name: Push to GitHub
@@ -43,11 +42,13 @@ jobs:
           # copy the files from the older version
           msg=""
           if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}" == "true" ]; then
+            echo "copying the previous stable version files"
             cp -vr ${{ steps.current.outputs.stable }} ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
             msg="Stable ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.name }}"
           fi
 
           if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}" == "true" ]; then
+            echo "copying the previous beta version files"
             cp -vr ${{ steps.current.outputs.beta }} ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
             if [ -n "$msg" ]; then
               msg="${msg}, "
@@ -62,9 +63,10 @@ jobs:
 
           # commit with the previous version
           git add --all
-          git commit -m "Copy older files for $msg"
+          git commit -m "Copy previous version files for \"$msg\""
 
           # now we actually copy the new files and commit, to generate diff
+          echo "copying the latest files"
           cp -vr ./scripts/out/* .
           git add --all
           git commit -m "Docs update: $msg"
@@ -91,5 +93,6 @@ jobs:
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
+          # sleep for a bit for GitHub's cache
           sleep 30s
           curl -X POST $VERCEL_DEPLOY_HOOK

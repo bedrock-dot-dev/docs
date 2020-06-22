@@ -3,4 +3,4 @@ node_modules
 
 # ignore all files other than ts in scripts folder
 /scripts/*
-!/scripts/*.ts
+!/scripts/**/*.ts

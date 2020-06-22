@@ -1,10 +1,7 @@
-import fs from 'fs'
-import path from 'path'
+import { copySync, existsSync, readFileStrSync, writeFileStrSync } from 'https://deno.land/std@0.58.0/fs/mod.ts'
+import * as path from 'https://deno.land/std@0.58.0/path/mod.ts'
 
-import fsExtra from 'fs-extra'
-
-import unzipper from 'unzipper'
-import request from 'request-promise-native'
+import * as unzipit from 'https://cdn.pika.dev/unzipit@^1.1.5'
 
 const betaUrls = {
   b: 'https://aka.ms/MinecraftBetaBehaviors',
@@ -19,9 +16,12 @@ const urls = {
   retail: retailUrls,
 }
 
-type FileTypes = 'beta' | 'retail'
+enum FileTypes {
+  Beta = 'beta',
+  Retail = 'retail',
+}
 
-const isLocal = process.platform !== 'linux'
+// const isLocal = Deno.build.os === 'darwin'
 
 const versionsPath = path.resolve('./tags.json')
 const tmpDirectory = './scripts/tmp/'
@@ -46,67 +46,74 @@ type ResultType = {
   error: boolean
 }
 
+const downloadFile = async (url: string, path: string) => {
+  const res = await fetch(url)
+  if (res.body) {
+    const file = await Deno.open(path, { create: true, write: true })
+    for await (const chunk of res.body) {
+      await Deno.writeAll(file, chunk)
+    }
+    file.close()
+  }
+}
+
 const downloadFiles = async (type: FileTypes, version: string) => {
   // download the file for storage
-  fsExtra.ensureDirSync('./scripts/cache/behaviours')
-  fsExtra.ensureDirSync('./scripts/cache/resources')
+  try {
+    Deno.mkdirSync('./scripts/cache/behaviours', { recursive: true })
+    Deno.mkdirSync('./scripts/cache/resources', { recursive: true })
+  } catch (e) {}
 
-  let location = path.resolve(`./scripts/cache/behaviours/${version}.zip`)
-  if (!fs.existsSync(location)) await request(urls[type].b).pipe(fs.createWriteStream(location))
+  const behavioursLocation = path.resolve(`./scripts/cache/behaviours/${version}.zip`)
+  await downloadFile(urls[type].b, behavioursLocation)
 
-  location = path.resolve(`./scripts/cache/resources/${version}.zip`)
-  if (!fs.existsSync(location)) await request(urls[type].r).pipe(fs.createWriteStream(location))
+  const resourcesLocation = path.resolve(`./scripts/cache/resources/${version}.zip`)
+  await downloadFile(urls[type].r, resourcesLocation)
 }
 
 const unzip = async (url: string, type: FileTypes) => {
-  // @ts-ignore
-  const directory = await unzipper.Open.url(request, url)
-
   const docsPath = path.resolve(tmpDirectory + type) + '/'
+  try {
+    Deno.mkdirSync(docsPath, { recursive: true })
+  } catch (e) {}
 
-  if (!fs.existsSync(docsPath)) fs.mkdirSync(path.resolve(docsPath), { recursive: true })
+  const { entries } = await unzipit.unzip(url)
 
-  const unzipFilesPromises = directory.files
-    .filter((f: unzipper.File) => f.path.startsWith('documentation/') && f.path !== 'documentation/')
-    .map((f: unzipper.File) => 
-      new Promise((resolve) => {
-        f.stream().pipe(fs.createWriteStream(
-            path.resolve(
-              docsPath + f.path.replace('documentation/', '')
-            )
-          ))
-          .on('error', (e) => console.log(e))
-          .on('finish', resolve)
-      })
-    )
-
-  // unzip everything
-  await Promise.all(unzipFilesPromises)
+  for (const [ name, entry ] of Object.entries(entries)) {
+    if (name.startsWith('documentation/') && !(entry as any).isDirectory) {
+      const localLocation =  path.resolve(docsPath + name.replace('documentation/', ''))
+      const buffer = await (entry as any).arrayBuffer()
+      const unit8arr = new Deno.Buffer(buffer).bytes()
+      Deno.writeFileSync(localLocation, unit8arr)
+    }
+  }
 
   let minorVersion: string = ''
   let majorVersion: string = ''
 
   // read from the unused index file the version
-  const indexFile = fs.readFileSync(path.resolve(docsPath + '/Index.html'), 'utf8')
+  const indexFile = readFileStrSync(path.resolve(docsPath + '/Index.html'))
   let versionString = indexFile.match(/Version: (\d+\.\d+\.\d+\.\d+)/)
-  if (versionString && versionString.length > 1) {
-    minorVersion = versionString[1]
-
-    const versionParts = minorVersion.split('.')
-    majorVersion = `${versionParts[0]}.${versionParts[1]}.0.0`
+  if (versionString) {
+    if (versionString.length > 1) {
+      minorVersion = versionString[1]
+  
+      const versionParts = minorVersion.split('.')
+      majorVersion = `${versionParts[0]}.${versionParts[1]}.0.0`
+    }
   }
 
   // delete the index file
-  fs.unlinkSync(path.resolve(docsPath + '/Index.html'))
+  Deno.removeSync(path.resolve(docsPath + '/Index.html'))
 
   return { minor: minorVersion, major: majorVersion, path: docsPath }
 }
 
 const main = async (force: boolean = false) => {
-  const { minor: betaMinor, major: betaMajor, path: betaPath } = await unzip(betaUrls.b, 'beta')
-  const { minor: retailMinor, major: retailMajor, path: retailPath } = await unzip(retailUrls.b, 'retail')
+  const { minor: betaMinor, major: betaMajor, path: betaPath } = await unzip(betaUrls.b, FileTypes.Beta)
+  const { minor: retailMinor, major: retailMajor, path: retailPath } = await unzip(retailUrls.b, FileTypes.Retail)
 
-  const versions: TagsType = JSON.parse(fs.readFileSync(versionsPath, 'utf8'))
+  const versions: TagsType = JSON.parse(readFileStrSync(versionsPath, { encoding: 'utf8' }))
 
   let newBeta = false
   let newRetail = false
@@ -121,18 +128,18 @@ const main = async (force: boolean = false) => {
   }
 
   // update tags if beta
-  if (newBeta || newRetail || force) fs.writeFileSync(versionsPath, JSON.stringify(versions, null, 2))
+  if (newBeta || newRetail || force) writeFileStrSync(versionsPath, JSON.stringify(versions, null, 2))
 
   // copy the files to the new directory
   if (newBeta || force) {
     const betaDirectory = path.resolve(`./scripts/out/${versions.beta.join('/')}`)
-    if (!fsExtra.pathExistsSync(betaDirectory)) fsExtra.copySync(betaPath, betaDirectory)
-    await downloadFiles('beta', betaMinor) // download the files for the cache
+    if (!existsSync(betaDirectory)) copySync(betaPath, betaDirectory)
+    await downloadFiles(FileTypes.Beta, betaMinor) // download the behaviours and resources files for the cache
   }
   if (newRetail || force) {
     const stableDirectory = path.resolve(`./scripts/out/${versions.stable.join('/')}`)
-    if (!fsExtra.pathExistsSync(stableDirectory)) fsExtra.copySync(retailPath, stableDirectory)
-    await downloadFiles('retail', retailMinor) // download the files for the cache
+    if (!existsSync(stableDirectory)) copySync(retailPath, stableDirectory)
+    await downloadFiles(FileTypes.Retail, retailMinor) // download the behaviours and resources files for the cache
   }
 
   let result: ResultType = {
@@ -163,7 +170,7 @@ const main = async (force: boolean = false) => {
     
   }
 
-  fsExtra.removeSync(path.resolve(tmpDirectory))
+  Deno.removeSync(path.resolve(tmpDirectory), { recursive: true })
 
   return result
 }
