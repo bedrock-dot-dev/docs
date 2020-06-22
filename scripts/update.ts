@@ -11,14 +11,15 @@ const retailUrls = {
   b: 'https://aka.ms/behaviorpacktemplate',
   r: 'https://aka.ms/resourcepacktemplate'
 }
-const urls = {
-  beta: betaUrls,
-  retail: retailUrls,
-}
 
 enum FileTypes {
   Beta = 'beta',
   Retail = 'retail',
+}
+
+const urls = {
+  [FileTypes.Beta]: betaUrls,
+  [FileTypes.Retail]: retailUrls,
 }
 
 // const isLocal = Deno.build.os === 'darwin'
