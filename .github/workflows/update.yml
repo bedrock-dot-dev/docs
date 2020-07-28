@@ -1,11 +1,12 @@
 name: Check for docs updates
 
 on:
+  workflow_dispatch: {}
   schedule:
-    # run this every few hours during the week
-    # at 9am, 1pm, 5pm, 9pm
+    # run this during the week, tuesday to friday
+    # at 9:10am, 9:10pm
     # Redmond time (UTC-7)
-    - cron:  '0 16,20,0,4 * * 2-5'
+    - cron: '10 16,4 * * 2-5'
 
 jobs:
   check:
