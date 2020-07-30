@@ -1,15 +1,38 @@
-<h1>ITEM DOCUMENTATION </br>Version: 1.16.20.54</h1>
+<h1>ITEM DOCUMENTATION </br>Version: 1.16.100.50</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
 <tr> <th><a href="#Overview">Overview</a></th> </tr>
-<tr> <td> <a href="#Item Components"> Item Components</a> </tr> </td>
 <tr> <td> <a href="#Items"> Items</a> </tr> </td>
+<tr> <td> <a href="#Item Components"> Item Components</a> </tr> </td>
 </table>
 <a href="#Index">Back to top</a>
 <h1><p id="Overview">Overview</p></h1>
 
-Items are setup in Json files under the behavior_packs, /'name of pack'/, items directory.</br><h1><p id="Item Components">Item Components</p></h1>
+Items are setup in Json files under the behavior_packs, /'name of pack'/, items directory.</br><h1><p id="Items">Items</p></h1>
+
+Represents a single item.'Input' items will burn and transform into items specified in 'output'.</br><h2>Item Example:</h2>
+<br / ><textarea readonly="true" cols="35" rows="17">
+{
+"format_version": "1.12.0",
+"minecraft:item": {
+  "description": {
+  "identifier": "minecraft:apple"
+  },
+ 
+  "components": {
+    "minecraft:use_duration": 32,
+    "minecraft:food": {
+      "nutrition": 4,
+      "saturation_modifier": "low"
+    },
+  }
+}
+}
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="Item Components">Item Components</p></h1>
 
 Here is a list of all item components and their settings.</br><h2>Item Component Settings:</h2>
 <br / ><textarea readonly="true" cols="112" rows="32">
@@ -57,29 +80,6 @@ Here is a list of all item components and their settings.</br><h2>Item Component
       "crop_result": "sweet_berry_bush",        // crop seed item result 
       "plant_at": ["grass","dirt","podzol"] // valid blocks you can plant this item at.
     },                                                       
-  }
-}
-}
-</textarea> </br>
-<a href="#Index">Back to top</a><br><br>
-
-<h1><p id="Items">Items</p></h1>
-
-Represents a single item.'Input' items will burn and transform into items specified in 'output'.</br><h2>Item Example:</h2>
-<br / ><textarea readonly="true" cols="35" rows="17">
-{
-"format_version": "1.12.0",
-"minecraft:item": {
-  "description": {
-  "identifier": "minecraft:apple"
-  },
- 
-  "components": {
-    "minecraft:use_duration": 32,
-    "minecraft:food": {
-      "nutrition": 4,
-      "saturation_modifier": "low"
-    },
   }
 }
 }
