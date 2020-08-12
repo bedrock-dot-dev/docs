@@ -1,4 +1,4 @@
-<h1>ENTITIES DOCUMENTATION </br>Version: 1.16.100.50</h1>
+<h1>ENTITIES DOCUMENTATION </br>Version: 1.16.100.51</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -12717,7 +12717,7 @@ Defines this entity's ability to trade with players.</br><h3></h3>
 <td style="border-style:solid; border-width:2; padding:8px">cured_discount</td>
 <td style="border-style:solid; border-width:2; padding:8px">Range [a, b]</td>
 <td style="border-style:solid; border-width:2; padding:8px">[-5, -20]</td>
-<td style="border-style:solid; border-width:2; padding:8px">How much should Demand be modified by when the player has cured the Zombie Villager. Can be specified as a pair of numbers (low-tier trade discount and high-tier trade discount)</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">How much should the discount be modified by when the player has cured the Zombie Villager. Can be specified as a pair of numbers (low-tier trade discount and high-tier trade discount)</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">display_name</td>
@@ -12729,19 +12729,25 @@ Defines this entity's ability to trade with players.</br><h3></h3>
 <td style="border-style:solid; border-width:2; padding:8px">hero_demand_discount</td>
 <td style="border-style:solid; border-width:2; padding:8px">Integer</td>
 <td style="border-style:solid; border-width:2; padding:8px">-4</td>
-<td style="border-style:solid; border-width:2; padding:8px">How much should Demand be modified by when the player has the Hero of the Village mob effect</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">Used in legacy prices to determine how much should Demand be modified by when the player has the Hero of the Village mob effect</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">max_cured_discount</td>
 <td style="border-style:solid; border-width:2; padding:8px">Range [a, b]</td>
 <td style="border-style:solid; border-width:2; padding:8px">[-25, -63]</td>
-<td style="border-style:solid; border-width:2; padding:8px">The max Demand should be modified by when the player has cured the Zombie Villager. Can be specified as a pair of numbers (low-tier trade discount and high-tier trade discount)</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">The max the discount can be modified by when the player has cured the Zombie Villager. Can be specified as a pair of numbers (low-tier trade discount and high-tier trade discount)</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">max_nearby_cured_discount</td>
+<td style="border-style:solid; border-width:2; padding:8px">Integer</td>
+<td style="border-style:solid; border-width:2; padding:8px">-200</td>
+<td style="border-style:solid; border-width:2; padding:8px">The max the discount can be modified by when the player has cured a nearby Zombie Villager</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">nearby_cured_discount</td>
 <td style="border-style:solid; border-width:2; padding:8px">Integer</td>
 <td style="border-style:solid; border-width:2; padding:8px">-25</td>
-<td style="border-style:solid; border-width:2; padding:8px">How much should Demand be modified by when the player has cured a nearby Zombie Villager</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">How much should the discount be modified by when the player has cured a nearby Zombie Villager</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">new_screen</td>
@@ -12766,6 +12772,12 @@ Defines this entity's ability to trade with players.</br><h3></h3>
 <td style="border-style:solid; border-width:2; padding:8px">String</td>
 <td style="border-style:solid; border-width:2; padding:8px"></td>
 <td style="border-style:solid; border-width:2; padding:8px">File path relative to the resource pack root for this entity's trades</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">use_legacy_price_formula</td>
+<td style="border-style:solid; border-width:2; padding:8px">Boolean</td>
+<td style="border-style:solid; border-width:2; padding:8px">false</td>
+<td style="border-style:solid; border-width:2; padding:8px">Determines whether the legacy formula is used to determines the trade prices.</br></td>
 </tr>
 </table>
 <a href="#Index">Back to top</a><br><br>
