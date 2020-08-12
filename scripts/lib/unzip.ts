@@ -1,9 +1,10 @@
-import { readFileStrSync } from 'https://deno.land/std@0.58.0/fs/mod.ts'
-import { resolve } from 'https://deno.land/std@0.58.0/path/mod.ts'
+import { readFileStrSync, writeFileStrSync } from 'https://deno.land/std@0.61.0/fs/mod.ts'
+import { resolve } from 'https://deno.land/std@0.61.0/path/mod.ts'
 
 import { unzip } from 'https://cdn.pika.dev/unzipit@^1.1.5'
 
 import { FileTypes, urls, tmpDirectory } from './constants.ts'
+import { formatSchemas } from './clean.ts'
 
 export const unzipDocumentationFiles = async (type: FileTypes) => {
   const url = urls[type].b
@@ -41,6 +42,11 @@ export const unzipDocumentationFiles = async (type: FileTypes) => {
 
   // delete the index file
   Deno.removeSync(resolve(docsPath + '/Index.html'))
+
+  const schemasFilePath = resolve(docsPath + '/Schemas.html')
+  const schemasFile = readFileStrSync(schemasFilePath)
+  const formattedSchemas = formatSchemas(schemasFile)
+  writeFileStrSync(schemasFilePath, formattedSchemas)
 
   return { minor: minorVersion, major: majorVersion, path: docsPath }
 }

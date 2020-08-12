@@ -1,4 +1,4 @@
-import { resolve } from 'https://deno.land/std@0.58.0/path/mod.ts'
+import { resolve } from 'https://deno.land/std@0.61.0/path/mod.ts'
 
 export enum FileTypes {
   Beta = 'beta',

@@ -1,5 +1,5 @@
-import { copySync, existsSync } from 'https://deno.land/std@0.58.0/fs/mod.ts'
-import { resolve } from 'https://deno.land/std@0.58.0/path/mod.ts'
+import { copySync, existsSync } from 'https://deno.land/std@0.61.0/fs/mod.ts'
+import { resolve } from 'https://deno.land/std@0.61.0/path/mod.ts'
 
 import { urls, FileTypes } from './constants.ts'
 

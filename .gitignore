@@ -3,5 +3,8 @@ node_modules
 run.sh
 
 # ignore all files other than ts in scripts folder
-/scripts/*
-!/scripts/**/*.ts
+/scripts/cache/*
+/scripts/out/*
+/scripts/tmp/*
+
+.vscode

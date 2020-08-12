@@ -1,5 +1,5 @@
-import { readJsonSync, writeFileStrSync } from 'https://deno.land/std@0.58.0/fs/mod.ts'
-import { resolve } from 'https://deno.land/std@0.58.0/path/mod.ts'
+import { readJsonSync, writeFileStrSync } from 'https://deno.land/std@0.61.0/fs/mod.ts'
+import { resolve } from 'https://deno.land/std@0.61.0/path/mod.ts'
 
 import { unzipDocumentationFiles } from './lib/unzip.ts'
 import { copyDocumentationFiles } from './lib/download.ts'
