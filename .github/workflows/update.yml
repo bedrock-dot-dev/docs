@@ -89,6 +89,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
           SOURCE_DIR: 'scripts/cache'
+      - name: Update packs repo
+        if: steps.github-push.outcome == 'success'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Update Pack Files
+          repo: bedrock-dot-dev/packs
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{ "beta": "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}", "stable": "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}", "msg": "${{ steps.github-push.outputs.msg }}" }'
       - name: Deploy site
         if: steps.github-push.outcome == 'success'
         env:
