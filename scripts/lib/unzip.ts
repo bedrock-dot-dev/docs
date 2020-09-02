@@ -1,7 +1,7 @@
 import { readFileStrSync, writeFileStrSync } from 'https://deno.land/std@0.61.0/fs/mod.ts'
 import { resolve } from 'https://deno.land/std@0.61.0/path/mod.ts'
 
-import { unzip } from 'https://cdn.pika.dev/unzipit@^1.1.5'
+import { unzip } from 'https://unpkg.com/unzipit@1.3.1/dist/unzipit.module.js'
 
 import { FileTypes, urls, tmpDirectory } from './constants.ts'
 import { formatSchemas } from './clean.ts'
