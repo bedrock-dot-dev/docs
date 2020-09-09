@@ -21,29 +21,29 @@ Here is a list of all item components and their settings.</br><h2>Item Component
   },
  
   "components": {
-    "minecraft:max_damage": 10,          // max damage item has, this is used like item max health.
-    "minecraft:hand_equipped": false,    // is this a hand equipped item.
+    "minecraft:max_damage": 10,          // max damage item has, this is used like item max durability.
+    "minecraft:hand_equipped": false,    // makes players hold the item like a sword.
     "minecraft:stacked_by_data": false,  // stacked by data aux value or not?
-    "minecraft:foil": false,             // foil or glint.
-    "minecraft:block": ,               // block name, leave blank for no block.
+    "minecraft:foil": false,             // foil or glint, like enchanted items.
+    "minecraft:block": ,                 // block name, leave blank for no block.
     "minecraft:max_stack_size": 64,      // max stack size.
-    "minecraft:use_duration": 32,        // how long to use before item is done being used.
+    "minecraft:use_duration": 32,        // how long to use before item is done being used, used with food.
     "minecraft:food": { 
       "nutrition": 4,                    // nutrition amount.
-      "saturation_modifier": "low"     // choose: poor, low, normal, good, max, supernatural.
-      "using_converts_to": 4,            // after using,  item converts it to this item.
+      "saturation_modifier": "low"       // choose: poor, low, normal, good, max, supernatural.
+      "using_converts_to": 4,            // after using, item converts it to this item.
       "on_use_action": 4,                // 'chorus_teleport' or 'none'.
       "on_use_range": 4,                 // array of 3 ranges.
       "cooldown_type": 4,                // 'chorusfruit' or 'none'.
       "cooldown_time": 4,                // cooldown time in ticks.
       "can_always_eat": 4,               // can always eat this item? true or false.
       
-      "effects": [,                      // effects.
+      "effects": [,                      // effects to apply on eat.
          { 
-           "name": "regeneration",     // name of effect: regeneration, absorption, resistance, fire_resistance
-            "chance": 1.0,                // float chance for effect to happen 
-            "duration": 30,               // int duration of effect 
-            "amplifier": 4,               // int amplifier
+           "name": "regeneration",       // name of effect: regeneration, absorption, resistance, fire_resistance, etc.
+            "chance": 1.0,               // float chance for effect to happen 
+            "duration": 30,              // int duration of effect 
+            "amplifier": 4,              // int amplifier
           },                                                
           {                                                 
             "name": "absorption",                       
@@ -55,7 +55,7 @@ Here is a list of all item components and their settings.</br><h2>Item Component
                                                            
     "minecraft:seed": {                                  
       "crop_result": "sweet_berry_bush",        // crop seed item result 
-      "plant_at": ["grass","dirt","podzol"] // valid blocks you can plant this item at.
+      "plant_at": ["grass","dirt","podzol"]     // valid blocks you can plant this item at.
     },                                                       
   }
 }
