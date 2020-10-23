@@ -33,7 +33,7 @@ jobs:
         id: docs-updated
         run: |
           echo "deno version: $(deno -V)"
-          output="$(deno run --unstable --allow-net --allow-read --allow-write --quiet ./scripts/update.ts)"
+          output="$(deno run --unstable --allow-net --allow-read --allow-write --quiet ./scripts/update.ts $GITHUB_REPOSITORY)"
           echo "::set-output name=result::$output"
           echo "result: $output"
       - name: Push to GitHub
