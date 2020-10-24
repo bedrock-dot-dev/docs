@@ -1,6 +1,7 @@
 ---
 path: "documentation/Entities.html"
 after-component: "minecraft:projectile"
+collapse: false
 ---
 
 ## Overview
