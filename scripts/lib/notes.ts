@@ -14,10 +14,10 @@ const addNotes = async (unit8arr: Buffer, path: string) => {
             const markup = Marked.parse(markdown);
             if (markup.meta.path === path) {
                 if (markup.meta['after-component'] != null) {
-                    afterComponentName(doc, markup.meta['after-component'], markup.content);
+                    afterComponentName(doc, markup.meta['after-component'], markup.content, markup.meta.collapse == null ? true : markup.meta.collapse);
                 }
                 else if (markup.meta['molang-query'] != null) {
-                    forMolangQuery(doc, markup.meta['molang-query'], markup.content);
+                    forMolangQuery(doc, markup.meta['molang-query'], markup.content, markup.meta.collapse == null ? true : markup.meta.collapse);
                 }
             }
         }
@@ -26,27 +26,41 @@ const addNotes = async (unit8arr: Buffer, path: string) => {
     return unit8arr;
 };
 
-const afterComponentName = (doc: HTMLDocument, titleId: string, html: string) => {
+const afterComponentName = (doc: HTMLDocument, titleId: string, html: string, collapse: boolean) => {
     let querySelector = doc.querySelector('#' + titleId.replaceAll(':', '\\:'));
     if (
         querySelector != null && querySelector.parentElement != null &&
         querySelector.parentElement.nextElementSibling != null
     ) {
-        let note = doc.createElement('p');
-        note.innerHTML = html;
-        querySelector.parentElement.nextElementSibling.after(note);
+        querySelector.parentElement.nextElementSibling.after(wrapHTML(doc, html, collapse));
     }
 };
 
-const forMolangQuery = (doc: HTMLDocument, query: string, html: string) => {
+const forMolangQuery = (doc: HTMLDocument, query: string, html: string, collapse: boolean) => {
     let elements = doc.getElementsByTagName('td')
     for (const element of elements) {
         if (element.textContent === query && element.nextElementSibling != null) {
-            let note = doc.createElement('spoiler');
-            note.innerHTML = html;
-            element.nextElementSibling.appendChild(note);
+            element.nextElementSibling.appendChild(wrapHTML(doc, html, collapse));
         }
     }
 };
+
+const wrapHTML = (doc: HTMLDocument, html: string, collapse: boolean) => {
+    if (collapse) {
+        let details = doc.createElement('details');
+        let summary = doc.createElement('summary');
+        summary.textContent = 'Community notes';
+        details.appendChild(summary);
+        let note = doc.createElement('p');
+        note.innerHTML = html;
+        details.appendChild(note);
+        return details;
+    }
+    else {
+        let note = doc.createElement('p');
+        note.innerHTML = html;
+        return note;
+    }
+}
 
 export {addNotes};
