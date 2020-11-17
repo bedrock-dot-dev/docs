@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.16.20.3</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.16.100.4</h1>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
 <tr> <th><a href="#Overview">Overview</a></th> </tr>
@@ -12,6 +12,7 @@ These are the data format schemas for content creators to reference when editing
 <h1><p id="Schemas">Schemas</p></h1>
 
 ```
+item_event_responses:1.16.100:
 actor_animation:1.8.0:{
     version "format_version"
     object "animations"
@@ -20,6 +21,8 @@ actor_animation:1.8.0:{
         {
             bool "loop" : opt // should this animation stop, loop, or stay on the last frame when finished (true, false, "hold_on_last_frame"
             string "loop"<"hold_on_last_frame"> : opt // should this animation stop, loop, or stay on the last frame when finished (true, false, "hold_on_last_frame"
+            molang "start_delay" : opt // How long to wait in seconds before playing this animation.  Note that this expression is evaluated once before playing, and only re-evaluated if asked to play from the beginning again.  A looping animation should use 'loop_delay' if it wants a delay between loops.
+            molang "loop_delay" : opt // How long to wait in seconds before looping this animation.  Note that this expression is evaluated after each loop and on looping animation only.
             molang "anim_time_update" : opt // how does time pass when playing the animation.  Defaults to "query.anim_time + query.delta_time" which means advance in seconds.
             molang "blend_weight" : opt
             bool "override_previous_animation" : opt // reset bones in this animation to the default pose before applying this animation
@@ -204,7 +207,7 @@ actor_animation_controller:1.10.0:{
                         {
                             string "effect" // The name of a particle effect that should be played
                             string "locator" : opt // The name of a locator on the actor where the effect should be located
-                            string "pre_effect_script" : opt // A molang script that will be run when the particle emitter is initialized
+                            molang "pre_effect_script" : opt // A molang script that will be run when the particle emitter is initialized
                             bool "bind_to_actor" : opt // Set to false to have the effect spawned in the world without being bound to an actor (by default an effect is bound to the actor).
                         }
                     }
@@ -336,6 +339,7 @@ actor_resource_definition:1.10.0:{
             {
                 string "<identifier>"
             }
+            string "queryable_geometry" : opt
             object "spawn_egg" : opt
             {
                 string "texture" : opt
@@ -345,6 +349,10 @@ actor_resource_definition:1.10.0:{
             }
             object "scripts" : opt
             {
+                object "variables" : opt // A list of variables that need certain settings applied to them.  Currently, for the client, only "public" is supported.
+                {
+                    string "variable.[a-zA-Z_][a-zA-Z0-9_]*"<"public"> // If a variable is public, it can be read by other mobs.  See the molang `->` operator for details.
+                }
                 array "initialize" : opt
                 {
                     molang "<any array element>"
@@ -414,6 +422,7 @@ actor_resource_definition:1.10.0:{
             {
                 string "<identifier>"
             }
+            string "queryable_geometry" : opt
             object "spawn_egg" : opt
             {
                 string "texture" : opt
@@ -423,6 +432,10 @@ actor_resource_definition:1.10.0:{
             }
             object "scripts" : opt
             {
+                object "variables" : opt // A list of variables that need certain settings applied to them.  Currently, for the client, only "public" is supported.
+                {
+                    string "variable.[a-zA-Z_][a-zA-Z0-9_]*"<"public"> // If a variable is public, it can be read by other mobs.  See the molang `->` operator for details.
+                }
                 array "initialize" : opt
                 {
                     molang "<any array element>"
@@ -1158,3 +1171,4 @@ geometry:1.14.0:{
 }
 
 ```</br><a href="#Index">Back to top</a><br><br>
+
