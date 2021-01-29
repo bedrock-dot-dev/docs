@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.16.210.56</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.16.210.57</h1>
 This is documentation for a beta release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of beta if your add-on isn't working properly. Resource and Behavior Packs created for the beta are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -246,102 +246,6 @@ block_reference:1.10.0:{
         bool "\w*:?\w+" : opt
         int "\w*:?\w+" : opt
         string "\w*:?\w+" : opt
-    }
-}
-
-render_controller:1.8.0:{
-    version "format_version"
-    object "render_controllers"
-    {
-        object "controller.render.<scope_identifier>"
-        {
-            bool "rebuild_animation_matrices" : opt
-            object "arrays" : opt
-            {
-                object "geometries" : opt
-                {
-                    array "array.<scope_identifier>"
-                    {
-                        string "<any array element>"
-                    }
-                }
-                object "materials" : opt
-                {
-                    array "array.<scope_identifier>"
-                    {
-                        string "<any array element>"
-                    }
-                }
-                object "textures" : opt
-                {
-                    array "array.<scope_identifier>"
-                    {
-                        string "<any array element>"
-                    }
-                }
-            }
-            string "geometry"
-            array "part_visibility" : opt
-            {
-                object "<any array element>"
-                {
-                    molang "[a-zA-Z0-9_.:*]+"
-                }
-            }
-            array "materials" : opt
-            {
-                object "<any array element>"
-                {
-                    molang "[a-zA-Z0-9_.:*]+"
-                }
-            }
-            array "textures" : opt
-            {
-                string "<any array element>"
-            }
-            object "color" : opt
-            {
-                molang "r" : opt
-                molang "g" : opt
-                molang "b" : opt
-                molang "a" : opt
-            }
-            object "overlay_color" : opt
-            {
-                molang "r" : opt
-                molang "g" : opt
-                molang "b" : opt
-                molang "a" : opt
-            }
-            object "on_fire_color" : opt
-            {
-                molang "r" : opt
-                molang "g" : opt
-                molang "b" : opt
-                molang "a" : opt
-            }
-            object "is_hurt_color" : opt
-            {
-                molang "r" : opt
-                molang "g" : opt
-                molang "b" : opt
-                molang "a" : opt
-            }
-            object "uv_anim" : opt
-            {
-                array "offset"[2]
-                {
-                    molang "<any array element>"
-                }
-                array "scale"[2]
-                {
-                    molang "<any array element>"
-                }
-            }
-            molang "light_color_multiplier" : opt
-            bool "ignore_lighting" : opt
-            bool "filter_lighting" : opt
-        }
     }
 }
 
