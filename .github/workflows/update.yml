@@ -45,14 +45,14 @@ jobs:
           if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}" == "true" ]; then
             echo "copying the previous stable version files"
             mkdir -p ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
-            cp -vr ${{ steps.current.outputs.stable }} ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
+            cp -vr ${{ steps.current.outputs.stable }}/* ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
             msg="Stable ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.name }}"
           fi
 
           if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}" == "true" ]; then
             echo "copying the previous beta version files"
             mkdir -p ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
-            cp -vr ${{ steps.current.outputs.beta }} ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
+            cp -vr ${{ steps.current.outputs.beta }}/* ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
             if [ -n "$msg" ]; then
               msg="${msg}, "
             fi
@@ -93,10 +93,12 @@ jobs:
           SOURCE_DIR: 'scripts/cache'
       - name: Update packs repo
         if: steps.github-push.outcome == 'success'
-        run: |
-          echo '{ "beta": "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}", "stable": "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}", "msg": "${{ steps.github-push.outputs.msg }}" }' | gh workflow run -R bedrock-dot-dev/packs "Update Pack Files"
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Update Pack Files
+          repo: bedrock-dot-dev/packs
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{ "beta": "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}", "stable": "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}", "msg": "${{ steps.github-push.outputs.msg }}" }'
       - name: Deploy site
         if: steps.github-push.outcome == 'success'
         env:
