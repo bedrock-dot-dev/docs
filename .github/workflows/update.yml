@@ -93,7 +93,7 @@ jobs:
           SOURCE_DIR: 'scripts/cache'
       - name: Update packs repo
         if: steps.github-push.outcome == 'success'
-          uses: benc-uk/workflow-dispatch@v1
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Update Pack Files
           repo: bedrock-dot-dev/packs
