@@ -17,10 +17,19 @@ jobs:
       - uses: denolib/setup-deno@master
         with:
           deno-version: 1.2.3
+
       - name: Setup git environment
         run: |
           git config --global user.name 'destruc7i0n'
           git config --global user.email 'destruc7i0n@users.noreply.github.com'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+
       - name: Store current versions
         id: current
         run: |
@@ -29,6 +38,7 @@ jobs:
           echo "current stable: $stable, current beta: $beta"
           echo "::set-output name=stable::$stable"
           echo "::set-output name=beta::$beta"
+
       - name: Check for bedrock docs update
         id: docs-updated
         run: |
@@ -36,6 +46,7 @@ jobs:
           output="$(deno run --unstable --allow-net --allow-read --allow-write --quiet ./scripts/update.ts)"
           echo "::set-output name=result::$output"
           echo "result: $output"
+
       - name: Push to GitHub
         id: github-push
         if: ${{ !fromJSON(steps.docs-updated.outputs.result).error && (fromJSON(steps.docs-updated.outputs.result).update.stable.updated || fromJSON(steps.docs-updated.outputs.result).update.beta.updated) }}
@@ -74,23 +85,21 @@ jobs:
           git add --all
           git commit -m "Docs update: $msg"
           git push
+
       - name: Archive documentation files
         if: steps.github-push.outcome == 'success'
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.github-push.outputs.msg }}
           path: scripts/out
+
       - name: Upload resources and behaviours to S3
         if: steps.github-push.outcome == 'success'
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'
-          SOURCE_DIR: 'scripts/cache'
+        run: |
+          aws s3 sync scripts/cache s3://${AWS_S3_BUCKET} --acl public-read --follow-symlinks
+
       - name: Update packs repo
         if: steps.github-push.outcome == 'success'
         uses: benc-uk/workflow-dispatch@v1
@@ -99,6 +108,7 @@ jobs:
           repo: bedrock-dot-dev/packs
           token: ${{ secrets.PERSONAL_TOKEN }}
           inputs: '{ "beta": "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}", "stable": "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}", "msg": "${{ steps.github-push.outputs.msg }}" }'
+
       - name: Deploy site
         if: steps.github-push.outcome == 'success'
         env:
