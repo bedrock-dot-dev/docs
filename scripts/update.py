@@ -57,8 +57,7 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
 def main() -> None:
   ensure_required_paths()
 
-  github = Github()
-  repo = github.get_repo(Constants.SAMPLES_REPO)
+  repo = Github(per_page=100).get_repo(Constants.SAMPLES_REPO)
   releases = repo.get_releases()
 
   latest_releases = get_latest_releases()
@@ -84,6 +83,12 @@ def main() -> None:
   version_updates = []
 
   def check_update(tag: Tags) -> bool:
+    """
+    Checks if the given tag has an update and performs the update process if so
+    :param tag: The version tag to check
+    :return: True if there is an update, False otherwise
+    """
+
     current_version = MinecraftVersion(release_data[tag.value]['current'])
     latest_version = MinecraftVersion(release_data[tag.value]['latest'])
 
