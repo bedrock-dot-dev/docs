@@ -1,32 +1,58 @@
 import os
 from pathlib import Path
 
-from constants import IS_ACTIONS
+import constants as Constants
 
-def get_major_version(version: str) -> str:
-  """
-  Gets the major version from the given version
-  """
-  return '.'.join(version.split('.')[:2] + ['0', '0'])
+class MinecraftVersion():
+  def __init__(self, version_id: str):
+    """
+    Creates a new MinecraftVersion instance
+    :param version_id: The version id
+    """
 
-def get_version_parts(version_id: str) -> list[str]:
-  """
-  Gets the path to the given version ID
-  """
-  return [get_major_version(version_id), version_id]
+    self.version_id = version_id
+    elements = version_id.split('.')
 
-def get_path_from_version_id(version_id: str) -> Path:
+    self.major = '.'.join(elements[:2] + ['0', '0'])
+
+  def __str__(self) -> str:
+    return self.version_id
+
+  def __repr__(self) -> str:
+    return f'MinecraftVersion({self.__str__()})'
+
+  def __eq__(self, other) -> bool:
+    if not isinstance(other, MinecraftVersion):
+      return False
+    return self.version_id == other.version_id
+
+  def parts(self) -> list[str]:
+    """
+    Gets the parts of the version id
+    :return: A list of the parts
+    """
+    return [self.major, self.version_id]
+
+  def as_path(self) -> Path:
+    """
+    Gets the version id as a path for storage
+    :return: The version id as a path
+    """
+    return Path(*self.parts())
+
+def ensure_required_paths() -> None:
   """
-  Gets the path to the given version ID
+  Ensures that the required paths exist
   """
-  return Path(*get_version_parts(version_id))
+  Constants.TMP_PATH.mkdir(exist_ok=True, parents=True)
+  Constants.CACHE_PATH.mkdir(exist_ok=True, parents=True)
 
 def write_to_github_output(key: str, value: str) -> None:
   """
   Writes the given string to the GitHub Actions output
   """
 
-  if not IS_ACTIONS:
+  if not Constants.IS_ACTIONS:
     print(f'Not in GitHub Actions, skipping output: {key}={value}')
     return
 

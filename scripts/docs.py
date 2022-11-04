@@ -3,22 +3,25 @@ from pathlib import Path
 
 from github.GitRelease import GitRelease
 
-from constants import CACHE_PATH, TMP_PATH
+import constants as Constants
 from releases import download_release
-from util import get_path_from_version_id
+from util import MinecraftVersion
 
-def get_docs_update(version_id: str, release: GitRelease) -> None:
-  documentation_cache_path = CACHE_PATH / (version_id + '.zip')
+def get_docs_update(version: MinecraftVersion, release: GitRelease) -> None:
+  documentation_cache_path = Constants.CACHE_PATH / f'{version}.zip'
   download_release(release, documentation_cache_path)
-  print(f'Downloaded {version_id}')
+  print(f'Downloaded {version}')
 
-  doc_version = unzip_documentation_from_release(TMP_PATH / get_path_from_version_id(version_id), documentation_cache_path)
+  doc_version = unzip_documentation_from_release(Constants.TMP_PATH / version.as_path(), documentation_cache_path)
 
-  if version_id != doc_version:
-    print(f'Got version {doc_version} (from documentation) instead of expected {version_id}')
-    version_id = doc_version
+  if doc_version == None:
+    print('Unable to find version in documentation')
 
-def unzip_documentation_from_release(documentation_path: Path, cache_path: Path) -> str:
+  if doc_version != None and doc_version != version:
+    print(f'Got version {doc_version} (from documentation) instead of expected {version}')
+    exit(1)
+
+def unzip_documentation_from_release(documentation_path: Path, cache_path: Path) -> MinecraftVersion | None:
   """
   Unzips the documentation from the given release
   :param documentation_path: The path to extract the documentation to
@@ -45,16 +48,17 @@ def unzip_documentation_from_release(documentation_path: Path, cache_path: Path)
 
   return doc_version
 
-def _read_version_from_index(index_path: Path) -> str:
+def _read_version_from_index(index_path: Path) -> MinecraftVersion | None:
   """
   Reads the version from the given index path
   """
   with open(index_path, 'r') as file:
     index_content = file.read()
+    # gets the version number from the index file
     version_match = re.search(r'Version: (\d+\.\d+\.\d+\.\d+)', index_content)
     if version_match:
-      return version_match.group(1)
-  return ''
+      return MinecraftVersion(version_match.group(1))
+  return None
 
 def _fix_schemas_file(path: Path) -> None:
   """
@@ -70,5 +74,6 @@ def _fix_schemas_file(path: Path) -> None:
     content = re.sub(r'<\/?br ?\/?>', '\n', content)
     return content
 
+  # replace the content surrounded with markdown code blocks using the function above
   schemas_content = re.sub(r'(?<=```)(.*?)(?=```)', replace_in_markdown, schemas_content, flags=re.S)
   path.write_text(schemas_content)
