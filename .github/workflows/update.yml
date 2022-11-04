@@ -10,107 +10,47 @@ on:
 
 jobs:
   check:
-    if: github.repository == 'bedrock-dot-dev/docs'
+    if: github.repository == 'bedrock-dot-dev/docs' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@master
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          deno-version: 1.2.3
+          python-version: '3.10'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
 
       - name: Setup git environment
         run: |
           git config --global user.name 'destruc7i0n'
           git config --global user.email 'destruc7i0n@users.noreply.github.com'
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'
-
-      - name: Store current versions
-        id: current
-        run: |
-          stable="./$(cat tags.json | jq -r '.stable | join("/")')"
-          beta="./$(cat tags.json | jq -r '.beta | join("/")')"
-          echo "current stable: $stable, current beta: $beta"
-          echo "::set-output name=stable::$stable"
-          echo "::set-output name=beta::$beta"
-
       - name: Check for bedrock docs update
-        id: docs-updated
+        id: check
         run: |
-          echo "deno version: $(deno -V)"
-          output="$(deno run --unstable --allow-net --allow-read --allow-write --quiet ./scripts/update.ts)"
-          echo "::set-output name=result::$output"
-          echo "result: $output"
+          cd scripts
+          python3 update.py
 
-      - name: Push to GitHub
-        id: github-push
-        if: ${{ !fromJSON(steps.docs-updated.outputs.result).error && (fromJSON(steps.docs-updated.outputs.result).update.stable.updated || fromJSON(steps.docs-updated.outputs.result).update.beta.updated) }}
-        run: |
-          # copy the files from the older version
-          msg=""
-          if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}" == "true" ]; then
-            echo "copying the previous stable version files"
-            mkdir -p ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
-            cp -vr ${{ steps.current.outputs.stable }}/* ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.path }}
-            msg="Stable ${{ fromJSON(steps.docs-updated.outputs.result).update.stable.name }}"
-          fi
-
-          if [ "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}" == "true" ]; then
-            echo "copying the previous beta version files"
-            mkdir -p ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
-            cp -vr ${{ steps.current.outputs.beta }}/* ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.path }}
-            if [ -n "$msg" ]; then
-              msg="${msg}, "
-            fi
-            msg="${msg}Beta ${{ fromJSON(steps.docs-updated.outputs.result).update.beta.name }}"
-          fi
-
-          if [ -n "$msg" ]; then
-            echo "commit message: $msg"
-            echo "::set-output name=msg::$msg"
-          fi
-
-          # commit with the previous version
-          git add --all
-          git commit -m "Copy previous version files for \"$msg\""
-
-          # now we actually copy the new files and commit, to generate diff
-          echo "copying the latest files"
-          cp -vr ./scripts/out/* .
-          git add --all
-          git commit -m "Docs update: $msg"
-          git push
+      - name: Store cached zip files
+        if: steps.check.outputs.update == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs-zip
+          path: scripts/cache
 
       - name: Archive documentation files
-        if: steps.github-push.outcome == 'success'
-        uses: actions/upload-artifact@v2
+        if: steps.check.outputs.update == 'true'
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.github-push.outputs.msg }}
-          path: scripts/out
-
-      - name: Upload resources and behaviours to S3
-        if: steps.github-push.outcome == 'success'
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        run: |
-          aws s3 sync scripts/cache s3://${AWS_S3_BUCKET} --acl public-read --follow-symlinks
-
-      - name: Update packs repo
-        if: steps.github-push.outcome == 'success'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Update Pack Files
-          repo: bedrock-dot-dev/packs
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{ "beta": "${{ fromJSON(steps.docs-updated.outputs.result).update.beta.updated }}", "stable": "${{ fromJSON(steps.docs-updated.outputs.result).update.stable.updated }}", "msg": "${{ steps.github-push.outputs.msg }}" }'
-
+          name: ${{ steps.check.outputs.msg }}
+          path: scripts/tmp
+      
       - name: Deploy site
-        if: steps.github-push.outcome == 'success'
+        if: steps.check.outputs.update == 'true'
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
