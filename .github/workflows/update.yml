@@ -35,6 +35,15 @@ jobs:
           cd scripts
           python3 update.py
 
+      - name: Update summary
+        run: |
+          echo "### Check output 🗒️" >> $GITHUB_STEP_SUMMARY
+          echo "Update found: ${{ (steps.check.outputs.update == 'true' && '✅') || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo 'JSON output: `${{ steps.check.outputs.release_data }}`' >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check.outputs.update }}" == "true" ]; then
+            echo 'Commit message: ${{ steps.check.outputs.msg }}' >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Store cached zip files
         if: steps.check.outputs.update == 'true'
         uses: actions/upload-artifact@v3
