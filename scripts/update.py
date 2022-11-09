@@ -41,7 +41,7 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
 
   # add previous files commit
   subprocess.run(shlex.split('git add --all'), cwd=Constants.ROOT)
-  subprocess.run(shlex.split(f'git commit -m "{copy_previous_version_msg}"'), cwd=Constants.ROOT)
+  subprocess.run(shlex.split(f'git commit -m \'{copy_previous_version_msg}\''), cwd=Constants.ROOT)
 
   # copy new files
   shutil.copytree(Constants.TMP_PATH, Constants.ROOT, dirs_exist_ok=True)
@@ -50,7 +50,7 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
   print(f'Committing "{final_msg}"')
 
   subprocess.run(shlex.split('git add --all'), cwd=Constants.ROOT)
-  subprocess.run(shlex.split(f'git commit -m "{final_msg}"'), cwd=Constants.ROOT)
+  subprocess.run(shlex.split(f'git commit -m \'{final_msg}\''), cwd=Constants.ROOT)
 
   subprocess.run(shlex.split('git push'), cwd=Constants.ROOT)
 
