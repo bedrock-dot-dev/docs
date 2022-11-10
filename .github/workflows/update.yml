@@ -44,6 +44,22 @@ jobs:
             echo 'Commit message: ${{ steps.check.outputs.msg }}' >> $GITHUB_STEP_SUMMARY
           fi
 
+      - name: Send Discord message
+        if: steps.check.outputs.update == 'true'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          jq -nr '{
+            "content": null,
+            "embeds": [
+              {
+                "title": "Docs update: **${{ steps.check.outputs.msg }}**",
+              }
+            ],
+            "username": "bedrock.dev",
+            "avatar_url": "https://bedrock.dev/favicon/android-chrome-512x512.png",
+          }' | curl -X POST -H "Content-Type: application/json" -d @- $DISCORD_WEBHOOK
+
       - name: Store cached zip files
         if: steps.check.outputs.update == 'true'
         uses: actions/upload-artifact@v3
