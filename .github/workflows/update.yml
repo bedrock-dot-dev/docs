@@ -2,6 +2,8 @@ name: Check for docs updates
 
 on:
   workflow_dispatch: {}
+  repository_dispatch:
+    types: [docs-update]
   schedule:
     # run this during the week, tuesday to friday
     # at 9:10am, 9:10pm
