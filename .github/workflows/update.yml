@@ -51,11 +51,13 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
+          LAST_COMMIT_SHA=$(git rev-parse HEAD)
           jq -nr '{
             "content": null,
             "embeds": [
               {
                 "title": "Docs update: **${{ steps.check.outputs.msg }}**",
+                "url": "https://github.com/${{ github.repository }}/commit/'"$LAST_COMMIT_SHA"'",
               }
             ],
             "username": "bedrock.dev",
