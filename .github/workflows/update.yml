@@ -10,6 +10,10 @@ on:
     # Redmond time (UTC-7)
     - cron: '10 16,4 * * 2-5'
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   check:
     if: github.repository == 'bedrock-dot-dev/docs' && github.ref == 'refs/heads/master'
