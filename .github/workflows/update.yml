@@ -19,29 +19,31 @@ jobs:
     if: github.repository == 'bedrock-dot-dev/docs' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
           cache: 'pip'
       
-      - name: Install dependencies
+      - name: ⚙️ Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: Setup git environment
+      - name: ⚙️ Setup git environment
         run: |
           git config --global user.name 'destruc7i0n'
           git config --global user.email 'destruc7i0n@users.noreply.github.com'
 
-      - name: Check for bedrock docs update
+      - name: 🔎 Check for docs update
         id: check
         run: |
           cd scripts
           python3 update.py
 
-      - name: Update summary
+      - name: 📝 Update summary
         run: |
           echo "### Check output 🗒️" >> $GITHUB_STEP_SUMMARY
           echo "Update found: ${{ (steps.check.outputs.update == 'true' && '✅') || '❌' }}" >> $GITHUB_STEP_SUMMARY
@@ -50,7 +52,7 @@ jobs:
             echo 'Commit message: ${{ steps.check.outputs.msg }}' >> $GITHUB_STEP_SUMMARY
           fi
 
-      - name: Send Discord message
+      - name: 🔔 Send Discord message
         if: steps.check.outputs.update == 'true'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -68,21 +70,14 @@ jobs:
             "avatar_url": "https://bedrock.dev/favicon/android-chrome-512x512.png",
           }' | curl -X POST -H "Content-Type: application/json" -d @- $DISCORD_WEBHOOK
 
-      - name: Store cached zip files
-        if: steps.check.outputs.update == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs-zip
-          path: scripts/cache
-
-      - name: Archive documentation files
+      - name: 📁 Archive documentation files
         if: steps.check.outputs.update == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.check.outputs.msg }}
           path: scripts/tmp
       
-      - name: Deploy site
+      - name: 🚀 Deploy site
         if: steps.check.outputs.update == 'true'
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
