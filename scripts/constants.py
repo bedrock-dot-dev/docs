@@ -15,6 +15,8 @@ TMP_PATH = Path('./tmp')
 
 IS_ACTIONS = 'GITHUB_ACTIONS' in os.environ
 
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+
 class Tags(Enum):
   STABLE = 'stable'
   BETA = 'beta'

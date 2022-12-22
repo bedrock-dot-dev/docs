@@ -57,7 +57,7 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
 def main() -> None:
   ensure_required_paths()
 
-  repo = Github(per_page=100).get_repo(Constants.SAMPLES_REPO)
+  repo = Github(login_or_token=Constants.GITHUB_TOKEN, per_page=100).get_repo(Constants.SAMPLES_REPO)
   releases = repo.get_releases()
 
   latest_releases = get_latest_releases()
