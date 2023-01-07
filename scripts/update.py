@@ -57,8 +57,8 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
 def main() -> None:
   ensure_required_paths()
 
-  if not Constants.GITHUB_TOKEN and Constants.IS_ACTIONS:
-    print('GITHUB_TOKEN not set, might be subject to rate limits.')
+  if not Constants.GITHUB_TOKEN:
+    print('GITHUB_TOKEN not set, subject to stricter rate limits.')
 
   repo = Github(login_or_token=Constants.GITHUB_TOKEN, per_page=100).get_repo(Constants.SAMPLES_REPO)
   releases = repo.get_releases()
