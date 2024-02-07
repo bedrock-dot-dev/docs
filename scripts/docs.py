@@ -38,19 +38,24 @@ def unzip_documentation_from_release(documentation_path: Path, cache_path: Path)
           data = archive.read(file)
           (documentation_path / file_path.name).write_bytes(data)
 
-  index_path = documentation_path / 'Index.html'
-  doc_version = _read_version_from_index(index_path)
-  # delete the index file
-  index_path.unlink()
+  doc_version = None
+
+  possible_index_file = ['Index.html', 'index.html']
+  for index_file_name in possible_index_file:
+    possible_file_path = documentation_path / index_file_name
+    if possible_file_path.exists():
+      doc_version = _read_version_from_doc_file(possible_file_path)
+      # delete the index file
+      possible_file_path.unlink()
 
   # fix the schemas file formatting
   _fix_schemas_file(documentation_path / 'Schemas.html')
 
   return doc_version
 
-def _read_version_from_index(index_path: Path) -> MinecraftVersion | None:
+def _read_version_from_doc_file(index_path: Path) -> MinecraftVersion | None:
   """
-  Reads the version from the given index path
+  Reads the version from the given doc path
   """
   with open(index_path, 'r') as file:
     index_content = file.read()
