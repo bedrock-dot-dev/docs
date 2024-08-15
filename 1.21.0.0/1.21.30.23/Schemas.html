@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.30.22</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.30.23</h1>
 This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -1225,7 +1225,7 @@ geometry:1.21.0:{
                 int "texture_width" : opt // Assumed width in texels of the texture that will be bound to this geometry.
                 int "texture_height" : opt // Assumed height in texels of the texture that will be bound to this geometry.
             }
-            object "item_display_transforms" : opt // Components of the 3d matrix transform to be applied to this geometry when displayed in this item rendering context. Valid contexts: ["gui", "firstperson_righthand", "firstperson_lefthand", "thirdperson_righthand", "thirdperson_lefthand", "ground", "fixed", "head"]. Requires the 'Upcoming Creator Features' toggle to be enabled in the world settings.
+            object "item_display_transforms" : opt // Components of the 3d matrix transform to be applied to this geometry when displayed in this item rendering context. Valid contexts: ["gui", "firstperson_righthand", "firstperson_lefthand", "thirdperson_righthand", "thirdperson_lefthand", "ground", "fixed", "head"].
             {
                 object "gui" : opt
                 {
