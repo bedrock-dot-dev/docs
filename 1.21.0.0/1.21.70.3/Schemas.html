@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.60.10</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.70.3</h1>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
 <tr> <th><a href="#Overview">Overview</a></th> </tr>
@@ -151,12 +151,14 @@ persona_actor_animation:1.8.0:{
                 object "<time_stamp>" : opt
                 {
                     string "effect" // Valid sound effect names should be listed in the entity's resource_definition json file.
+                    string "locator" : opt // The name of a locator on the actor where the sound should originate from
                 }
                 array "<time_stamp>" : opt
                 {
                     object "<any array element>" : opt
                     {
                         string "effect" // Valid sound effect names should be listed in the entity's resource_definition json file.
+                        string "locator" : opt // The name of a locator on the actor where the sound should originate from
                     }
                 }
             }
