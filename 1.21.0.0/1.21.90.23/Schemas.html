@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.80.28</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.90.23</h1>
 This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -13,6 +13,21 @@ These are the data format schemas for content creators to reference when editing
 <h1><p id="Schemas">Schemas</p></h1>
 
 ```
+texture_set:1.21.30:{
+    version "format_version"
+    object "minecraft:texture_set"
+    {
+        color "color" : opt // Fill RGBA channels of a textureset layer with the specified values in an array or hex string
+        string "color" : opt // The texture name of a textureset layer
+        string "normal" : opt // The texture name of a textureset layer
+        string "heightmap" : opt // The texture name of a textureset layer
+        color "metalness_emissive_roughness" : opt // Fill RGB channels of a textureset layer with the specified values in an array or hex string
+        string "metalness_emissive_roughness" : opt // The texture name of a textureset layer
+        color "metalness_emissive_roughness_subsurface" : opt // Fill RGBA channels of a textureset layer with the specified values in an array or hex string
+        string "metalness_emissive_roughness_subsurface" : opt // The texture name of a textureset layer
+    }
+}
+
 chance_information:1.14.0:{
     int "numerator"<0-*>
     int "denominator"<1-*>
