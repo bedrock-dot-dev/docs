@@ -18,8 +18,7 @@ def get_docs_update(version: MinecraftVersion, release: GitRelease) -> None:
     print('Unable to find version in documentation')
 
   if doc_version != None and doc_version != version:
-    print(f'Got version {doc_version} (from documentation) instead of expected {version}')
-    exit(1)
+    print(f'Warning: Got version {doc_version} (from documentation) instead of expected {version}. Continuing process.')
 
 def unzip_documentation_from_release(documentation_path: Path, cache_path: Path) -> MinecraftVersion | None:
   """
@@ -53,11 +52,11 @@ def unzip_documentation_from_release(documentation_path: Path, cache_path: Path)
 
   return doc_version
 
-def _read_version_from_doc_file(index_path: Path) -> MinecraftVersion | None:
+def _read_version_from_doc_file(file_path: Path) -> MinecraftVersion | None:
   """
   Reads the version from the given doc path
   """
-  with open(index_path, 'r') as file:
+  with open(file_path, 'r') as file:
     index_content = file.read()
     # gets the version number from the index file
     version_match = re.search(r'Version: (\d+\.\d+\.\d+\.\d+)', index_content)
