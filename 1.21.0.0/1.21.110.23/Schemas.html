@@ -1,4 +1,4 @@
-<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.110.20</h1>
+<h1>SCHEMAS DOCUMENTATION </br>Version: 1.21.110.23</h1>
 This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -634,7 +634,7 @@ geometry:1.12.0:{
                             bool "ignore_inherited_scale" : opt // Discard scale inherited from parent bone.
                         }
                     }
-                    object "poly_mesh" : opt // A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry.
+                    object "poly_mesh" : opt // [Deprecated] A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry. This feature is deprecated, and using it in new content will result in content errors.
                     {
                         bool "normalized_uvs" : opt // If true, UVs are assumed to be [0-1]. If false, UVs are assumed to be [0-texture_width] and [0-texture_height] respectively.
                         array "positions" : opt
@@ -860,7 +860,7 @@ geometry:1.14.0:{
                             bool "ignore_inherited_scale" : opt // Discard scale inherited from parent bone.
                         }
                     }
-                    object "poly_mesh" : opt // A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry.
+                    object "poly_mesh" : opt // [Deprecated] A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry. This feature is deprecated, and using it in new content will result in content errors.
                     {
                         bool "normalized_uvs" : opt // If true, UVs are assumed to be [0-1]. If false, UVs are assumed to be [0-texture_width] and [0-texture_height] respectively.
                         array "positions" : opt
@@ -1087,7 +1087,7 @@ geometry:1.16.0:{
                             bool "ignore_inherited_scale" : opt // Discard scale inherited from parent bone.
                         }
                     }
-                    object "poly_mesh" : opt // A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry.
+                    object "poly_mesh" : opt // [Deprecated] A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry. This feature is deprecated, and using it in new content will result in content errors.
                     {
                         bool "normalized_uvs" : opt // If true, UVs are assumed to be [0-1]. If false, UVs are assumed to be [0-texture_width] and [0-texture_height] respectively.
                         array "positions" : opt
@@ -1314,7 +1314,7 @@ geometry:1.19.30:{
                             bool "ignore_inherited_scale" : opt // Discard scale inherited from parent bone.
                         }
                     }
-                    object "poly_mesh" : opt // A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry.
+                    object "poly_mesh" : opt // [Deprecated] A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry. This feature is deprecated, and using it in new content will result in content errors.
                     {
                         bool "normalized_uvs" : opt // If true, UVs are assumed to be [0-1]. If false, UVs are assumed to be [0-texture_width] and [0-texture_height] respectively.
                         array "positions" : opt
@@ -1735,7 +1735,7 @@ geometry:1.21.0:{
                             bool "ignore_inherited_scale" : opt // Discard scale inherited from parent bone.
                         }
                     }
-                    object "poly_mesh" : opt // A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry.
+                    object "poly_mesh" : opt // [Deprecated] A triangle or quad mesh object. Can be used in conjunction with cubes and texture geometry. This feature is deprecated, and using it in new content will result in content errors.
                     {
                         bool "normalized_uvs" : opt // If true, UVs are assumed to be [0-1]. If false, UVs are assumed to be [0-texture_width] and [0-texture_height] respectively.
                         array "positions" : opt
