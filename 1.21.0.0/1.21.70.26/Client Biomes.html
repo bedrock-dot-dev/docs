@@ -1,4 +1,4 @@
-<h1>CLIENT BIOMES DOCUMENTATION </br>Version: 1.21.110.23</h1>
+<h1>CLIENT BIOMES DOCUMENTATION </br>Version: 1.21.70.26</h1>
 This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -20,7 +20,6 @@ This is documentation for a preview release of Minecraft. New features, componen
 <tr> <td> <a href="#minecraft:foliage_appearance"> minecraft:foliage_appearance</a> </tr> </td>
 <tr> <td> <a href="#minecraft:grass_appearance"> minecraft:grass_appearance</a> </tr> </td>
 <tr> <td> <a href="#minecraft:lighting_identifier"> minecraft:lighting_identifier</a> </tr> </td>
-<tr> <td> <a href="#minecraft:precipitation"> minecraft:precipitation</a> </tr> </td>
 <tr> <td> <a href="#minecraft:sky_color"> minecraft:sky_color</a> </tr> </td>
 <tr> <td> <a href="#minecraft:water_appearance"> minecraft:water_appearance</a> </tr> </td>
 <tr> <td> <a href="#minecraft:water_identifier"> minecraft:water_identifier</a> </tr> </td>
@@ -75,7 +74,7 @@ Any components that this Client Biome uses</br><h2></h2>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:atmosphere_identifier</td>
 <td style="border-style:solid; border-width:3; padding:7px">Object</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Set the identifier used for atmospherics in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Atmospheric Scattering JSON schemas under the "atmospherics" directory. Biomes without this component will have default atmosphere settings.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">[INTERNAL - WORK IN PROGRESS] Set the atmosphere settings used during deferred rendering. Biomes without this component will have default atmosphere settings.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:biome_music</td>
@@ -87,7 +86,7 @@ Any components that this Client Biome uses</br><h2></h2>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:color_grading_identifier</td>
 <td style="border-style:solid; border-width:3; padding:7px">Object</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Set the identifier used for color grading in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Color Grading JSON schemas under the "color_grading" directory. Biomes without this component will have default color_grading settings.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">[INTERNAL - WORK IN PROGRESS] Set the color_grading settings used during deferred rendering. Biomes without this component will have default color_grading settings.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:dry_foliage_color</td>
@@ -117,13 +116,7 @@ Any components that this Client Biome uses</br><h2></h2>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:lighting_identifier</td>
 <td style="border-style:solid; border-width:3; padding:7px">Object</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Set the identifier used for lighting in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Lighting JSON schemas under the "lighting" directory. Biomes without this component will have default lighting settings.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">minecraft:precipitation</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Describes the visuals for a biome's precipitation. Biomes without this component will have default values. At most one precipitation type can be set for a biome.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">[INTERNAL - WORK IN PROGRESS] Set the lighting settings used during deferred rendering. Biomes without this component will have default lighting settings.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:sky_color</td>
@@ -141,7 +134,7 @@ Any components that this Client Biome uses</br><h2></h2>
 <td style="border-style:solid; border-width:3; padding:7px">minecraft:water_identifier</td>
 <td style="border-style:solid; border-width:3; padding:7px">Object</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Set the identifier used for rendering water in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Water JSON schemas under the "water" directory. Biomes without this component will have default water settings.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">[INTERNAL - WORK IN PROGRESS] Set the water settings used during deferred rendering. Biomes without this component will have default water settings.</br></td>
 </tr>
 </table>
 <a href="#Index">Back to top</a><br><br>
@@ -241,19 +234,19 @@ Set the ambient sounds for the biome. These sounds must be in the 'individual_na
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">addition</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
 <td style="border-style:solid; border-width:3; padding:7px">Named sound that occasionally plays at the listener position</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">loop</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
 <td style="border-style:solid; border-width:3; padding:7px">Named sound that loops while the listener position is inside the biome</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">mood</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
 <td style="border-style:solid; border-width:3; padding:7px">Named sound that rarely plays at a nearby air block position when the light level is low. Biomes without an ambient mood sound will use the 'ambient.cave' sound.</br></td>
 </tr>
@@ -262,13 +255,13 @@ Set the ambient sounds for the biome. These sounds must be in the 'individual_na
 
 <h1><p id="minecraft:atmosphere_identifier">minecraft:atmosphere_identifier</p></h1>
 
-Set the identifier used for atmospherics in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Atmospheric Scattering JSON schemas under the "atmospherics" directory. Biomes without this component will have default atmosphere settings.</br><h2></h2>
+[INTERNAL - WORK IN PROGRESS] Set the atmosphere settings used during deferred rendering. Biomes without this component will have default atmosphere settings.</br><h2></h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">atmosphere_identifier</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">Identifier of atmosphere definition to use</br></td>
 </tr>
@@ -282,12 +275,6 @@ Affect how music plays within the biome</br><h2></h2>
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
-<td style="border-style:solid; border-width:3; padding:7px">music_definition</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Music to be played when inside this biome. If left off or not found the default music will be determined by the dimension. Empty string will result in no music.</br></td>
-</tr>
-<tr>
 <td style="border-style:solid; border-width:3; padding:7px">volume_multiplier</td>
 <td style="border-style:solid; border-width:3; padding:7px">Float</td>
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
@@ -298,13 +285,13 @@ Affect how music plays within the biome</br><h2></h2>
 
 <h1><p id="minecraft:color_grading_identifier">minecraft:color_grading_identifier</p></h1>
 
-Set the identifier used for color grading in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Color Grading JSON schemas under the "color_grading" directory. Biomes without this component will have default color_grading settings.</br><h2></h2>
+[INTERNAL - WORK IN PROGRESS] Set the color_grading settings used during deferred rendering. Biomes without this component will have default color_grading settings.</br><h2></h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">color_grading_identifier</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">Identifier of color_grading definition to use</br></td>
 </tr>
@@ -334,7 +321,7 @@ Set the fog settings used during rendering. Biomes without this component will h
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">fog_identifier</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">Identifier of fog definition to use</br></td>
 </tr>
@@ -368,59 +355,20 @@ Set the grass color or color map used during rendering. Biomes without this comp
 <td style="border-style:solid; border-width:3; padding:7px">Optional</td>
 <td style="border-style:solid; border-width:3; padding:7px">RGB color of grass.</br></td>
 </tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">grass_is_shaded</td>
-<td style="border-style:solid; border-width:3; padding:7px">Boolean</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Adds a shading effect to the grass as if there was a roof.</br></td>
-</tr>
 </table>
 <a href="#Index">Back to top</a><br><br>
 
 <h1><p id="minecraft:lighting_identifier">minecraft:lighting_identifier</p></h1>
 
-Set the identifier used for lighting in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Lighting JSON schemas under the "lighting" directory. Biomes without this component will have default lighting settings.</br><h2></h2>
+[INTERNAL - WORK IN PROGRESS] Set the lighting settings used during deferred rendering. Biomes without this component will have default lighting settings.</br><h2></h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">lighting_identifier</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">Identifier of lighting definition to use</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h1><p id="minecraft:precipitation">minecraft:precipitation</p></h1>
-
-Describes the visuals for a biome's precipitation. Biomes without this component will have default values. At most one precipitation type can be set for a biome.</br><h2></h2>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
-<tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">ash</td>
-<td style="border-style:solid; border-width:3; padding:7px">Float</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Density of ash precipitation visuals</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">blue_spores</td>
-<td style="border-style:solid; border-width:3; padding:7px">Float</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Density of blue spore precipitation visuals</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">red_spores</td>
-<td style="border-style:solid; border-width:3; padding:7px">Float</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Density of blue spore precipitation visuals</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">white_ash</td>
-<td style="border-style:solid; border-width:3; padding:7px">Float</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
-<td style="border-style:solid; border-width:3; padding:7px">Density of white ash precipitation visuals</br></td>
 </tr>
 </table>
 <a href="#Index">Back to top</a><br><br>
@@ -449,7 +397,7 @@ Set the water surface color used during rendering. Biomes without this component
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">surface_color</td>
 <td style="border-style:solid; border-width:3; padding:7px">Object of type Color255RGB</td>
-<td style="border-style:solid; border-width:3; padding:7px">Optional</td>
+<td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">RGB color of the water surface</br></td>
 </tr>
 <tr>
@@ -463,13 +411,13 @@ Set the water surface color used during rendering. Biomes without this component
 
 <h1><p id="minecraft:water_identifier">minecraft:water_identifier</p></h1>
 
-Set the identifier used for rendering water in Vibrant Visuals mode. Identifiers must resolve to identifiers in valid Water JSON schemas under the "water" directory. Biomes without this component will have default water settings.</br><h2></h2>
+[INTERNAL - WORK IN PROGRESS] Set the water settings used during deferred rendering. Biomes without this component will have default water settings.</br><h2></h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Required?</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">water_identifier</td>
-<td style="border-style:solid; border-width:3; padding:7px">Object of type Reference</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
 <td style="border-style:solid; border-width:3; padding:7px">Required</td>
 <td style="border-style:solid; border-width:3; padding:7px">Identifier of water definition to use</br></td>
 </tr>

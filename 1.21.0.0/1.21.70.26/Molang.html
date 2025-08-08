@@ -1,4 +1,4 @@
-<h1>MOLANG DOCUMENTATION </br>Version: 1.21.110.23</h1>
+<h1>MOLANG DOCUMENTATION </br>Version: 1.21.70.26</h1>
 This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
@@ -1071,10 +1071,6 @@ Query Functions are operators that access a wide variety of information. They ca
 <td style="border-style:solid; border-width:3; padding:7px">Gets specified axis of the specified locator offset of the root model.</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:3; padding:7px">query.graphics_mode_is_any</td>
-<td style="border-style:solid; border-width:3; padding:7px">Takes in one or more arguments ('simple', 'fancy', 'deferred', 'raytraced'). If the graphics mode of the client matches any of the arguments, return 1.0. Available on the Client (Resource Packs) only.</br></td>
-</tr>
-<tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.ground_speed</td>
 <td style="border-style:solid; border-width:3; padding:7px">Returns the ground speed of the entity in meters/second.</br></td>
 </tr>
@@ -1085,10 +1081,6 @@ Query Functions are operators that access a wide variety of information. They ca
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.has_any_family</td>
 <td style="border-style:solid; border-width:3; padding:7px">Returns 1 if the entity has any of the specified families, else 0.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">query.has_any_leashed_entity_of_type</td>
-<td style="border-style:solid; border-width:3; padding:7px">Returns whether or not the entity is currently leashing other entities of the designated types.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.has_armor_slot</td>
@@ -1259,8 +1251,8 @@ Query Functions are operators that access a wide variety of information. They ca
 <td style="border-style:solid; border-width:3; padding:7px">Returns 1.0 if the entity has chests attached to it, else it returns 0.0.</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:3; padding:7px">query.is_cooldown_category</td>
-<td style="border-style:solid; border-width:3; padding:7px">Returns 1.0 if the specified held or worn item has the specified cooldown category, otherwise returns 0.0. First argument is the cooldown name to check for, second argument is the equipment slot name, and if required third argument is the numerical slot id. For second and third arguments, uses the same name and id that the replaceitem command takes when querying entities.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">query.is_cooldown_type</td>
+<td style="border-style:solid; border-width:3; padding:7px">Returns 1.0 if the specified held or worn item has the specified cooldown type name, otherwise returns 0.0. First argument is the cooldown name to check for, second argument is the equipment slot name, and if required third argument is the numerical slot id. For second and third arguments, uses the same name and id that the replaceitem command takes when querying entities.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.is_crawling</td>
@@ -1479,10 +1471,6 @@ Query Functions are operators that access a wide variety of information. They ca
 <td style="border-style:solid; border-width:3; padding:7px">Returns 1.0 if the entity is riding, else it returns 0.0.</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:3; padding:7px">query.is_riding_any_entity_of_type</td>
-<td style="border-style:solid; border-width:3; padding:7px">Returns whether or not the entity is currently riding an entity of any of the designated types.</br></td>
-</tr>
-<tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.is_rising</td>
 <td style="border-style:solid; border-width:3; padding:7px">(No longer available in pack min_engine_version 1.20.50.) DEPRECATED after 1.20.40. Returns 1.0 if behavior.timer_flag_2 is running, else it returns 0.0.</br></td>
 </tr>
@@ -1616,7 +1604,7 @@ Query Functions are operators that access a wide variety of information. They ca
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.item_remaining_use_duration</td>
-<td style="border-style:solid; border-width:3; padding:7px">Returns the amount of time an item has left to use, else 0.0 if it doesn't make sense. Item queried is specified by the slot name 'main_hand' or 'off_hand'. Time remaining is normalized using the normalization value, only if one is given, else it is returned in seconds.</br></td>
+<td style="border-style:solid; border-width:3; padding:7px">Returns the amount of time an item has left to use, else 0.0 if it doesn't make sense.Item queried is specified by the slot name 'main_hand' or 'off_hand'.Time remaining is normalized using the normalization value, only if one is given, else it is returned in seconds.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.item_slot_to_bone_name</td>
@@ -1637,10 +1625,6 @@ Query Functions are operators that access a wide variety of information. They ca
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.last_input_mode_is_any</td>
 <td style="border-style:solid; border-width:3; padding:7px">Takes one or more arguments ('keyboard_and_mouse', 'touch', 'gamepad', or 'motion_controller'). If the last input used is any of the specified string values, returns 1.0. Otherwise returns 0.0. Available on the Client (Resource Packs) only.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">query.leashed_entity_count</td>
-<td style="border-style:solid; border-width:3; padding:7px">Returns the number of entities for which this entity is the leash holder.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">query.lie_amount</td>
@@ -1979,6 +1963,15 @@ Query Functions are operators that access a wide variety of information. They ca
 
 <h1><p id="List of Experimental Entity Queries">List of Experimental Entity Queries</p></h1>
 
+<h2></h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">query.graphics_mode_is_any</td>
+<td style="border-style:solid; border-width:3; padding:7px">(EXPERIMENTAL. Enable 'Upcoming Creator Features' to use.) Takes in one or more arguments ('simple', 'fancy', 'deferred', 'raytraced'). If the graphics mode of the client matches any of the arguments, return 1.0. Available on the Client (Resource Packs) only.</br></td>
+</tr>
+</table>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -2042,10 +2035,6 @@ Molang uses the `"min_engine_version"` from the `manifest.json` of the resource 
 <tr>
 <td style="border-style:solid; border-width:3; padding:7px">1.20.70</td>
 <td style="border-style:solid; border-width:3; padding:7px">Queries surface_particle_texture_size, surface_particle_texture_coordinate, and surface_particle_texture_size now register leaf blocks as supporting for step particles</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:3; padding:7px">1.21.100</td>
-<td style="border-style:solid; border-width:3; padding:7px">query.is_carrying_block is now usable by all entities not just Enderman and returns 1.0 for air like all other blocks.</br></td>
 </tr>
 </table>
 <a href="#Index">Back to top</a><br><br>
