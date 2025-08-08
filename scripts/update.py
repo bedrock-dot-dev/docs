@@ -95,9 +95,23 @@ def main() -> None:
     current_version = MinecraftVersion(release_data[tag.value]['current'])
     latest_version = MinecraftVersion(release_data[tag.value]['latest'])
 
+    prereleases = [r for r in releases if r.prerelease]
+    regular_releases = [r for r in releases if not r.prerelease]
+    
+    if prereleases:
+      print(f'Latest pre-release: {prereleases[0].title}')
+    if regular_releases:
+      print(f'Latest regular release: {regular_releases[0].title}')
+
     if current_version != latest_version:
       # get the release with the latest version
-      git_release = next(release for release in releases if release.title.startswith(f'v{latest_version}'))
+      try:
+        git_release = next(release for release in releases if release.title.startswith(f'v{latest_version}'))
+      except StopIteration:
+        print(f'Available releases: {[release.title for release in releases]}')
+        
+        raise Exception(f'No release found for {latest_version}.')
+
       print(f'New {tag.name} version found: {latest_version}')
       # download and extract the release
       get_docs_update(latest_version, git_release)
