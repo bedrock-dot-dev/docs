@@ -103,7 +103,7 @@ def main() -> None:
     if regular_releases:
       print(f'Latest regular release: {regular_releases[0].title}')
 
-    if current_version != latest_version:
+    if latest_version > current_version:
       # get the release with the latest version
       try:
         git_release = next(release for release in releases if release.title.startswith(f'v{latest_version}'))
@@ -123,8 +123,14 @@ def main() -> None:
 
       tags[tag.value] = latest_version.parts()
       return True
-
-    return False
+    elif latest_version < current_version:
+      error_msg = f'ERROR: Latest {tag.name} version {latest_version} is older than current version {current_version}.'
+      print(error_msg)
+      raise Exception(error_msg)
+    else:
+      # Versions are equal, no update needed
+      print(f'{tag.name} version {current_version} is up to date')
+      return False
 
   new_stable = check_update(Tags.STABLE)
   new_beta = check_update(Tags.BETA)

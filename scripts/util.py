@@ -26,6 +26,33 @@ class MinecraftVersion():
       return False
     return self.version_id == other.version_id
 
+  def _get_version_tuple(self) -> tuple:
+    """
+    Converts the version string to a tuple of integers for comparison
+    :return: A tuple of integers representing the version
+    """
+    return tuple(int(x) for x in self.version_id.split('.'))
+
+  def __lt__(self, other) -> bool:
+    if not isinstance(other, MinecraftVersion):
+      return NotImplemented
+    return self._get_version_tuple() < other._get_version_tuple()
+
+  def __le__(self, other) -> bool:
+    if not isinstance(other, MinecraftVersion):
+      return NotImplemented
+    return self._get_version_tuple() <= other._get_version_tuple()
+
+  def __gt__(self, other) -> bool:
+    if not isinstance(other, MinecraftVersion):
+      return NotImplemented
+    return self._get_version_tuple() > other._get_version_tuple()
+
+  def __ge__(self, other) -> bool:
+    if not isinstance(other, MinecraftVersion):
+      return NotImplemented
+    return self._get_version_tuple() >= other._get_version_tuple()
+
   def parts(self) -> list[str]:
     """
     Gets the parts of the version id
