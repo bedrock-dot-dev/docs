@@ -43,6 +43,13 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
   subprocess.run(shlex.split('git add --all'), cwd=Constants.ROOT)
   subprocess.run(shlex.split(f'git commit -m \'{copy_previous_version_msg}\''), cwd=Constants.ROOT)
 
+  # remove the new version directories to handle deleted files
+  for prev, new in updates:
+    new_path = Constants.ROOT / new.as_path()
+    if new_path.exists():
+      print(f'Deleting {new_path} to handle removed docs...')
+      shutil.rmtree(new_path)
+
   # copy new files
   shutil.copytree(Constants.TMP_PATH, Constants.ROOT, dirs_exist_ok=True)
 
