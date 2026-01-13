@@ -1406,7 +1406,11 @@ Short (using Defaults)..<br / ><textarea readonly="true" cols="61" rows="2">
 
 <h1><p id="clock_time">clock_time</p></h1>
 
-Compares the current time with a float value in the range (0.0, 1.0).0.0= Noon0.25= Sunset0.5= Midnight0.75= Sunrise</br><h2></h2>
+Compares the current time with a float value in the range (0.0, 1.0).
+0.0= Noon
+0.25= Sunset
+0.5= Midnight
+0.75= Sunrise</br><h2></h2>
 
 <table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
 <tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Default</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
@@ -21034,17 +21038,46 @@ When set to true, smaller motion packets will be sent during drop packet interva
 
 <h2><p id="minecraft:custom_hit_test">minecraft:custom_hit_test</p></h2>
 
-List of hitboxes for melee and ranged hits against the entity.</br><h3></h3>
+List of hitboxes for melee and ranged hits against the entity. It is worth noting that this doesnt scale with minecraft:scale or minecraft:age_scale</br><h3></h3>
 
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+
+<table style="width: 100%; border-style: solid; border-collapse: collapse; border-width: 2;" border="1">
+<thead>
 <tr>
-<td style="border-style:solid; border-width:2; padding:8px">hitboxes</td>
-<td style="border-style:solid; border-width:2; padding:8px">Array</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">Comma seperated list of hitboxes.</br></td>
+<th style="width: 79px;">Name</th>
+<th style="width: 102.133px;">Type</th>
+<th style="width: 111.867px;">Default Value</th>
+<th style="width: 362px;">Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 2; padding: 8px;">hitboxes</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">List</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">&nbsp;</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Specifies hitboxes and their properties</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 2; padding: 8px;">width</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Float</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">&nbsp;</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Width of the hitbox in meters/blocks</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 2; padding: 8px;">height</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Float</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">&nbsp;</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Height of the hitbox in meters/blocks</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 2; padding: 8px;">pivot</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Vector [a,b,c]</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">[0,0,0]</td>
+<td style="border-style: solid; border-width: 2; padding: 8px;">Specifies the absolute center of the hitbox (including the height) relative to the world orientation</td>
+</tr>
+</tbody>
 </table>
+
 <a href="#Index">Back to top</a><br><br>
 
 <h2><p id="minecraft:damage_over_time">minecraft:damage_over_time</p></h2>
