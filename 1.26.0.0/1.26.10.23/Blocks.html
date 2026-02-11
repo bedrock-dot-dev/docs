@@ -1,5 +1,4 @@
 <h1>BLOCKS DOCUMENTATION </h1>
-This is documentation for a preview release of Minecraft. New features, components, and capabilities in this release are not final and might change without notice before the final release.<br/>Be sure to check the documentation once the release is out of preview if your add-on isn't working properly. Resource and Behavior Packs created for the preview are not guaranteed to work on the final release.<br/>
 <h2><p id="Index">Index</p></h2>
 <table border="1">
 <tr> <th><a href="#Blocks">Blocks</a></th> </tr>
@@ -208,12 +207,6 @@ The component can be defined as an object to gain control over more specific beh
 <td style="border-style:solid; border-width:1; padding:9px">String</td>
 <td style="border-style:solid; border-width:1; padding:9px">minecraft:culling_layer.undefined</td>
 <td style="border-style:solid; border-width:1; padding:9px">A string that allows culling rule to group multiple blocks together when comparing them. When using the minecraft namespace, the only allowed culling layer identifiers are : "minecraft:culling_layer.undefined" or "minecraft:culling_layer.leaves". When using no namespaces or a custom one, the names must start and end with an alpha-numeric character.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:1; padding:9px">culling_shape</td>
-<td style="border-style:solid; border-width:1; padding:9px">String</td>
-<td style="border-style:solid; border-width:1; padding:9px">minecraft:empty</td>
-<td style="border-style:solid; border-width:1; padding:9px">Currently only available with the VoxelShape experiment on. The voxel shape used for culling adjacent block faces. Voxel shapes work together with culling rules and will not function if there is no culling rule defined for the block. Only adjacent blocks with voxel shapes will occlude using this shape. Blocks using "minecraft:geometry.full_block" always use the unit cube shape and will ignore custom shapes if specified. When using the minecraft namespace, the only currently available culling shape identifiers are : "minecraft:empty" or "minecraft:unit_cube". When using no namespaces or a custom one, the names must start and end with an alpha-numeric character.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:1; padding:9px">identifier</td>
@@ -644,7 +637,7 @@ These properties are part of the Block Definition. This helps the system determi
 <h2>Code Example</h2>
 Example<br / ><textarea readonly="true" cols="66" rows="20">
 {
-  "format_version": "1.26.10",
+  "format_version": "1.26.0",
   "minecraft:block": {
     "description": {
       "identifier": "design:lavenderstone"
