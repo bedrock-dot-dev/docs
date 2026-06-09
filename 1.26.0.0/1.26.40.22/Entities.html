@@ -21,6 +21,7 @@ This is documentation for a preview release of Minecraft. New features, componen
 <tr> <th><a href="#Data-Driven Spawning">Data-Driven Spawning</a></th> </tr>
 <tr> <td> <a href="#Spawn Rules"> Spawn Rules</a> </tr> </td>
 <tr> <th><a href="#Filters">Filters</a></th> </tr>
+<tr> <td> <a href="#actor_has_item_with_enchantment_in_slot"> actor_has_item_with_enchantment_in_slot</a> </tr> </td>
 <tr> <td> <a href="#actor_health"> actor_health</a> </tr> </td>
 <tr> <td> <a href="#all_slots_empty"> all_slots_empty</a> </tr> </td>
 <tr> <td> <a href="#any_slot_empty"> any_slot_empty</a> </tr> </td>
@@ -893,7 +894,164 @@ Example Spawn Rules for the zombie<br / ><textarea readonly="true" cols="72" row
 
 <h1><p id="Filters">Filters</p></h1>
 
-Filters allow data objects to specify test criteria which allows their use.</br></br>For example, a model that includes a filter will only be used when the filter criteria is true.</br></br></br></br>A typical filter consists of four parameters:</br></br> name: the name of the test to apply.</br></br> domain: the domain the test should be performed in. An armor slot, for example. This parameter is only used by a few tests.</br></br> operator: the comparison to apply with the value, such as 'equal' or 'greater'.</br></br> value: the value being compared with the test.</br></br></br></br>A typical filter looks like the following:</br></br> { "test" : "moon_intensity", "subject" : "self", "operator" : "greater", "value" : "0.5" } </br></br>Which results in the calling entity (self) calculating the moon_intensity at its location and returning true if the result is greater than 0.5.</br></br></br></br>Tests can be combined into groups using the collections 'all_of', 'any_of', or 'none_of'.</br></br> All tests in an 'all_of' group must pass in order for the group to pass.</br></br> One or more tests in an 'any_of' group must pass in order for the group to pass.</br></br> All tests in a 'none_of' group must fail in order for the group to pass.</br></br><h1><p id="actor_health">actor_health</p></h1>
+Filters allow data objects to specify test criteria which allows their use.</br></br>For example, a model that includes a filter will only be used when the filter criteria is true.</br></br></br></br>A typical filter consists of four parameters:</br></br> name: the name of the test to apply.</br></br> domain: the domain the test should be performed in. An armor slot, for example. This parameter is only used by a few tests.</br></br> operator: the comparison to apply with the value, such as 'equal' or 'greater'.</br></br> value: the value being compared with the test.</br></br></br></br>A typical filter looks like the following:</br></br> { "test" : "moon_intensity", "subject" : "self", "operator" : "greater", "value" : "0.5" } </br></br>Which results in the calling entity (self) calculating the moon_intensity at its location and returning true if the result is greater than 0.5.</br></br></br></br>Tests can be combined into groups using the collections 'all_of', 'any_of', or 'none_of'.</br></br> All tests in an 'all_of' group must pass in order for the group to pass.</br></br> One or more tests in an 'any_of' group must pass in order for the group to pass.</br></br> All tests in a 'none_of' group must fail in order for the group to pass.</br></br><h1><p id="actor_has_item_with_enchantment_in_slot">actor_has_item_with_enchantment_in_slot</p></h1>
+
+Tests that an actor has an item equipped with a given enchantment.</br><h2></h2>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:3;">
+<tr> <th style="border-style:solid; border-width:3;">Name</th> <th style="border-style:solid; border-width:3;">Type</th> <th style="border-style:solid; border-width:3;">Default</th> <th style="border-style:solid; border-width:3;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">domain</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
+<td style="border-style:solid; border-width:3; padding:7px">any</td>
+<td style="border-style:solid; border-width:3; padding:7px">(Optional) The equipment location to test</br><table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Options</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">any</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">armor</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">body</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">feet</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">hand</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">head</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">inventory</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">leg</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">main_hand</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">torso</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">operator</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
+<td style="border-style:solid; border-width:3; padding:7px">equals</td>
+<td style="border-style:solid; border-width:3; padding:7px">(Optional) The comparison to apply with 'value'.</br><table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Options</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">!=</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for inequality.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px"><</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for less-than the value.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px"><=</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for less-than or equal to the value.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px"><></td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for inequality.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">=</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for equality.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">==</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for equality.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">></td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for greater-than the value.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">>=</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for greater-than or equal to the value.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">equals</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for equality.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">not</td>
+<td style="border-style:solid; border-width:2; padding:8px">Test for inequality.</br></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">subject</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
+<td style="border-style:solid; border-width:3; padding:7px">self</td>
+<td style="border-style:solid; border-width:3; padding:7px">(Optional) The subject of this filter test.</br><table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Options</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">block</td>
+<td style="border-style:solid; border-width:2; padding:8px">The block involved with the interaction.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">damager</td>
+<td style="border-style:solid; border-width:2; padding:8px">The damaging actor involved with the interaction.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">other</td>
+<td style="border-style:solid; border-width:2; padding:8px">The other member of an interaction, not the caller.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">parent</td>
+<td style="border-style:solid; border-width:2; padding:8px">The caller's current parent.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">player</td>
+<td style="border-style:solid; border-width:2; padding:8px">The player involved with the interaction.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The entity or object calling the test</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">The caller's current target.</br></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:3; padding:7px">value</td>
+<td style="border-style:solid; border-width:3; padding:7px">String</td>
+<td style="border-style:solid; border-width:3; padding:7px"></td>
+<td style="border-style:solid; border-width:3; padding:7px">(Required) A string value.</br></td>
+</tr>
+</table>
+<h2>Examples</h2>
+Full..<br / ><textarea readonly="true" cols="125" rows="2">
+{ "test": "actor_has_item_with_enchantment_in_slot", "subject": "self", "domain": "any", "operator": "equals", "value": "" }
+</textarea> </br>
+Short (using Defaults)..<br / ><textarea readonly="true" cols="67" rows="2">
+{ "test": "actor_has_item_with_enchantment_in_slot", "value": "" }
+</textarea> </br>
+<a href="#Index">Back to top</a><br><br>
+
+<h1><p id="actor_health">actor_health</p></h1>
 
 Tests the health of the subject.</br><h2></h2>
 
@@ -13341,7 +13499,7 @@ Allows this entity to damage a target by using a running attack.</br><h3></h3>
 </table>
 <a href="#Index">Back to top</a><br><br>
 
-<h2><p id="minecraft:behavior.charge_held_item">minecraft:behavior.charge_held_item</p></h2>
+<h2><p id="minecraft:behavior.charge_held_item (See JSON Schema since 1.26.40)">minecraft:behavior.charge_held_item (See JSON Schema since 1.26.40)</p></h2>
 
 Allows an entity to charge and use their held item.</br><h3></h3>
 
@@ -14145,7 +14303,7 @@ Allows the entity to move toward a target, and drop an item near the target. Thi
 </table>
 <a href="#Index">Back to top</a><br><br>
 
-<h2><p id="minecraft:behavior.eat_block">minecraft:behavior.eat_block</p></h2>
+<h2><p id="minecraft:behavior.eat_block (See JSON Schema since 1.26.40)">minecraft:behavior.eat_block (See JSON Schema since 1.26.40)</p></h2>
 
 Allows the entity to consume a block, replace the eaten block with another block, and trigger an event as a result.</br><h3></h3>
 
@@ -14155,7 +14313,7 @@ Allows the entity to consume a block, replace the eaten block with another block
 <td style="border-style:solid; border-width:2; padding:8px">eat_and_replace_block_pairs</td>
 <td style="border-style:solid; border-width:2; padding:8px">Array</td>
 <td style="border-style:solid; border-width:2; padding:8px">N/A</td>
-<td style="border-style:solid; border-width:2; padding:8px">A collection of pairs of blocks; the first ("eat_block")is the block the entity should eat, the second ("replace_block") is the block that should replace the eaten block.</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">A collection of pairs of blocks; the first ("eat_block") is the block the entity should eat, the second ("replace_block") is the block that should replace the eaten block.</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">on_eat</td>
@@ -15618,7 +15776,7 @@ Allows an entity to jump to another random block.</br><h3></h3>
 </table>
 <a href="#Index">Back to top</a><br><br>
 
-<h2><p id="minecraft:behavior.knockback_roar">minecraft:behavior.knockback_roar</p></h2>
+<h2><p id="minecraft:behavior.knockback_roar (See JSON Schema since 1.26.40)">minecraft:behavior.knockback_roar (See JSON Schema since 1.26.40)</p></h2>
 
 Allows the mob to perform a damaging knockback that affects all nearby entities.</br><h3></h3>
 
@@ -15633,7 +15791,7 @@ Allows the mob to perform a damaging knockback that affects all nearby entities.
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">cooldown_time</td>
 <td style="border-style:solid; border-width:2; padding:8px">Decimal</td>
-<td style="border-style:solid; border-width:2; padding:8px">0.10</td>
+<td style="border-style:solid; border-width:2; padding:8px">0.1</td>
 <td style="border-style:solid; border-width:2; padding:8px">Time (in seconds) the mob has to wait before using the goal again.</br></td>
 </tr>
 <tr>
@@ -18086,7 +18244,7 @@ Allows an entity to randomly move through water</br><h3></h3>
 </table>
 <a href="#Index">Back to top</a><br><br>
 
-<h2><p id="minecraft:behavior.ranged_attack">minecraft:behavior.ranged_attack</p></h2>
+<h2><p id="minecraft:behavior.ranged_attack (See JSON Schema since 1.26.40)">minecraft:behavior.ranged_attack (See JSON Schema since 1.26.40)</p></h2>
 
 Allows an entity to attack by using ranged shots. "charge_shoot_trigger" must be greater than 0 to enable charged up burst-shot attacks. Requires minecraft:shooter to define projectile behaviour.</br><h3></h3>
 
@@ -24008,6 +24166,276 @@ Allows this entity to generate paths by walking around and jumping up and down a
 </table>
 <a href="#Index">Back to top</a><br><br>
 
+<h2><p id="minecraft:on_death">minecraft:on_death</p></h2>
+
+Adds a trigger to call on this entity's death.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_friendly_anger">minecraft:on_friendly_anger</p></h2>
+
+Adds a trigger that will run when a nearby entity of the same type as this entity becomes Angry.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_hurt">minecraft:on_hurt</p></h2>
+
+Adds a trigger to call when this entity takes damage.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_hurt_by_player">minecraft:on_hurt_by_player</p></h2>
+
+Adds a trigger to call when this entity is attacked by the player.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_ignite">minecraft:on_ignite</p></h2>
+
+Adds a trigger to call when this entity is set on fire.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_start_landing">minecraft:on_start_landing</p></h2>
+
+Only usable by the Ender Dragon. Adds a trigger to call when this entity lands.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_start_takeoff">minecraft:on_start_takeoff</p></h2>
+
+Only usable by the Ender Dragon. Adds a trigger to call when this entity starts flying.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_target_acquired">minecraft:on_target_acquired</p></h2>
+
+Adds a trigger to call when this entity finds a target.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_target_escape">minecraft:on_target_escape</p></h2>
+
+Adds a trigger to call when this entity loses the target it currently has.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
+<h2><p id="minecraft:on_wake_with_owner">minecraft:on_wake_with_owner</p></h2>
+
+Adds a trigger to call when this pet's owner awakes after sleeping with the pet.</br><h3></h3>
+
+<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
+<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">event</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">filters</td>
+<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
+<td style="border-style:solid; border-width:2; padding:8px"></td>
+<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">target</td>
+<td style="border-style:solid; border-width:2; padding:8px">String</td>
+<td style="border-style:solid; border-width:2; padding:8px">self</td>
+<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
+</tr>
+</table>
+<a href="#Index">Back to top</a><br><br>
+
 <h2><p id="minecraft:out_of_control">minecraft:out_of_control</p></h2>
 
 Defines the entity's 'out of control' state.</br><a href="#Index">Back to top</a><br><br>
@@ -25608,8 +26036,8 @@ Sets the mapping of internal animation controller references to actual animation
 <td style="border-style:solid; border-width:2; padding:8px">17135737530272528235</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.charge_held_item</td>
-<td style="border-style:solid; border-width:2; padding:8px">9534738104831396526</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.charge_held_item (See JSON Schema since 1.26.40)</td>
+<td style="border-style:solid; border-width:2; padding:8px">13883018417049668296</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.circle_around_anchor (See JSON Schema since 1.21.100)</td>
@@ -25688,8 +26116,8 @@ Sets the mapping of internal animation controller references to actual animation
 <td style="border-style:solid; border-width:2; padding:8px">5376378384288983894</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.eat_block</td>
-<td style="border-style:solid; border-width:2; padding:8px">13717849383294281770</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.eat_block (See JSON Schema since 1.26.40)</td>
+<td style="border-style:solid; border-width:2; padding:8px">8135000037169854404</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.eat_carried_item</td>
@@ -25824,8 +26252,8 @@ Sets the mapping of internal animation controller references to actual animation
 <td style="border-style:solid; border-width:2; padding:8px">4936427207419266264</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.knockback_roar</td>
-<td style="border-style:solid; border-width:2; padding:8px">10556128811593022910</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.knockback_roar (See JSON Schema since 1.26.40)</td>
+<td style="border-style:solid; border-width:2; padding:8px">14274873969460293560</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.lay_down</td>
@@ -26028,8 +26456,8 @@ Sets the mapping of internal animation controller references to actual animation
 <td style="border-style:solid; border-width:2; padding:8px">-1465281278</br></td>
 </tr>
 <tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.ranged_attack</td>
-<td style="border-style:solid; border-width:2; padding:8px">17427060681688556526</br></td>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.ranged_attack (See JSON Schema since 1.26.40)</td>
+<td style="border-style:solid; border-width:2; padding:8px">6902083698709929224</br></td>
 </tr>
 <tr>
 <td style="border-style:solid; border-width:2; padding:8px">minecraft:behavior.receive_love</td>
@@ -26618,6 +27046,46 @@ Sets the mapping of internal animation controller references to actual animation
 <td style="border-style:solid; border-width:2; padding:8px">1140005505</br></td>
 </tr>
 <tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_death</td>
+<td style="border-style:solid; border-width:2; padding:8px">-49357854</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_friendly_anger</td>
+<td style="border-style:solid; border-width:2; padding:8px">-1009986313</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_hurt</td>
+<td style="border-style:solid; border-width:2; padding:8px">-1028603471</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_hurt_by_player</td>
+<td style="border-style:solid; border-width:2; padding:8px">-599009831</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_ignite</td>
+<td style="border-style:solid; border-width:2; padding:8px">-1911489054</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_start_landing</td>
+<td style="border-style:solid; border-width:2; padding:8px">-555648368</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_start_takeoff</td>
+<td style="border-style:solid; border-width:2; padding:8px">426083399</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_target_acquired</td>
+<td style="border-style:solid; border-width:2; padding:8px">1063277906</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_target_escape</td>
+<td style="border-style:solid; border-width:2; padding:8px">-1373130027</br></td>
+</tr>
+<tr>
+<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_wake_with_owner</td>
+<td style="border-style:solid; border-width:2; padding:8px">-1543219003</br></td>
+</tr>
+<tr>
 <td style="border-style:solid; border-width:2; padding:8px">minecraft:out_of_control</td>
 <td style="border-style:solid; border-width:2; padding:8px">-639930856</br></td>
 </tr>
@@ -26996,51 +27464,6 @@ Sets the mapping of internal animation controller references to actual animation
 
 <h2><p id="Triggers">Triggers</p></h2>
 
-<h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">JSON Name</th> <th style="border-style:solid; border-width:2;">ID</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_death</td>
-<td style="border-style:solid; border-width:2; padding:8px">-49357854</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_friendly_anger</td>
-<td style="border-style:solid; border-width:2; padding:8px">-1009986313</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_hurt</td>
-<td style="border-style:solid; border-width:2; padding:8px">-1028603471</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_hurt_by_player</td>
-<td style="border-style:solid; border-width:2; padding:8px">-599009831</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_ignite</td>
-<td style="border-style:solid; border-width:2; padding:8px">-1911489054</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_start_landing</td>
-<td style="border-style:solid; border-width:2; padding:8px">-555648368</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_start_takeoff</td>
-<td style="border-style:solid; border-width:2; padding:8px">426083399</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_target_acquired</td>
-<td style="border-style:solid; border-width:2; padding:8px">1063277906</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_target_escape</td>
-<td style="border-style:solid; border-width:2; padding:8px">-1373130027</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">minecraft:on_wake_with_owner</td>
-<td style="border-style:solid; border-width:2; padding:8px">-1543219003</br></td>
-</tr>
-</table>
 <a href="#Index">Back to top</a><br><br>
 
 <br><br>
@@ -27602,279 +28025,7 @@ Sets that this entity wants to become a jockey.</br><a href="#Index">Back to top
 
 <h1><p id="Triggers">Triggers</p></h1>
 
-<h2></h2>
-
-<h2><p id="minecraft:on_death">minecraft:on_death</p></h2>
-
-Adds a trigger to call on this entity's death.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
 <a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_friendly_anger">minecraft:on_friendly_anger</p></h2>
-
-Adds a trigger that will run when a nearby entity of the same type as this entity becomes Angry.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_hurt">minecraft:on_hurt</p></h2>
-
-Adds a trigger to call when this entity takes damage.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_hurt_by_player">minecraft:on_hurt_by_player</p></h2>
-
-Adds a trigger to call when this entity is attacked by the player.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_ignite">minecraft:on_ignite</p></h2>
-
-Adds a trigger to call when this entity is set on fire.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_start_landing">minecraft:on_start_landing</p></h2>
-
-Only usable by the Ender Dragon. Adds a trigger to call when this entity lands.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_start_takeoff">minecraft:on_start_takeoff</p></h2>
-
-Only usable by the Ender Dragon. Adds a trigger to call when this entity starts flying.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_target_acquired">minecraft:on_target_acquired</p></h2>
-
-Adds a trigger to call when this entity finds a target.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_target_escape">minecraft:on_target_escape</p></h2>
-
-Adds a trigger to call when this entity loses the target it currently has.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<h2><p id="minecraft:on_wake_with_owner">minecraft:on_wake_with_owner</p></h2>
-
-Adds a trigger to call when this pet's owner awakes after sleeping with the pet.</br><h3></h3>
-
-<table border="1" style="width:100%; border-style:solid; border-collapse:collapse; border-width:2;">
-<tr> <th style="border-style:solid; border-width:2;">Name</th> <th style="border-style:solid; border-width:2;">Type</th> <th style="border-style:solid; border-width:2;">Default Value</th> <th style="border-style:solid; border-width:2;">Description</th> </tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">event</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The event to run when the conditions for this trigger are met.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">filters</td>
-<td style="border-style:solid; border-width:2; padding:8px">Minecraft Filter</td>
-<td style="border-style:solid; border-width:2; padding:8px"></td>
-<td style="border-style:solid; border-width:2; padding:8px">The list of conditions for this trigger to execute.</br></td>
-</tr>
-<tr>
-<td style="border-style:solid; border-width:2; padding:8px">target</td>
-<td style="border-style:solid; border-width:2; padding:8px">String</td>
-<td style="border-style:solid; border-width:2; padding:8px">self</td>
-<td style="border-style:solid; border-width:2; padding:8px">The target of the event.</br></td>
-</tr>
-</table>
-<a href="#Index">Back to top</a><br><br>
-
-<br><br>
 
 <br><br>
 
