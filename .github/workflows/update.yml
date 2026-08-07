@@ -14,6 +14,9 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   check:
     if: github.repository == 'bedrock-dot-dev/docs' && (github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch')
@@ -57,15 +60,15 @@ jobs:
       - name: Setup git environment ⚙️
         if: github.ref == 'refs/heads/master'
         run: |
-          git config --global user.name 'destruc7i0n'
-          git config --global user.email 'destruc7i0n@users.noreply.github.com'
+          git config user.name 'destruc7i0n'
+          git config user.email 'destruc7i0n@users.noreply.github.com'
 
       - name: Check for docs update 🔎
         id: check
         env:
           DRY_RUN: ${{ github.ref != 'refs/heads/master' }}
+        working-directory: scripts
         run: |
-          cd scripts
           python3 update.py
 
       - name: Update summary 📝
@@ -73,7 +76,7 @@ jobs:
           echo "### Check output 🗒️" >> $GITHUB_STEP_SUMMARY
           echo "Dry run: ${{ github.ref != 'refs/heads/master' }}" >> $GITHUB_STEP_SUMMARY
           echo "Update found: ${{ (steps.check.outputs.update == 'true' && '✅') || '❌' }}" >> $GITHUB_STEP_SUMMARY
-          echo 'JSON output: `${{ steps.check.outputs.release_data }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'JSON output: `${{ steps.check.outputs.version_data }}`' >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check.outputs.update }}" == "true" ]; then
             echo 'Commit message: ${{ steps.check.outputs.msg }}' >> $GITHUB_STEP_SUMMARY
           fi
@@ -94,7 +97,7 @@ jobs:
             ],
             "username": "bedrock.dev",
             "avatar_url": "https://bedrock.dev/favicon/android-chrome-512x512.png",
-          }' | curl -X POST -H "Content-Type: application/json" -d @- $DISCORD_WEBHOOK
+          }' | curl --fail-with-body --silent --show-error -X POST -H "Content-Type: application/json" -d @- "$DISCORD_WEBHOOK"
 
       - name: Archive documentation files 📁
         if: steps.check.outputs.update == 'true'
@@ -110,4 +113,4 @@ jobs:
         run: |
           # sleep for a bit for GitHub's cache
           sleep 10s
-          curl -X POST $VERCEL_DEPLOY_HOOK
+          curl --fail-with-body --silent --show-error -X POST "$VERCEL_DEPLOY_HOOK"
