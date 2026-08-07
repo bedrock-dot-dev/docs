@@ -2,8 +2,6 @@ import os
 from enum import Enum
 from pathlib import Path
 
-SAMPLES_REPO = 'Mojang/bedrock-samples'
-
 LINE = '-' * 20
 
 ROOT = Path('../')
@@ -14,12 +12,16 @@ CACHE_PATH = Path('./cache')
 TMP_PATH = Path('./tmp')
 
 IS_ACTIONS = 'GITHUB_ACTIONS' in os.environ
-
-GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+DRY_RUN = os.environ.get('DRY_RUN') == 'true'
 
 class Tags(Enum):
   STABLE = 'stable'
   BETA = 'beta'
+
+SOURCES = {
+  Tags.STABLE.value: CACHE_PATH / 'stable',
+  Tags.BETA.value: CACHE_PATH / 'preview',
+}
 
 TITLES = {
   Tags.STABLE.value: 'Stable',

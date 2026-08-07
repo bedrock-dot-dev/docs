@@ -1,7 +1,5 @@
 import json, shutil, subprocess, shlex
 
-from github import Github
-
 from releases import get_latest_releases
 from util import MinecraftVersion, write_to_github_output, ensure_required_paths
 from docs import get_docs_update
@@ -15,6 +13,12 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
   :param updates: A list of tuples of the form (old_version, new_version)
   :param msg: The commit message
   """
+
+  if Constants.DRY_RUN:
+    print('Dry run, skipping commit.')
+    print(f'Updates: {updates}')
+    print(f'Message: {msg}')
+    return
 
   if not Constants.IS_ACTIONS:
     print('Not in GitHub Actions, skipping commit.')
@@ -64,12 +68,6 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
 def main() -> None:
   ensure_required_paths()
 
-  if not Constants.GITHUB_TOKEN:
-    print('GITHUB_TOKEN not set, subject to stricter rate limits.')
-
-  repo = Github(login_or_token=Constants.GITHUB_TOKEN, per_page=100).get_repo(Constants.SAMPLES_REPO)
-  releases = repo.get_releases()
-
   latest_releases = get_latest_releases()
   tags = json.loads(Constants.TAGS_PATH.read_text())
 
@@ -102,26 +100,10 @@ def main() -> None:
     current_version = MinecraftVersion(release_data[tag.value]['current'])
     latest_version = MinecraftVersion(release_data[tag.value]['latest'])
 
-    prereleases = [r for r in releases if r.prerelease]
-    regular_releases = [r for r in releases if not r.prerelease]
-    
-    if prereleases:
-      print(f'Latest pre-release: {prereleases[0].title}')
-    if regular_releases:
-      print(f'Latest regular release: {regular_releases[0].title}')
-
     if latest_version > current_version:
-      # get the release with the latest version
-      try:
-        git_release = next(release for release in releases if release.title.startswith(f'v{latest_version}'))
-      except StopIteration:
-        print(f'Available releases: {[release.title for release in releases]}')
-        
-        raise Exception(f'No release found for {latest_version}.')
-
       print(f'New {tag.name} version found: {latest_version}')
-      # download and extract the release
-      get_docs_update(latest_version, git_release)
+      # copy the checked out documentation
+      get_docs_update(latest_version, Constants.SOURCES[tag.value] / 'documentation')
 
       # add previous and new version to copy
       version_updates.append((current_version, latest_version))
