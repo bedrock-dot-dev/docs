@@ -1,6 +1,6 @@
-import json, shutil, subprocess, shlex
+import json, shutil, subprocess
 
-from releases import get_latest_releases
+from versions import get_latest_versions
 from util import MinecraftVersion, write_to_github_output, ensure_required_paths
 from docs import get_docs_update
 
@@ -44,8 +44,8 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
   print(f'Committing "{copy_previous_version_msg}"')
 
   # add previous files commit
-  subprocess.run(shlex.split('git add --all'), cwd=Constants.ROOT)
-  subprocess.run(shlex.split(f'git commit -m \'{copy_previous_version_msg}\''), cwd=Constants.ROOT)
+  subprocess.run(['git', 'add', '--all'], cwd=Constants.ROOT, check=True)
+  subprocess.run(['git', 'commit', '-m', copy_previous_version_msg], cwd=Constants.ROOT, check=True)
 
   # remove the new version directories to handle deleted files
   for prev, new in updates:
@@ -60,32 +60,32 @@ def do_versioned_commits(updates: list[tuple[MinecraftVersion, MinecraftVersion]
   final_msg = f'Docs update: {msg}'
   print(f'Committing "{final_msg}"')
 
-  subprocess.run(shlex.split('git add --all'), cwd=Constants.ROOT)
-  subprocess.run(shlex.split(f'git commit -m \'{final_msg}\''), cwd=Constants.ROOT)
+  subprocess.run(['git', 'add', '--all'], cwd=Constants.ROOT, check=True)
+  subprocess.run(['git', 'commit', '-m', final_msg], cwd=Constants.ROOT, check=True)
 
-  subprocess.run(shlex.split('git push'), cwd=Constants.ROOT)
+  subprocess.run(['git', 'push'], cwd=Constants.ROOT, check=True)
 
 def main() -> None:
   ensure_required_paths()
 
-  latest_releases = get_latest_releases()
+  latest_versions = get_latest_versions()
   tags = json.loads(Constants.TAGS_PATH.read_text())
 
-  # mapping of version tag to current and latest release
-  release_data: dict[Tags, dict[str, str]] = {}
+  # mapping of version tag to current and latest version
+  version_data: dict[str, dict[str, str]] = {}
   for tag in Tags:
-    latest_version_id = latest_releases[tag.value]
+    latest_version_id = latest_versions[tag.value]
     current_version_id = tags[tag.value][1]
-    release_data[tag.value] = {
+    version_data[tag.value] = {
       'current': current_version_id,
       'latest': latest_version_id,
     }
 
-  print('Release data:', json.dumps(release_data, indent=2))
+  print('Version data:', json.dumps(version_data, indent=2))
   print(Constants.LINE)
 
   # write as a github actions output
-  write_to_github_output('release_data', json.dumps(release_data))
+  write_to_github_output('version_data', json.dumps(version_data))
 
   commit_msg_parts = []
   version_updates = []
@@ -97,8 +97,8 @@ def main() -> None:
     :return: True if there is an update, False otherwise
     """
 
-    current_version = MinecraftVersion(release_data[tag.value]['current'])
-    latest_version = MinecraftVersion(release_data[tag.value]['latest'])
+    current_version = MinecraftVersion(version_data[tag.value]['current'])
+    latest_version = MinecraftVersion(version_data[tag.value]['latest'])
 
     if latest_version > current_version:
       print(f'New {tag.name} version found: {latest_version}')

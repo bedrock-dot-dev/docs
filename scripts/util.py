@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from pathlib import Path
 
 import constants as Constants
@@ -71,6 +71,8 @@ def ensure_required_paths() -> None:
   """
   Ensures that the required paths exist
   """
+  if Constants.TMP_PATH.exists():
+    shutil.rmtree(Constants.TMP_PATH)
   Constants.TMP_PATH.mkdir(exist_ok=True, parents=True)
   Constants.CACHE_PATH.mkdir(exist_ok=True, parents=True)
 

@@ -3,9 +3,9 @@ import json
 import constants as Constants
 from constants import Tags
 
-def get_latest_releases() -> dict[str, str]:
+def get_latest_versions() -> dict[str, str]:
   """
-  Gets the latest releases from the checked out version files
+  Gets the latest versions from the checked out version files
   :return: A dict with the latest preview and stable versions
   """
   stable_version_map = json.loads((Constants.SOURCES[Tags.STABLE.value] / 'version.json').read_text())

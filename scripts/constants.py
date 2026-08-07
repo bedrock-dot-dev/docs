@@ -4,12 +4,13 @@ from pathlib import Path
 
 LINE = '-' * 20
 
-ROOT = Path('../')
-TAGS_PATH = Path('../tags.json')
+SCRIPTS_PATH = Path(__file__).resolve().parent
+ROOT = SCRIPTS_PATH.parent
+TAGS_PATH = ROOT / 'tags.json'
 
-CACHE_PATH = Path('./cache')
+CACHE_PATH = SCRIPTS_PATH / 'cache'
 
-TMP_PATH = Path('./tmp')
+TMP_PATH = SCRIPTS_PATH / 'tmp'
 
 IS_ACTIONS = 'GITHUB_ACTIONS' in os.environ
 DRY_RUN = os.environ.get('DRY_RUN') == 'true'
