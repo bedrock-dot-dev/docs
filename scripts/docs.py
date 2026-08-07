@@ -1,18 +1,15 @@
-import zipfile, re
+import shutil, re
 from pathlib import Path
 
-from github.GitRelease import GitRelease
-
 import constants as Constants
-from releases import download_release
 from util import MinecraftVersion
 
-def get_docs_update(version: MinecraftVersion, release: GitRelease) -> None:
-  documentation_cache_path = Constants.CACHE_PATH / f'{version}.zip'
-  download_release(release, documentation_cache_path)
-  print(f'Downloaded {version}')
+def get_docs_update(version: MinecraftVersion, source_path: Path) -> None:
+  documentation_path = Constants.TMP_PATH / version.as_path()
+  shutil.copytree(source_path, documentation_path, dirs_exist_ok=True)
+  print(f'Copied {version}')
 
-  doc_version = unzip_documentation_from_release(Constants.TMP_PATH / version.as_path(), documentation_cache_path)
+  doc_version = prepare_documentation(documentation_path)
 
   if doc_version == None:
     print('Unable to find version in documentation')
@@ -20,23 +17,12 @@ def get_docs_update(version: MinecraftVersion, release: GitRelease) -> None:
   if doc_version != None and doc_version != version:
     print(f'Warning: Got version {doc_version} (from documentation) instead of expected {version}. Continuing process.')
 
-def unzip_documentation_from_release(documentation_path: Path, cache_path: Path) -> MinecraftVersion | None:
+def prepare_documentation(documentation_path: Path) -> MinecraftVersion | None:
   """
-  Unzips the documentation from the given release
-  :param documentation_path: The path to extract the documentation to
-  :param cache_path: The path to the cached release zip
+  Prepares the documentation for storage
+  :param documentation_path: The path containing the documentation
   :return: The version of the documentation
   """
-  documentation_path.mkdir(exist_ok=True, parents=True)
-
-  with zipfile.ZipFile(cache_path, 'r') as archive:
-    for file in archive.namelist():
-      if file.endswith('.html'):
-        file_path = Path(file)
-        if file_path.parent.name == 'documentation':
-          data = archive.read(file)
-          (documentation_path / file_path.name).write_bytes(data)
-
   doc_version = None
 
   possible_index_file = ['Index.html', 'index.html']

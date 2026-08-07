@@ -16,23 +16,46 @@ concurrency:
 
 jobs:
   check:
-    if: github.repository == 'bedrock-dot-dev/docs' && github.ref == 'refs/heads/master'
+    if: github.repository == 'bedrock-dot-dev/docs' && (github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v6
 
-      - name: Setup Python 🐍
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
-          cache: 'pip'
-      
-      - name: Install dependencies ⚙️
-        run: |
-          pip install -r scripts/requirements.txt
+      - parallel:
+          - name: Checkout stable documentation 🛎️
+            uses: actions/checkout@v6
+            with:
+              repository: Mojang/bedrock-samples
+              ref: main
+              path: scripts/cache/stable
+              fetch-depth: 1
+              persist-credentials: false
+              sparse-checkout: |
+                /documentation/
+                /version.json
+              sparse-checkout-cone-mode: false
+
+          - name: Checkout preview documentation 🛎️
+            uses: actions/checkout@v6
+            with:
+              repository: Mojang/bedrock-samples
+              ref: preview
+              path: scripts/cache/preview
+              fetch-depth: 1
+              persist-credentials: false
+              sparse-checkout: |
+                /documentation/
+                /version.json
+              sparse-checkout-cone-mode: false
+
+          - name: Setup Python 🐍
+            uses: actions/setup-python@v6
+            with:
+              python-version: '3.14'
 
       - name: Setup git environment ⚙️
+        if: github.ref == 'refs/heads/master'
         run: |
           git config --global user.name 'destruc7i0n'
           git config --global user.email 'destruc7i0n@users.noreply.github.com'
@@ -40,7 +63,7 @@ jobs:
       - name: Check for docs update 🔎
         id: check
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ github.ref != 'refs/heads/master' }}
         run: |
           cd scripts
           python3 update.py
@@ -48,6 +71,7 @@ jobs:
       - name: Update summary 📝
         run: |
           echo "### Check output 🗒️" >> $GITHUB_STEP_SUMMARY
+          echo "Dry run: ${{ github.ref != 'refs/heads/master' }}" >> $GITHUB_STEP_SUMMARY
           echo "Update found: ${{ (steps.check.outputs.update == 'true' && '✅') || '❌' }}" >> $GITHUB_STEP_SUMMARY
           echo 'JSON output: `${{ steps.check.outputs.release_data }}`' >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check.outputs.update }}" == "true" ]; then
@@ -55,7 +79,7 @@ jobs:
           fi
 
       - name: Send Discord message 🔔
-        if: steps.check.outputs.update == 'true'
+        if: steps.check.outputs.update == 'true' && github.ref == 'refs/heads/master'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
@@ -80,7 +104,7 @@ jobs:
           path: scripts/tmp
       
       - name: Deploy site 🚀
-        if: steps.check.outputs.update == 'true'
+        if: steps.check.outputs.update == 'true' && github.ref == 'refs/heads/master'
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
